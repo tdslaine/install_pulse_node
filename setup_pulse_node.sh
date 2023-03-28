@@ -150,11 +150,11 @@ sudo ufw allow from 127.0.0.1 to any port 8545 proto tcp
 sudo ufw enable
 
 # Allow inbound traffic for specific ports based on user choices 
-if [ "$ETH_CLIENT_CHOICE" = "1" ]; then
+if [ "$ETH_CLIENT_CHOICE" = "1" ]; then # as per https://geth.ethereum.org/docs/fundamentals/security
   sudo ufw allow 30303/tcp
   sudo ufw allow 30303/udp
   
-elif [ "$ETH_CLIENT_CHOICE" = "2" ]; then
+elif [ "$ETH_CLIENT_CHOICE" = "2" ]; then #as per https://github.com/ledgerwatch/erigon
   sudo ufw allow 30303/tcp
   sudo ufw allow 30303/udp
   sudo ufw allow 30304/tcp
@@ -166,10 +166,10 @@ elif [ "$ETH_CLIENT_CHOICE" = "2" ]; then
 fi
 
 
-if [ "$CONSENSUS_CLIENT" = "prysm" ]; then
+if [ "$CONSENSUS_CLIENT" = "prysm" ]; then #as per https://docs.prylabs.network/docs/prysm-usage/p2p-host-ip
   sudo ufw allow 13000/tcp
   sudo ufw allow 12000/udp
-elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then
+elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then #as per https://lighthouse-book.sigmaprime.io/faq.html
   sudo ufw allow 9000
 fi
 
