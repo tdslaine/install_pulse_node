@@ -1,5 +1,13 @@
 #!/bin/bash
-# By Peter L Dipslayer v.1
+
+
+#Icosa, Hex, Hedron,
+#Three shapes in symmetry dance,
+#Nature's art is shown.
+
+# v. 0.1
+# By tdslaine aka Peter L Dipslayer 
+#
 
 echo -e "\033[1;33m"
 echo "┌─────────────────────────────────────────────────────────┐"
