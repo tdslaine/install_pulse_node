@@ -153,7 +153,6 @@ else
 fi
 
 read -p "Do you want to allow SSH access to this server? (y/n): " ssh_choice
-
 if [[ $ssh_choice == "y" ]]; then
   read -p "Enter SSH port (default is 22): " ssh_port
   if [[ $ssh_port == "" ]]; then
@@ -161,7 +160,12 @@ if [[ $ssh_choice == "y" ]]; then
   fi
   sudo ufw allow $ssh_port/tcp comment 'SSH Port'
 else
-  sudo ufw deny 22/tcp comment 'SSH Port'
+  read -p "Warning: Denying SSH access to this server may disconnect your current SSH connection. Please make sure you have an alternative way to access the server before proceeding. Do you want to proceed with denying SSH access? (y/n): " ssh_confirm
+  if [[ $ssh_confirm == "y" ]]; then
+    sudo ufw deny 22/tcp comment 'SSH Port'
+  else
+    echo "SSH access not denied. Make sure to allow SSH-Access if needed"
+  fi
 fi
 
 sudo ufw default deny incoming
