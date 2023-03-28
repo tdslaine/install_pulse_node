@@ -143,10 +143,29 @@ sudo useradd -M -G docker $CONSENSUS_CLIENT
 sudo chown -R ${ETH_CLIENT}: "${CUSTOM_PATH}/execution/$ETH_CLIENT"
 sudo chown -R ${CONSENSUS_CLIENT}: "${CUSTOM_PATH}/consensus/$CONSENSUS_CLIENT"
 
-echo "Setting up firewall including port 8545 for internal connection to the RPC"
+echo "Setting up firewall including port 22 and 8545 for internal connection to the RPC"
+read -p "Do you want to allow RPC (8545) access from localhost? (y/n): " rpc_choice
+
+if [[ $rpc_choice == "y" ]]; then
+  sudo ufw allow from 127.0.0.1 to any port 8545 proto tcp comment 'RPC Port'
+else
+  sudo ufw deny from 127.0.0.1 to any port 8545 proto tcp comment 'RPC Port'
+fi
+
+read -p "Do you want to allow SSH access to this server? (y/n): " ssh_choice
+
+if [[ $ssh_choice == "y" ]]; then
+  read -p "Enter SSH port (default is 22): " ssh_port
+  if [[ $ssh_port == "" ]]; then
+    ssh_port=22
+  fi
+  sudo ufw allow $ssh_port/tcp comment 'SSH Port'
+else
+  sudo ufw deny 22/tcp comment 'SSH Port'
+fi
+
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow from 127.0.0.1 to any port 8545 proto tcp 
 sudo ufw enable
 
 # Allow inbound traffic for specific ports based on user choices 
