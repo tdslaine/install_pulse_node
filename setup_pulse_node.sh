@@ -79,7 +79,7 @@ BOOTNODE="enr:-L64QNIt1R1_ou9Aw5ci8gLAsV1TrK2MtWiPNGy21YsTW0HpA86hGowakgk3IVEZNj
 # Docker run commands for Ethereum clients
 GETH_CMD="sudo -u geth docker run -t \\
 --network=host \\
--v ${CUSTOM_PATH}/blockchain \\
+-v ${CUSTOM_PATH}:/blockchain \\
 registry.gitlab.com/pulsechaincom/go-pulse \\
 --pulsechain-testnet-v3 \\
 --authrpc.jwtsecret=/blockchain/jwt.hex \\
