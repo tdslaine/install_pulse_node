@@ -155,6 +155,8 @@ if [ "$ETH_CLIENT_CHOICE" = "1" ]; then
   sudo ufw allow 30303/udp
   
 elif [ "$ETH_CLIENT_CHOICE" = "2" ]; then
+  sudo ufw allow 30303/tcp
+  sudo ufw allow 30303/udp
   sudo ufw allow 30304/tcp
   sudo ufw allow 30304/udp
   sudo ufw allow 42069/tcp
