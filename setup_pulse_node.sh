@@ -70,6 +70,9 @@ if [ -z "$CUSTOM_PATH" ]; then
   CUSTOM_PATH="/blockchain"
 fi
 
+#  Set Fee Receiption Wallet Adress for validator-setup
+read -p "Enter FEE-Receiption Wallet: " FEEWALLET
+
 # Checkpoint sync url
 CHECKPOINT="https://checkpoint.v3.testnet.pulsechain.com"
 
@@ -79,6 +82,7 @@ BOOTNODE="enr:-L64QNIt1R1_ou9Aw5ci8gLAsV1TrK2MtWiPNGy21YsTW0HpA86hGowakgk3IVEZNj
 # Docker run commands for Ethereum clients
 GETH_CMD="sudo -u geth docker run -t \\
 --network=host \\
+--name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
 registry.gitlab.com/pulsechaincom/go-pulse \\
 --pulsechain-testnet-v3 \\
@@ -89,6 +93,7 @@ registry.gitlab.com/pulsechaincom/go-pulse \\
 
 ERIGON_CMD="sudo -u erigon docker run \\
 --network=host \\
+--name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
 registry.gitlab.com/pulsechaincom/erigon-pulse \\
 --chain=pulsechain-testnet-v3 \\
@@ -99,6 +104,7 @@ registry.gitlab.com/pulsechaincom/erigon-pulse \\
 # Docker run commands for Consensus clients
 PRYSM_CMD="sudo -u prysm docker run -t \\
 --network=host \\
+--name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
 registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain \\
 --pulsechain-testnet-v3 \\
@@ -106,10 +112,12 @@ registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain \\
 --datadir=/blockchain/consensus/prysm \\
 --checkpoint-sync-url=${CHECKPOINT} \\
 --bootstrap-node=${BOOTNODE} \\
+--suggested-fee-recipient=${FEEWALLET} \\
 --genesis-beacon-api-url=${CHECKPOINT} "
 
 LIGHTHOUSE_CMD="sudo -u lighthouse docker run -t \\
 --network=host \\
+--name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
 registry.gitlab.com/pulsechaincom/lighthouse-pulse \\
 lighthouse bn \\
@@ -119,6 +127,7 @@ lighthouse bn \\
 --execution-endpoint=http://localhost:8551 \\
 --checkpoint-sync-url=${CHECKPOINT} \\
 --boot-nodes=${BOOTNODE} \\
+--suggested-fee-recipient=${FEEWALLET} \\
 --http "
 
 # Use the variables in both single and separate script modes
