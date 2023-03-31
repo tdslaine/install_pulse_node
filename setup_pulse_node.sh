@@ -344,3 +344,13 @@ EOL
 
 fi
 echo "you can now "cd "$CUSTOM_PATH"" into your folder and start the script(s)"
+
+read -p "Do you also want to create a validator too? Only got LH setup at the moment, which is known to be buggy? (yes/no): " VALIDATOR_CHOICE
+if [ "$VALIDATOR_CHOICE" = "yes" ]; then
+  echo "Running validator_test.sh script"
+  chmod +x validator_test.sh
+  sudo mv validator_test.sh "$CUSTOM_PATH"
+  ./"${CUSTOM_PATH}/validator_test.sh"
+else
+  echo "Not creating a validator."
+fi
