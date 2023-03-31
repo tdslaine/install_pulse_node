@@ -94,7 +94,7 @@ GETH_CMD="sudo -u geth docker run -t \\
 --network=host \\
 --name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
-registry.gitlab.com/pulsechaincom/go-pulse \\
+registry.gitlab.com/pulsechaincom/go-pulse:latest \\
 --pulsechain-testnet-v3 \\
 --authrpc.jwtsecret=/blockchain/jwt.hex \\
 --datadir=/blockchain/execution/geth \\
@@ -105,7 +105,7 @@ ERIGON_CMD="sudo -u erigon docker run \\
 --network=host \\
 --name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
-registry.gitlab.com/pulsechaincom/erigon-pulse \\
+registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
 --chain=pulsechain-testnet-v3 \\
 --authrpc.jwtsecret=/blockchain/jwt.hex \\
 --datadir=/blockchain/execution/erigon \\
@@ -129,7 +129,7 @@ LIGHTHOUSE_CMD="sudo -u lighthouse docker run -t \\
 --network=host \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
-registry.gitlab.com/pulsechaincom/lighthouse-pulse:v1.0.1 \\
+registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
 lighthouse bn \\
 --network=pulsechain_testnet_v3 \\
 --execution-jwt=/blockchain/jwt.hex \\
