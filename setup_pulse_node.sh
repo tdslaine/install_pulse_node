@@ -116,7 +116,7 @@ PRYSM_CMD="sudo -u prysm docker run -t \\
 --network=host \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
-registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain \\
+registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest \\
 --pulsechain-testnet-v3 \\
 --jwt-secret=/blockchain/jwt.hex \\
 --datadir=/blockchain/consensus/prysm \\
@@ -129,7 +129,7 @@ LIGHTHOUSE_CMD="sudo -u lighthouse docker run -t \\
 --network=host \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
-registry.gitlab.com/pulsechaincom/lighthouse-pulse \\
+registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
 lighthouse bn \\
 --network=pulsechain_testnet_v3 \\
 --execution-jwt=/blockchain/jwt.hex \\
