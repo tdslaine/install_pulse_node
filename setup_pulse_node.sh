@@ -349,8 +349,7 @@ read -p "Do you also want to create a validator too? Only got LH setup at the mo
 if [ "$VALIDATOR_CHOICE" = "yes" ]; then
   echo "Running validator_test.sh script"
   chmod +x validator_test.sh
-  sudo mv validator_test.sh "$CUSTOM_PATH"
-  ./"${CUSTOM_PATH}/validator_test.sh"
+  sudo ./validator_test.sh
 else
   echo "Not creating a validator."
 fi
