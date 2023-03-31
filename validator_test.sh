@@ -21,7 +21,7 @@ sudo apt-get install -y \
     ufw \
     openssl \
     lsb-release \
-	python3.10 python3.10-venv python3.10-dev python3-pip
+    python3.10 python3.10-venv python3.10-dev python3-pip
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo \
@@ -112,30 +112,27 @@ sudo docker run -it \
     --network=pulsechain_testnet_v3 \
     account validator import \
     --directory=/blockchain/validator_keys \
+    --datadir=/blockchain
 
-sudo docker stop -t 180 validator_import
+sudo docker stop -t 10 validator_import
 
 sudo docker container prune
 
-
 VALIDATOR_LH="sudo -u validator docker run -it --network=host \\
     -v ${custompath}:/blockchain \\
-    --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
     lighthouse vc \\
     --network=pulsechain_testnet_v3 \\
-    --graffiti= hdrn_for_life \\ 
-    --validators-dir=/blockchain/validator \\
+    --validators-dir=/blockchain/validators \\
     --suggested-fee-recipient=${fee_wallet} \\
-    --beacon-nodes=http://127.0.0.1:5052 \\
-    -datadir=/blockchain/consensus/lighthouse"
+    --beacon-nodes=http://127.0.0.1:5052 "
 
 # Use a heredoc to create the start_validator_lh.sh file
 cat << EOF > start_validator_lh.sh
 #!/bin/bash
 ${VALIDATOR_LH}
 EOF
-
+cd ${custompath}
 sudo chmod +x start_validator_lh.sh
 
 # Change the ownership of the custompath/validator directory to validator user and group
