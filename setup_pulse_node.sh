@@ -90,7 +90,7 @@ CHECKPOINT="https://checkpoint.v3.testnet.pulsechain.com"
 BOOTNODE="enr:-L64QNIt1R1_ou9Aw5ci8gLAsV1TrK2MtWiPNGy21YsTW0HpA86hGowakgk3IVEZNjBOTVdqtXObXyErbEfxEi8Y8Z-CARSHYXR0bmV0c4j__________4RldGgykFuckgYAAAlE__________-CaWSCdjSCaXCEA--2T4lzZWNwMjU2azGhArzEiK-HUz_pnQBn_F8g7sCRKLU4GUocVeq_TX6UlFXIiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo"
 
 # Docker run commands for Ethereum clients
-GETH_CMD="sudo -u geth docker run -t \\
+GETH_CMD="sudo -u geth docker run -t --restart unless-stopped \\
 --network=host \\
 --name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
@@ -101,7 +101,7 @@ registry.gitlab.com/pulsechaincom/go-pulse:latest \\
 --http \\
 --http.api eth,net,engine,admin "
 
-ERIGON_CMD="sudo -u erigon docker run \\
+ERIGON_CMD="sudo -u erigon docker run --restart unless-stopped \\
 --network=host \\
 --name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
@@ -112,7 +112,7 @@ registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
 --externalcl "
 
 # Docker run commands for Consensus clients
-PRYSM_CMD="sudo -u prysm docker run -t \\
+PRYSM_CMD="sudo -u prysm docker run -t --restart unless-stopped \\
 --network=host \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
@@ -125,7 +125,7 @@ registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest \\
 --suggested-fee-recipient=${fee_wallet} \\
 --genesis-beacon-api-url=${CHECKPOINT} "
 
-LIGHTHOUSE_CMD="sudo -u lighthouse docker run -t \\
+LIGHTHOUSE_CMD="sudo -u lighthouse docker run -t --restart unless-stopped \\
 --network=host \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
