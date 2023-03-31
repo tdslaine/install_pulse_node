@@ -43,8 +43,7 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 # Define the custom path for the validator directory
-echo "please enter the path for the validator data like keys, pw etc.. (f.e.: /blockchain/validator):"
-read custom_path
+read -e -p  "please enter the path for the validator data like keys, pw etc.. (f.e.: /blockchain/validator):" custompath
 
 # Create the validator directory in the custom path
 sudo mkdir -p "${custompath}"
@@ -93,8 +92,8 @@ fi
 
 # Run the deposit.sh script with the entered fee-receiption address
 echo "now generating the validator keys - please follow the instructions and make sure to READ! everything"
-sudo ./deposit.sh new-mnemonic --num_validators=1 --mnemonic_language=english --chain=pulsechain-testnet-v3 --folder="${custom_path}"
-cd "${custom_path}"
+sudo ./deposit.sh new-mnemonic --num_validators=1 --mnemonic_language=english --chain=pulsechain-testnet-v3 --folder="${custompath}"
+cd "${custompath}"
 
 echo "please upload your generated "deposit_data-xxxyyyzzzz.json" to the validator dashboard at https://launchpad.v3.testnet.pulsechain.com; the deposit page is after client installation."
 #echo "now sleeping for 10"
@@ -120,7 +119,7 @@ sudo docker container prune
 
 
 VALIDATOR_LH="sudo -u validator docker run -it --network=host \\
-    -v \"${custom_path}\":/blockchain \\
+    -v \"${custompath}\":/blockchain \\
     --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
     lighthouse vc \\
@@ -140,4 +139,4 @@ EOF
 sudo chmod +x start_validator_lh.sh
 
 # Change the ownership of the custompath/validator directory to validator user and group
-sudo chown -R validator:validator "${custom_path}"
+sudo chown -R validator:validator "${custompath}"
