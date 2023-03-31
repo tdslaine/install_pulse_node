@@ -78,7 +78,7 @@ sudo python3 setup.py install
 #./deposit.sh install
 
 # Ask the user to enter the fee-receiption address
-echo "Please enter the fee-receiption address (Press Enter to use the default address):"
+echo "Please enter the fee-receiption address (Press Enter to use the default address, which is mine lol):"
 read fee_wallet
 
 # Use a regex pattern to validate the input wallet address
