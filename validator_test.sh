@@ -104,9 +104,9 @@ echo "importing keys using lighthouse"
 
 ## Run the Lighthouse Pulse docker container as the validator user
 sudo docker run -it \
-    --name validator_import
-	--network=host \
-    -v "${custompath}":/blockchain \
+    --name validator_import \
+    --network=host \
+    -v ${custompath}:/blockchain \
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \
     lighthouse \
     --network=pulsechain_testnet_v3 \
@@ -119,7 +119,7 @@ sudo docker container prune
 
 
 VALIDATOR_LH="sudo -u validator docker run -it --network=host \\
-    -v \"${custompath}\":/blockchain \\
+    -v ${custompath}:/blockchain \\
     --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
     lighthouse vc \\
