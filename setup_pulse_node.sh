@@ -129,7 +129,7 @@ LIGHTHOUSE_CMD="sudo -u lighthouse docker run -t \\
 --network=host \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
-registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
+registry.gitlab.com/pulsechaincom/lighthouse-pulse:v1.0.1 \\
 lighthouse bn \\
 --network=pulsechain_testnet_v3 \\
 --execution-jwt=/blockchain/jwt.hex \\
