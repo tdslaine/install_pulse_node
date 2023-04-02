@@ -47,3 +47,8 @@ Finally, run the `setup_pulse_node.sh` script:
 ```bash
   ./setup_pulse_node.sh
 ```
+
+
+donations accepted so I might be able to work on mainnet too :smiley:
+
+erc20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA
