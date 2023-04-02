@@ -43,7 +43,12 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 # Define the custom path for the validator directory
-read -e -p  "please enter the path for the validator data like keys, pw etc.. (f.e.: /blockchain/validator):" custompath
+read -e -p  "please enter the path for the validator data like keys, pw etc.. (default: /blockchain):" custompath
+
+# Set the default value for custom path if the user enters nothing
+if [ -z "$custompath" ]; then
+  custompath="/blockchain"
+fi
 
 # Create the validator directory in the custom path
 sudo mkdir -p "${custompath}"
