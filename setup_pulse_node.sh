@@ -58,10 +58,11 @@ case $CONSENSUS_CLIENT_CHOICE in
   *) echo "Invalid choice. Exiting."; exit 1 ;;
 esac
 
-# Enable tab autocompletion for the read command
-if [ -n "$BASH_VERSION" ]; then
+# Enable tab autocompletion for the read command if line editing is enabled
+if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
   bind '"\t":menu-complete'
 fi
+
 
 # Get custom path for the blockchain folder
 read -e -p $'\nThe following setup will be installed under the custom path you specified.\nIt includes the creation of an execution and a consensus folder, where the databases, the keystore, and the different startup scripts will be located.\nAdditionally, the jwt-secret file will be created in this path.\n \n Setup the installation path (default: /blockchain): '  CUSTOM_PATH
