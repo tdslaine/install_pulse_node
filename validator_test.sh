@@ -37,8 +37,8 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose
 # Create the lhvalidator user with no home directory and add it to the docker group
 sudo useradd -MG docker validator
 
-# Enable tab autocompletion for the read command
-if [ -n "$BASH_VERSION" ]; then
+# Enable tab autocompletion for the read command if line editing is enabled
+if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
   bind '"\t":menu-complete'
 fi
 
