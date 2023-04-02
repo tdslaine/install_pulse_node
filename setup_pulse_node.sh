@@ -72,17 +72,16 @@ if [ -z "$CUSTOM_PATH" ]; then
 fi
 
 # Ask the user to enter the fee-receiption address
-echo "Please enter the fee-receiption address (Press Enter to use the default address):"
-read fee_wallet
+#echo "Please enter the fee-receiption address (it is the address that will receive the fees your validator will earn) (Press Enter to use the default address, which is mine and can be changed later in the generated .sh script):"
+#read fee_wallet
 
 # Use a regex pattern to validate the input wallet address
-if [[ -z "${fee_wallet}" ]] || ! [[ "${fee_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-    fee_wallet="0x998D0ed46B837fbeAEb6988A6C00b721E33224Ec"
-    echo "Using default fee-receiption address: ${fee_wallet}"
-else
-    echo "Using provided fee-receiption address: ${fee_wallet}"
-fi
-
+#if [[ -z "${fee_wallet}" ]] || ! [[ "${fee_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
+#    fee_wallet="0x998D0ed46B837fbeAEb6988A6C00b721E33224Ec"
+#    echo "Using default fee-receiption address: ${fee_wallet}"
+#else
+#    echo "Using provided fee-receiption address: ${fee_wallet}"
+#fi
 
 # Checkpoint sync url
 CHECKPOINT="https://checkpoint.v3.testnet.pulsechain.com"
@@ -123,7 +122,6 @@ registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest \\
 --datadir=/blockchain/consensus/prysm \\
 --checkpoint-sync-url=${CHECKPOINT} \\
 --bootstrap-node=${BOOTNODE} \\
---suggested-fee-recipient=${fee_wallet} \\
 --genesis-beacon-api-url=${CHECKPOINT} "
 
 LIGHTHOUSE_CMD="sudo -u lighthouse docker run -t --restart unless-stopped \\
@@ -138,7 +136,6 @@ lighthouse bn \\
 --execution-endpoint=http://localhost:8551 \\
 --checkpoint-sync-url=${CHECKPOINT} \\
 --boot-nodes=${BOOTNODE} \\
---suggested-fee-recipient=${fee_wallet} \\
 --http "
 
 # Use the variables in both single and separate script modes
