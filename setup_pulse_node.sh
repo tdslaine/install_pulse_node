@@ -16,21 +16,22 @@ echo "├───────────────────────�
 echo "│                                                         │"
 echo "│                                                         │"
 echo "│ This script automates the installation and setup process│"
-echo "│ for pls-test-v3 NODE. By using this script, you         │"
-echo "│ acknowledge that you understand the potential risks     │"
+echo "│ for pls-test-v3 NODE plus lighthouse validator.         │"
+echo "│ By using this script, you                               |"
+echo "| acknowledge that you understand the potential risks     │"
 echo "│ involved and accept full responsibility for the         │"
 echo "│ security and custody of your own assets.                │"
 echo "│                                                         │"
 echo "│ It is strongly recommended that you review the script   │"
 echo "│ and understand its workings before proceeding.          │"
 echo "|                                                         |"
-echo "│ Currently its only a NODE, not a Validator setup        │"
+echo "│ node setup with the option to add lighthouse validator  │"
 echo "└─────────────────────────────────────────────────────────┘"
 echo -e "\033[0m"
 
 
 read -p "Do you wish to continue? (yes/no): " CONFIRM
-if [ "$CONFIRM" != "yes" ]; then
+if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
   echo "Aborting."
   exit 1
 fi
@@ -343,9 +344,9 @@ EOL
   echo "start_execution.sh and start_consensus.sh scripts generated successfully! Start with ./start_execution.sh and ./start_consensus.sh. Everything can be found in ${CUSTOM_PATH}. Options/Flags can be changed inside the corresponding .sh script(s)"
 
 fi
-echo "you can now "cd "$CUSTOM_PATH"" into your folder and start the script(s)"
+echo "you can now "cd "$CUSTOM_PATH"" into your folder and start the script(s) via ./SCRIPTNAME"
 
-read -p "Do you also want to create a validator too? Only got LH setup at the moment, which is known to be buggy? (yes/no): " VALIDATOR_CHOICE
+read -p "Do you also want to create a validator too (currently only lighthouse-validator)? (yes/no): " VALIDATOR_CHOICE
 if [ "$VALIDATOR_CHOICE" = "yes" ]; then
   echo "Running validator_test.sh script"
   chmod +x validator_test.sh
