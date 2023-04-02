@@ -8,6 +8,10 @@
 # v. 0.1
 # By tdslaine aka Peter L Dipslayer 
 #
+# Set color variables
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
 
 echo -e "\033[1;33m"
 echo "┌─────────────────────────────────────────────────────────┐"
@@ -141,27 +145,65 @@ lighthouse bn \\
 
 # Use the variables in both single and separate script modes
 
-echo "Installing PulseChain v3"
+# Add the deadsnakes PPA repository to install the latest Python version
+echo -e "${GREEN}Adding deadsnakes PPA to get the latest Python Version${NC}"
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+echo ""
+echo -e "${GREEN}Installing Dependencies...${NC}"
 sudo apt-get update -y
 sudo apt-get upgrade -y
-sudo apt install docker openssl tmux ufw -y
-sudo apt install docker.io -y
+echo ""
+# Perform distribution upgrade and remove unused packages
+sudo apt-get dist-upgrade -y
+sudo apt autoremove -y
+echo ""
+# Install required packages
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    git \
+    ufw \
+    tmux \
+    openssl \
+    lsb-release \
+    python3.10 python3.10-venv python3.10-dev python3-pip
+echo ""
+# Downloading Docker
+echo -e "${GREEN}Adding Docker PPA and installing Docker${NC}"
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo \
+"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+echo ""
+sudo apt-get update -y
+echo ""
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose
+echo ""
+echo -e "${GREEN}Starting and enabling docker service${NC}"
 sudo systemctl start docker
 sudo systemctl enable docker
-sudo mkdir "${CUSTOM_PATH}"
-sudo sh -c "openssl rand -hex 32 | tr -d '\n' > ${CUSTOM_PATH}/jwt.hex"
 
-echo "Creating directories"
+echo -e "${GREEN}Creating ${CUSTOM_PATH} Main-Folder${NC}"
+sudo mkdir "${CUSTOM_PATH}"
+echo ""
+echo -e "${GREEN}Generating jwt.hex secret${NC}"
+sudo sh -c "openssl rand -hex 32 | tr -d '\n' > ${CUSTOM_PATH}/jwt.hex"
+echo ""
+echo -e "${GREEN}Creating subFolders for ${ETH_CLIENT} and ${CONSENSUS_CLIENT}${NC}"
 sudo mkdir -p "${CUSTOM_PATH}/execution/$ETH_CLIENT"
 sudo mkdir -p "${CUSTOM_PATH}/consensus/$CONSENSUS_CLIENT"
+echo ""
 
-echo "Creating users and setting permissions"
+echo -e "${GREEN}Creating the users ${ETH_CLIENT} and ${CONSENSUS_CLIENT} and setting permissions to the folders${NC}"
 sudo useradd -M -G docker $ETH_CLIENT
 sudo useradd -M -G docker $CONSENSUS_CLIENT
 sudo chown -R ${ETH_CLIENT}: "${CUSTOM_PATH}/execution/$ETH_CLIENT"
 sudo chown -R ${CONSENSUS_CLIENT}: "${CUSTOM_PATH}/consensus/$CONSENSUS_CLIENT"
 
-echo "Setting up firewall including port 22 and 8545 for internal connection to the RPC"
+echo ""
+echo -e "${GREEN}Setting up firewall including port 22 and 8545 for internal connection to the RPC${NC}"
 read -p "Do you want to allow RPC (8545) access from localhost? (y/n): " rpc_choice
 
 if [[ $rpc_choice == "y" ]]; then
@@ -185,11 +227,12 @@ else
     echo "SSH access not denied. Make sure to allow SSH-Access if needed"
   fi
 fi
-
+echo ""
+echo -e "${GREEN}Setting to default deny incomming and allow outgoing, enabling the Firewall${NC}"
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw enable
-
+echo ""
 # Allow inbound traffic for specific ports based on user choices 
 if [ "$ETH_CLIENT_CHOICE" = "1" ]; then # as per https://geth.ethereum.org/docs/fundamentals/security
   sudo ufw allow 30303/tcp
@@ -213,10 +256,12 @@ if [ "$CONSENSUS_CLIENT" = "prysm" ]; then #as per https://docs.prylabs.network/
 elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then #as per https://lighthouse-book.sigmaprime.io/faq.html
   sudo ufw allow 9000
 fi
-
+echo ""
 echo "Choose whether you want to start the Ethereum and Consensus clients separately or together:"
-echo "1) Start both clients together with a single script via tmux (start_pulsechain.sh)"
-echo "2) Start clients separately with two scripts (start_execution.sh and start_consensus.sh)"
+echo ""
+echo "1) Option 1 will start both clients at the same time using a single script, which is run inside a tmux session. This is the easiest and recommended option for most users.( will result in a single start_pulsechain.sh script)"
+echo ""
+echo "2) Option 2 involves starting the two clients separately using two different scripts - one for execution and one for consensus. This option is more advanced and typically used by users who require more control over the individual clients. (will result in two script, start_execution.sh and start_consensus.sh)"
 read -p "Enter the number (1 or 2): " START_SCRIPT_CHOICE
 
 case $START_SCRIPT_CHOICE in
@@ -283,7 +328,7 @@ EOL
   chmod +x start_pulsechain.sh
   sudo mv start_pulsechain.sh "$CUSTOM_PATH"
 
-  echo "start_pulsechain.sh script generated successfully! Start with ./start_pulsechain.sh. Everything can be found in ${CUSTOM_PATH}. Options/Flags etc... can be changed inside the script."
+  echo "${GREEN}The start_pulsechain.sh script has been generated successfully! To start the script, run ./start_pulsechain.sh. You can find everything related to the script in the ${CUSTOM_PATH} directory. You can modify any options or flags inside the script itself using a text editor such as nano.${NC}"
 fi
 
 
@@ -338,17 +383,32 @@ EOL
 
   chmod +x start_consensus.sh
   sudo mv start_consensus.sh "$CUSTOM_PATH"
-
-  echo "start_execution.sh and start_consensus.sh scripts generated successfully! Start with ./start_execution.sh and ./start_consensus.sh. Everything can be found in ${CUSTOM_PATH}. Options/Flags can be changed inside the corresponding .sh script(s)"
+  
+  echo ""
+  echo -e "${GREEN}start_execution.sh and start_consensus.sh scripts generated successfully!${NC}"
+  echo -e "${GREEN}Start them with ./start_execution.sh and ./start_consensus.sh.${NC}"
+  echo -e "${GREEN}Everything can be found in ${CUSTOM_PATH}.${NC}"
+  echo -e "${GREEN}Options/Flags can be changed inside the corresponding .sh script(s).${NC}"
+  echo ""
+  echo -e "${GREEN}Note: For improved usability, you may consider starting the clients inside a tmux session,${NC}"
+  echo -e "${GREEN}which allows you to manage multiple terminal sessions within a single window.${NC}"
+  echo ""
 
 fi
-echo "you can now "cd "$CUSTOM_PATH"" into your folder and start the script(s) via ./SCRIPTNAME"
+echo -e "${GREEN} Congratulations! The initial node setup is complete. You can start your execution and consensus clients to begin syncing the Pulse chain."
+echo ""
+echo -e "${GREEN}To start the clients, go to the directory where the scripts were generated by running cd "$CUSTOM_PATH" in your terminal.${NC}"
+echo -e "${GREEN}To start the script(s), run ./SCRIPTNAME (replace SCRIPTNAME with the actual name of the script you want to run).${NC}"
+echo ""
+echo ""
 
-read -p "Do you also want to create a validator too (currently only lighthouse-validator)? (yes/no): " VALIDATOR_CHOICE
-if [ "$VALIDATOR_CHOICE" = "yes" ]; then
+read -p "Would you like to create a Lighthouse validator? (y/n):" VALIDATOR_CHOICE
+echo ""
+if [ "$VALIDATOR_CHOICE" = "y" ]; then
   echo "Running validator_test.sh script"
   chmod +x validator_test.sh
   sudo ./validator_test.sh
 else
-  echo "Not creating a validator."
+  echo "Skipping creation of validator."
+  echo "You can always create a validator later by running the ./validator_test.sh script separately."
 fi
