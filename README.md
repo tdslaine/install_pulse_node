@@ -48,6 +48,34 @@ Finally, run the `setup_pulse_node.sh` script:
   ./setup_pulse_node.sh
 ```
 
+## Updating the Docker-Images should pulse-devs update clients etc.
+
+To update your Docker containers and images using the watchtower.sh script, follow the steps below:
+
+### 1. Make the script executable: 
+
+To make the watchtower.sh script executable, navigate to the directory where the script is located and run the following command:
+
+```bash
+   chmod +x watchtower.sh
+```
+
+### 2. Run the script: 
+
+To update your Docker containers and images, simply execute the watchtower.sh script by running:
+
+```bash
+   ./watchtower.sh
+```
+### 3. Review the output: 
+
+The script will automatically check for updates and update the necessary containers and images. Review the output of the script to ensure that the update process was successful.
+
+### Please note that the watchtower.sh script might require administrative privileges to execute, depending on your system's settings. If necessary, use sudo to run the script with elevated privileges:
+
+``` bash
+   sudo ./watchtower.sh
+```
 
 donations accepted so I might be able to work on mainnet too :smiley:
 
