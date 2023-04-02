@@ -34,7 +34,7 @@ echo "└───────────────────────�
 echo -e "\033[0m"
 
 
-read -p "Do you wish to continue? (yes/no): " CONFIRM
+read -p "Do you wish to continue? (y/n): " CONFIRM
 if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
   echo "Aborting."
   exit 1
