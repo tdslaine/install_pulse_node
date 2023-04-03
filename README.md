@@ -89,7 +89,7 @@ pulsedev telegram: https://t.me/PulseDEV
 Other:
 
 ssh: https://www.digitalocean.com/community/tutorials/how-to-harden-openssh-on-ubuntu-20-04
-
+ssh-tunneling (usefull for secure RPC acces, would be port 8545): https://linuxize.com/post/how-to-setup-ssh-tunneling/
 ufw (firewall): https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-20-04
 
 tmux: https://tmuxcheatsheet.com/
