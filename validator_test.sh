@@ -224,4 +224,4 @@ echo -e " - Please ensure the chain is fully synced before starting your validat
 echo ""
 echo " - In case of errors, check if there are any docker images already running by using the command \"sudo docker ps\". If there are, you can stop them using the \"sudo docker stop ID-NUMBER or NAME\" command."
 echo " - You might also need to prune the container using the \"sudo docker container prune\" command."
-
+echo ""
