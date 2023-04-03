@@ -76,8 +76,24 @@ The script will automatically check for updates and update the necessary contain
 ``` bash
    sudo ./watchtower.sh
 ```
-ressources:
-https://gitlab.com/pulsechaincom
+### Ressources:
+
+Pulse:
+
+official gitlab: https://gitlab.com/pulsechaincom
+
+validator launchpad: https://launchpad.v3.testnet.pulsechain.com/en/overview
+
+pulsedev telegram: https://t.me/PulseDEV
+
+Other:
+
+ssh: https://www.digitalocean.com/community/tutorials/how-to-harden-openssh-on-ubuntu-20-04
+
+ufw (firewall): https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-20-04
+
+tmux: https://tmuxcheatsheet.com/
+
 
 donations accepted so I might be able to work on mainnet too :smiley:
 
