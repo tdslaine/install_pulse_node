@@ -137,7 +137,7 @@ else
     cd "${custompath}"
 
 echo ""
-echo "please upload your generated "deposit_data-xxxyyyzzzz.json" to the validator dashboard at https://launchpad.v3.testnet.pulsechain.com; the deposit page is after client installation."
+echo "please upload your generated "deposit_data-xxxyyyzzzz.json" to the validator dashboard at https://launchpad.v3.testnet.pulsechain.com; Upload the deposit_xxxx.json only after you completed the full chain sync process - otherwise youll might get slashed."
 #echo "now sleeping for 10"
 sleep 5
 echo ""
