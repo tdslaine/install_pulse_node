@@ -259,9 +259,9 @@ fi
 echo ""
 echo "Choose whether you want to start the Ethereum and Consensus clients separately or together:"
 echo ""
-echo "1) Option 1 will start both clients at the same time using a single script, which is run inside a tmux session. This is the easiest and recommended option for most users.( will result in a single start_pulsechain.sh script)"
+echo "1) Option 1 - ADVANCED - will start both clients at the same time using a single script, which is run inside a tmux session. THIS IS ADVANCED! and should only be used by people who know how to control tmux.( will result in a single start_pulsechain.sh script)"
 echo ""
-echo "2) Option 2 involves starting the two clients separately using two different scripts - one for execution and one for consensus. This option is more advanced and typically used by users who require more control over the individual clients. (will result in two script, start_execution.sh and start_consensus.sh)"
+echo "2) Option 2 - EASY - involves starting the two clients separately using two different scripts - one for execution and one for consensus. (will result in two script, start_execution.sh and start_consensus.sh)"
 read -p "Enter the number (1 or 2): " START_SCRIPT_CHOICE
 
 case $START_SCRIPT_CHOICE in
