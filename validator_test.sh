@@ -212,6 +212,7 @@ sudo chmod +x start_validator_lh.sh
 
 # Change the ownership of the custompath/validator directory to validator user and group
 sudo chown -R validator:validator "${custompath}"
+sudo chmod -R 644 "${custompath}/validator_keys"
 
 echo -e "${GREEN} - Congratulations! The Node+Validator setup is now complete. You can start your execution and consensus clients to begin syncing with the Pulse chain.${NC}"
 echo ""
