@@ -4,39 +4,57 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Add the deadsnakes PPA repository to install the latest Python version
-sudo add-apt-repository ppa:deadsnakes/ppa -y
+echo "Now setting up the Lighthouse_validator"
+echo ""
 
-# Update package lists and upgrade installed packages
-sudo apt-get update -y
-sudo apt-get upgrade -y
+# Check if Python 3.10 is installed
+python_check=$(python3.10 --version 2>/dev/null)
 
-# Perform distribution upgrade and remove unused packages
-sudo apt-get dist-upgrade -y
-sudo apt autoremove -y
+# Check if Docker is installed
+docker_check=$(docker --version 2>/dev/null)
 
-# Install required packages
-sudo apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    git \
-    ufw \
-    openssl \
-    lsb-release \
-    python3.10 python3.10-venv python3.10-dev python3-pip
+# Check if Docker Compose is installed
+docker_compose_check=$(docker-compose --version 2>/dev/null)
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo \
-"deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# Install the required software only if not already installed
+if [[ -z "${python_check}" || -z "${docker_check}" || -z "${docker_compose_check}" ]]; then
+    echo "Installing required packages..."
 
-sudo apt-get update -y
+    # Add the deadsnakes PPA repository to install the latest Python version
+    sudo add-apt-repository ppa:deadsnakes/ppa -y
 
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose
+    # Update package lists and upgrade installed packages
+    sudo apt-get update -y
+    sudo apt-get upgrade -y
 
+    # Perform distribution upgrade and remove unused packages
+    sudo apt-get dist-upgrade -y
+    sudo apt autoremove -y
 
+    # Install required packages
+    sudo apt-get install -y \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg \
+        git \
+        ufw \
+        openssl \
+        lsb-release \
+        python3.10 python3.10-venv python3.10-dev python3-pip
+
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    echo \
+    "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    sudo apt-get update -y
+
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose
+
+else
+    echo "Required packages are already installed."
+fi
 
 # Create the lhvalidator user with no home directory and add it to the docker group
 sudo useradd -MG docker validator
@@ -192,7 +210,7 @@ VALIDATOR_LH="sudo -u validator docker run -it --network=host \\
     --network=pulsechain_testnet_v3 \\
     --validators-dir=/blockchain/validators \\
     --suggested-fee-recipient=${fee_wallet} \\
-	--graffiti='${user_graffiti}' \\
+    --graffiti='${user_graffiti}' \\
     --beacon-nodes=http://127.0.0.1:5052 "
 
 # Use a heredoc to create the start_validator_lh.sh file
