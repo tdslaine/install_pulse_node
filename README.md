@@ -76,6 +76,8 @@ The script will automatically check for updates and update the necessary contain
 ``` bash
    sudo ./watchtower.sh
 ```
+ressources:
+https://gitlab.com/pulsechaincom
 
 donations accepted so I might be able to work on mainnet too :smiley:
 
