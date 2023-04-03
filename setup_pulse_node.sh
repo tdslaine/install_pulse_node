@@ -127,6 +127,7 @@ registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest \\
 --datadir=/blockchain/consensus/prysm \\
 --checkpoint-sync-url=${CHECKPOINT} \\
 --bootstrap-node=${BOOTNODE} \\
+--min-sync-peers 1 \\
 --genesis-beacon-api-url=${CHECKPOINT} "
 
 LIGHTHOUSE_CMD="sudo -u lighthouse docker run -t --restart=always \\
