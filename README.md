@@ -45,7 +45,7 @@ Give execution permissions to the `setup_pulse_node.sh` script:
 
 Finally, run the `setup_pulse_node.sh` script:
 ```bash
-  ./setup_pulse_node.sh
+  sudo ./setup_pulse_node.sh
 ```
 
 ## Updating the Docker-Images should pulse-devs update clients etc.
