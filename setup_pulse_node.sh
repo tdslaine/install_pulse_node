@@ -40,6 +40,11 @@ if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
   exit 1
 fi
 
+#enabling ntp for timesyncronization
+echo "enabling ntp for timesync"
+sudo timedatectl set-ntp true
+echo "enabled ntp timesync"
+
 echo "Choose your Execution client:"
 echo "1) Geth"
 echo "2) Erigon"
