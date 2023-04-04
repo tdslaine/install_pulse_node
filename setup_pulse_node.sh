@@ -47,7 +47,8 @@ sleep 2
 echo "enabling ntp for timesync"
 sudo timedatectl set-ntp true
 echo "enabled ntp timesync"
-echo "please choose your ${red}correct timezone${NC}"
+echo "please choose your ${RED}correct timezone${NC}"
+sleep 2
 sudo dpkg-reconfigure tzdata
 echo "timezone set"
 sleep 1
