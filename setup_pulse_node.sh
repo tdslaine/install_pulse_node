@@ -41,6 +41,9 @@ if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
 fi
 
 #enabling ntp for timesyncronization
+echo ""
+echo "We are going to setup the timezone first, it is important to be synced in time for the Chain to work correctly"
+sleep 2
 echo "enabling ntp for timesync"
 sudo timedatectl set-ntp true
 echo "enabled ntp timesync"
