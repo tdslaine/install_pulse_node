@@ -110,7 +110,7 @@ read has_previous_key
 echo ""
 
 if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
-    read -e -p "Please enter the path to folder that holds your validator_key backup folder (the backup data must be present as folder: validator_key in source, not zipped/archived. default: /backup):" backup_path
+    read -e -p "Please enter the path to the source folder containing your 'validator_key' folder, which needs to be imported (ensure that the 'validator_key' folder is present in the source directory, and not zipped or archived. Default location: /backupPath):" backup_path
     
     # Set the default value for backup path if the user enters nothing
     if [ -z "$backup_path" ]; then
