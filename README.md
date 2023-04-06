@@ -57,7 +57,14 @@ sudo docker logs -f beacon
 sudo docker logs -f validator
 ```
 
-To stop the containers, you can use:
+To stop the containers, you can use the stop_remove_images.sh script provided.
+
+```bash
+sudo chmod +x stop_remove_images.sh
+./stop_remove_images.sh
+```
+
+or you can stop containers manually via:
 
 ```bash
 sudo docker stop execution
