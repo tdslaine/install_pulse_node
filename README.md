@@ -51,7 +51,17 @@ Finally, run the `setup_pulse_node.sh` script:
 ```bash
   sudo ./setup_pulse_node.sh
 ```
-# - Launching, Logging and Stopping the Execution, Beacon and Validator Docker-Containers -
+The setup will create several start_###.sh scripts inside the folder you chose in the setup, these are:
+
+```bash
+start_execution.sh
+start_consensus.sh
+start_validator_lh.sh
+```
+
+There will also be a copy of three helper_scripts to ease up the task of stopping, viewing/following logs and updating the Docker Images/Containers. Read bellow for further informaion
+
+# - Launching, Logging, and Stopping the Execution, Beacon and Validator Docker-Containers -
 
 ## Launching:
 
@@ -69,18 +79,22 @@ cd /blockchain
 
 ## Logging:
 
-To view the log files for the execution, beacon, and validator after a reboot you can use the provided log_viewer.sh script or use sepperate commands in a terminal window:
+To view the log files for the execution, beacon, and validator after a reboot you can use the provided log_viewer.sh script that should be inside the folder you chose in the setup (default: /blockchain) You can also use sepperate commands inside a terminal:
 
 ### A) via script:
 
-make the script executable:
+The script should already be executable, if not make the script executable via:
 
 ```bash
+cd /blockhain
+
 sudo chmod +x log_viewer.sh
 ```
 run the script:
 
 ```bash
+cd /blockchain
+
 ./log_viewer.sh
 ```
 
@@ -93,18 +107,22 @@ sudo docker logs -f validator
 
 ## Stopping Containers:
 
-Should you need to alter the original start_###.sh scripts you might need to stop/restart the docker-containers/images that are currently running. To achieve this, you can use the stop_remove_images.sh script provided.
+Should you need to alter the original start_###.sh scripts you might need to stop/restart the docker-containers/images that are currently running. To achieve this, you can use the stop_remove_images.sh script provided which should be inside the folder you chose in the setup (default: /blockchain).
 
 ### A) via script:
 
-make the script executable:
+The script should already be executable, if not make the script executable via:
 
 ```bash
+cd /blockchain
+
 sudo chmod +x stop_remove_images.sh
 ```
 
 run the script:
 ```bash
+cd /blockchain
+
 ./stop_remove_images.sh
 ```
 
@@ -116,36 +134,63 @@ sudo docker stop beacon
 sudo docker stop validator
 ```
 
+```bash
+sudo docker -rm execution
+sudo docker -rm beacon
+sudo docker -rm validator
+```
+
 Once the containers are stopped, you might also need to prune/clean the cache using the command:
 
 ```bash
 sudo docker container prune
 ```
 
-After you made desired changes, you can start the Docker Images/Containers again via:
+After you made desired changes, you can start the Docker Images/Containers again with the initial start_###.sh scripts from within the folder you chose in the setup (default: /blockchain):
 
 ```bash
+cd /blockchain
+
 ./start_execution.sh
 ./start_consensus.sh
 ./start_validator_lh.sh
 ```
 
-## - Updating the Docker-Images should pulse-devs update clients etc. -
+# - Changing flags/options  -
 
-To update your Docker containers and images using the watchtower.sh script, follow the steps below:
+If you ever find yourself in the need to change/add/remove some option-flags or alter the config you can achieve this by first stopping the docker-images/containers, then editing the start_###.sh script as you desire. You can use any editor available, just make sure you run these as sudo to be able to save changes inside the .sh file. Also pay attention to end each line with a " \" 
 
-### 1. Make the script executable: 
-
-To make the watchtower.sh script executable, navigate to the directory where the script is located and run the following command:
+1. Stop containers via provided script or manually as described above.
+2. Edit desired start_###.sh script
 
 ```bash
-   chmod +x watchtower.sh
+cd \blockchain
+
+sudo nano start_execution.sh
+```
+
+3. save changes
+4. restart the docker container-images as described above manually.
+
+
+## - Updating the Docker-Images should pulse-devs update clients etc. -
+
+To update your Docker containers/images you can use the provided the watchtower.sh script which can be found inside the folder you chose in the setup (default: /blockchain):
+
+The script should already be executable, if not make the script executable via::
+
+```bash
+cd /blockchain
+
+chmod +x watchtower.sh
 ```
 
 ### 2. Run the script: 
 
 ```bash
-   ./watchtower.sh
+cd /blockchain
+
+./watchtower.sh
 ```
 ### 3. Review the output: 
 
@@ -154,7 +199,9 @@ The script will automatically check for updates and update the necessary contain
 ### Please note that the watchtower.sh script might require administrative privileges to execute, depending on your system's settings. If necessary, use sudo to run the script with elevated privileges:
 
 ``` bash
-   sudo ./watchtower.sh
+cd /blockchain
+
+sudo ./watchtower.sh
 ```
 ### Ressources:
 
