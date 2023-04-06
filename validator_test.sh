@@ -223,7 +223,7 @@ echo -e "${GREEN} - Start the execution client first, followed by the consensus 
 echo -e "${GREEN} - Options/Flags can be changed inside the corresponding .sh script(s) (for example with nano you can. sudo nano start_execution.sh) .${NC}"
 echo ""
 echo -e "${GREEN} - You have to run the start_xyz script once. After that the Docker-Container should automatically restart on reboot/crashes .${NC}"
-echo -e "${GREEN} - you are able to view the log files for the Validator via: "sudo docker log -f validator" in a fresh terminal windows .${NC}"
+echo -e "${GREEN} - you are able to view the log files for the Validator via: "sudo docker logs -f validator" in a fresh terminal windows .${NC}"
 echo "" 
 echo -e " - Please ensure the chain is fully synced before starting your validator. Do not use the same keys on different machines simultaneously."
 echo ""
