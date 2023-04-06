@@ -67,7 +67,7 @@ You need to run each `start_###.sh` script once. After doing so, the Docker cont
 
 To view the log files for the execution, beacon, and validator after a reboot you can use the provided log_viewer.sh script or use sepperate commands in a terminal window:
 
-### via script:
+### A) via script:
 
 make the script executable:
 
@@ -80,7 +80,7 @@ run the script:
 ./log_viewer.sh
 ```
 
-### single commands:
+### B) single commands:
 ```bash
 sudo docker logs -f execution
 sudo docker logs -f beacon
@@ -89,9 +89,9 @@ sudo docker logs -f validator
 
 ## Stopping Containers:
 
-To stop the containers, you can use the stop_remove_images.sh script provided.
+Should you need to alter the original start_###.sh scripts you might need to stop/restart the docker-containers/images that are currently running. To achieve this, you can use the stop_remove_images.sh script provided.
 
-### via script:
+### A) via script:
 
 make the script executable:
 
@@ -104,7 +104,7 @@ run the script:
 ./stop_remove_images.sh
 ```
 
-### singel commands:
+### B) singel commands:
 
 ```bash
 sudo docker stop execution
@@ -112,10 +112,18 @@ sudo docker stop beacon
 sudo docker stop validator
 ```
 
-Once the containers are stopped, you might need to prune/clean the cache using the command:
+Once the containers are stopped, you might also need to prune/clean the cache using the command:
 
 ```bash
 sudo docker container prune
+```
+
+After you made desired changes, you can start the Docker Images/Containers again via:
+
+```bash
+./start_execution.sh
+./start_consensus.sh
+./start_validator_lh.sh
 ```
 
 ## - Updating the Docker-Images should pulse-devs update clients etc. -
