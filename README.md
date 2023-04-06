@@ -51,6 +51,9 @@ Finally, run the `setup_pulse_node.sh` script:
 ```bash
   sudo ./setup_pulse_node.sh
 ```
+
+### 6. After the setup is complete
+
 The setup will create several start_###.sh scripts inside the folder you chose in the setup, these are:
 
 ```bash
