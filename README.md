@@ -1,4 +1,6 @@
 
+## Interactive Setup
+Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace of Mind with this interactive setup script 
 
 ## Installing and Running Pulse Node with the option to add the lighthouse-validator
 
