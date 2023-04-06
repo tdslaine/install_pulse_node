@@ -47,6 +47,29 @@ Finally, run the `setup_pulse_node.sh` script:
 ```bash
   sudo ./setup_pulse_node.sh
 ```
+## Launching and Stopping the Execution, Beacon and Validator Docker-Containers
+
+You need to run the `start_xyz.sh` script once. After doing so, the Docker container should automatically restart on reboot or crashes. To view the log files for the execution, beacon, and validator, after a reboot use the following commands in a new terminal window:
+
+```bash
+sudo docker logs -f execution
+sudo docker logs -f beacon
+sudo docker logs -f validator
+```
+
+To stop the containers, you can use:
+
+```bash
+sudo docker stop execution
+sudo docker stop beacon
+sudo docker stop validator
+```
+
+Once the containers are stopped, you might need to prune/clean the cache using the command:
+
+```bash
+sudo docker container prune
+```
 
 ## Updating the Docker-Images should pulse-devs update clients etc.
 
