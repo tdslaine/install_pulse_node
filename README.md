@@ -1,6 +1,6 @@
 
 
-# Installing and Running Pulse Node with the option to add the lighthouse-validator
+## Installing and Running Pulse Node with the option to add the lighthouse-validator
 
 This guide will help you install and run the Pulse Node using the provided `setup_pulse_node.sh` script.
 
@@ -13,7 +13,7 @@ erc20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA
 - A Unix-based operating system (e.g., Ubuntu, Debian)
 - Git installed
 
-## - Installation Steps -
+# - Installation Steps -
 
 ### 1. Install the GitHub client** (if not already installed) 
 
