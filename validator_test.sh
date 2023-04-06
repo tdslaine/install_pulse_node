@@ -192,8 +192,9 @@ sudo docker stop -t 10 validator_import
 
 sudo docker container prune
 
-VALIDATOR_LH="sudo -u validator docker run -it --network=host \\
+VALIDATOR_LH="sudo -u validator docker run -it --network=host --restart=always \\
     -v ${custompath}:/blockchain \\
+    --name validator
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
     lighthouse vc \\
     --network=pulsechain_testnet_v3 \\
@@ -221,6 +222,9 @@ echo -e "${GREEN} - To run a script, use ./SCRIPTNAME (replace SCRIPTNAME with t
 echo -e "${GREEN} - Start the execution client first, followed by the consensus client, and finally the validator client.${NC}"
 echo -e "${GREEN} - Options/Flags can be changed inside the corresponding .sh script(s) (for example with nano you can. sudo nano start_execution.sh) .${NC}"
 echo ""
+echo -e "${GREEN} - You have to run the start_xyz script once. After that the Docker-Container should automatically restart on reboot/crashes .${NC}"
+echo -e "${GREEN} - you are able to view the log files for the Validator via: "sudo docker log -f validator" in a fresh terminal windows .${NC}"
+echo "" 
 echo -e " - Please ensure the chain is fully synced before starting your validator. Do not use the same keys on different machines simultaneously."
 echo ""
 echo " - In case of errors, check if there are any docker images already running by using the command \"sudo docker ps\". If there are, you can stop them using the \"sudo docker stop ID-NUMBER or NAME\" command."
