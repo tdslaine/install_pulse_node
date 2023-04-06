@@ -395,8 +395,6 @@ EOL
   fi
 
 
-  chmod +x start_consensus.sh
-  sudo mv start_consensus.sh "$CUSTOM_PATH"
   
   echo ""
   echo -e "${GREEN}start_execution.sh and start_consensus.sh scripts generated successfully!${NC}"
@@ -415,8 +413,20 @@ echo -e "${GREEN}To start the clients, go to the directory where the scripts wer
 echo -e "${GREEN}To start the script(s), run ./SCRIPTNAME (replace SCRIPTNAME with the actual name of the script you want to run).${NC}"
 echo ""
 echo -e "${GREEN} - You have to run the start_xyz script once. After that the Docker-Container should automatically restart on reboot/crashes .${NC}"
-echo -e "${GREEN} - you are able to view the log files for the Validator via: "sudo docker logs -f execution" + "sudo docker logs -f beacon" in a fresh terminal windows .${NC}
+echo -e "${GREEN} - you are able to view and follow the log files by executing ./log_viewer.sh script.${NC}
 echo ""
+
+echo ""
+echo "copying over helper scripts"
+chmod +x start_consensus.sh
+sudo mv start_consensus.sh "$CUSTOM_PATH"
+chmod +x log_viewer.sh
+sudo mv log_viewer.sh "$CUSTOM_PATH"
+chmod +x watchtower.sh
+sudo mv watchtower.sh "$CUSTOM_PATH"
+chmod +x stop_remove_images.sh
+sudo mv stop_remove_images.sh "$CUSTOM_PATH"
+echo "finished copying helper scripts"
 echo ""
 
 read -p "Would you like to create a Lighthouse validator? (y/n):" VALIDATOR_CHOICE
