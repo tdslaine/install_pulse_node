@@ -54,7 +54,7 @@ Finally, run the `setup_pulse_node.sh` script:
 
 ### 6. After the setup is complete
 
-The setup will create several start_###.sh scripts inside the folder you chose in the setup, these are:
+The setup will create several start_###.sh scripts inside the folder you chose in the setup (default: /blockchain), these are:
 
 ```bash
 start_execution.sh
