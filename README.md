@@ -55,9 +55,13 @@ Finally, run the `setup_pulse_node.sh` script:
 
 ## Launching:
 
-You need to run each `start_###.sh` script once. After doing so, the Docker container should automatically restart on reboot or crashes.
+After completing the initial setup, you will have to run each start_###.sh script at least once manually. Once you have done so, the Docker container will automatically restart in the event of a reboot or crash, without requiring manual intervention. You will only need to run the scripts manually again if you have manually stopped the containers.
+
+cd into the folder you provided in the setup (default: /blockchain) f.e.:
 
 ```bash
+cd /blockchain
+
 ./start_execution.sh
 ./start_consensus.sh
 ./start_validator_lh.sh
