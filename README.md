@@ -4,6 +4,10 @@
 
 This guide will help you install and run the Pulse Node using the provided `setup_pulse_node.sh` script.
 
+donations accepted so I might be able to work on mainnet too 😃
+
+erc20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA
+
 ## Prerequisites
 
 - A Unix-based operating system (e.g., Ubuntu, Debian)
@@ -125,8 +129,3 @@ ssh-tunneling (usefull for secure RPC acces, would be port 8545): https://linuxi
 ufw (firewall): https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-20-04
 
 tmux: https://tmuxcheatsheet.com/
-
-
-donations accepted so I might be able to work on mainnet too :smiley:
-
-erc20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA
