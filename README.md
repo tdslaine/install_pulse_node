@@ -13,9 +13,9 @@ erc20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA
 - A Unix-based operating system (e.g., Ubuntu, Debian)
 - Git installed
 
-## Installation Steps
+## - Installation Steps -
 
-### 1. Install the GitHub client** (if not already installed)
+### 1. Install the GitHub client** (if not already installed) 
 
 To install the GitHub client on a Unix-based system, you can use the package manager specific to your operating system. For example, on Ubuntu or Debian, you can use the following command:
 
@@ -51,24 +51,60 @@ Finally, run the `setup_pulse_node.sh` script:
 ```bash
   sudo ./setup_pulse_node.sh
 ```
-## Launching and Stopping the Execution, Beacon and Validator Docker-Containers
+# - Launching, Logging and Stopping the Execution, Beacon and Validator Docker-Containers -
 
-You need to run the `start_xyz.sh` script once. After doing so, the Docker container should automatically restart on reboot or crashes. To view the log files for the execution, beacon, and validator, after a reboot use the following commands in a new terminal window:
+## Launching:
 
+You need to run each `start_###.sh` script once. After doing so, the Docker container should automatically restart on reboot or crashes.
+
+```bash
+./start_execution.sh
+./start_consensus.sh
+./start_validator_lh.sh
+```
+
+## Logging:
+
+To view the log files for the execution, beacon, and validator after a reboot you can use the provided log_viewer.sh script or use sepperate commands in a terminal window:
+
+### via script:
+
+make the script executable:
+
+```bash
+sudo chmod +x log_viewer.sh
+```
+run the script:
+
+```bash
+./log_viewer.sh
+```
+
+### single commands:
 ```bash
 sudo docker logs -f execution
 sudo docker logs -f beacon
 sudo docker logs -f validator
 ```
 
+## Stopping Containers:
+
 To stop the containers, you can use the stop_remove_images.sh script provided.
+
+### via script:
+
+make the script executable:
 
 ```bash
 sudo chmod +x stop_remove_images.sh
+```
+
+run the script:
+```bash
 ./stop_remove_images.sh
 ```
 
-or you can stop containers manually via:
+### singel commands:
 
 ```bash
 sudo docker stop execution
@@ -82,7 +118,7 @@ Once the containers are stopped, you might need to prune/clean the cache using t
 sudo docker container prune
 ```
 
-## Updating the Docker-Images should pulse-devs update clients etc.
+## - Updating the Docker-Images should pulse-devs update clients etc. -
 
 To update your Docker containers and images using the watchtower.sh script, follow the steps below:
 
@@ -95,8 +131,6 @@ To make the watchtower.sh script executable, navigate to the directory where the
 ```
 
 ### 2. Run the script: 
-
-To update your Docker containers and images, simply execute the watchtower.sh script by running:
 
 ```bash
    ./watchtower.sh
