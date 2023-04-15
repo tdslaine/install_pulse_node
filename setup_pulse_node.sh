@@ -54,8 +54,8 @@ echo "timezone set"
 sleep 1
 
 echo "Choose your Execution client:"
-echo "1) Geth"
-echo "2) Erigon"
+echo "1) Geth (full node)"
+echo "2) Erigon (archive)"
 read -p "Enter the number (1 or 2): " ETH_CLIENT_CHOICE
 
 case $ETH_CLIENT_CHOICE in
@@ -66,7 +66,7 @@ esac
 
 echo "Choose your Consensus client:"
 echo "1) Prysm"
-echo "2) Lighthouse"
+echo "2) Lighthouse (authors choice)"
 read -p "Enter the number (1 or 2): " CONSENSUS_CLIENT_CHOICE
 
 case $CONSENSUS_CLIENT_CHOICE in
