@@ -416,7 +416,7 @@ echo -e "${GREEN}To start the clients, go to the directory where the scripts wer
 echo -e "${GREEN}To start the script(s), run ./SCRIPTNAME (replace SCRIPTNAME with the actual name of the script you want to run).${NC}"
 echo ""
 echo -e "${GREEN} - You have to run the start_xyz script once. After that the Docker-Container should automatically restart on reboot/crashes .${NC}"
-echo -e "${GREEN} - you are able to view and follow the log files by executing ./log_viewer.sh script.${NC}
+echo -e "${GREEN} - you are able to view and follow the log files by executing ./log_viewer.sh script.${NC}"
 echo ""
 
 echo ""
