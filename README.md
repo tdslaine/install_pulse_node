@@ -84,23 +84,37 @@ cd /blockchain
 
 ## Logging:
 
-To view the log files for the execution, beacon, and validator after a reboot you can use the provided log_viewer.sh script that should be inside the folder you chose in the setup (default: /blockchain) You can also use sepperate commands inside a terminal:
+To view the log files for the execution, beacon, and validator after a reboot you can use the provided log_viewer.sh or tmux_logviewer.sh script that should be inside the folder you chose in the setup (default: /blockchain) You can also use sepperate commands inside a terminal:
 
 ### A) via script:
+There are two version available:
+1. log_viewer.sh for GUI-Ubuntu
+2. tmux_logviewer.sh for terminal-based environments (please get to know on how to control tmux prior).
 
 The script should already be executable, if not make the script executable via:
 
 ```bash
 cd /blockhain
-
 sudo chmod +x log_viewer.sh
+```
+or
+
+```bash
+cd /blockhain
+sudo chmod +x tmux_logviewer.sh
 ```
 run the script:
 
 ```bash
 cd /blockchain
-
 ./log_viewer.sh
+```
+
+or
+
+```bash
+cd /blockchain
+./tmux_logviewer.sh
 ```
 
 ### B) single commands:
