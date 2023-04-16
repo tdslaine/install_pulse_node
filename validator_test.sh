@@ -266,7 +266,7 @@ echo -e "${GREEN} - Access the script directory by entering cd \"$custompath\" i
 echo -e "${GREEN} - Once the chain is fully synced, start the validator client with ./start_validator.sh.${NC}"
 echo ""
 echo " - Please run each start script once; Docker containers auto-restart on reboot/crashes afterward."
-echo " - Use ./log_viewer.sh to view logs (for graphical Ubuntu-based OS; on terminal-only, use tmux)."
+echo " - View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only)."
 echo ""
 echo " - Note: Sync the chain fully before starting the validator, and avoid using the same keys on multiple machines."
 echo ""
