@@ -417,6 +417,8 @@ chmod +x watchtower.sh
 sudo mv watchtower.sh "$CUSTOM_PATH"
 chmod +x stop_remove_images.sh
 sudo mv stop_remove_images.sh "$CUSTOM_PATH"
+chmod +x tmux_logviewer.sh
+sudo mv tmux_logviewer.sh "$CUSTOM_PATH"
 echo "finished copying helper scripts"
 echo ""
 
