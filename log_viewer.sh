@@ -10,3 +10,9 @@ gnome-terminal --tab --title="Beacon Logs" --command="bash -c 'sudo docker logs 
 
 # Open the third terminal window and execute the third command
 gnome-terminal --tab --title="Validator Logs" --command="bash -c 'sudo docker logs -f validator'"
+
+# Open the fourth terminal window and execute htop
+gnome-terminal --tab --title="HTOP" --command="bash -c 'htop'"
+
+# Open the fifth terminal window and execute df -h
+gnome-terminal --tab --title="DiskUsage" --command="bash -c 'sudo watch df -H'"
