@@ -400,17 +400,13 @@ EOL
 
 echo "${GREEN}start_execution.sh and start_consensus.sh created successfully!${NC}"
 echo ""
-echo -e "${GREEN}Initial node setup complete! Begin syncing Pulse chain by starting execution and consensus clients.${NC}"
-echo -e "${GREEN}Enter cd "$CUSTOM_PATH" in your terminal to access the script directory.${NC}"
-echo -e "${GREEN}Run ./start_execution.sh and ./start_consensus.sh to start the clients.${NC}"
+echo -e "${GREEN} - To begin syncing Pulse chain, start the execution and consensus clients by running ./start_execution.sh and ./start_consensus.sh respectively.${NC}"
+echo -e "${GREEN} - Access the script directory by entering cd \"$custompath\" in your terminal.${NC}"
 
 fi
 
-echo -e "${GREEN} - Run each start script once; Docker container will auto-restart on reboot/crashes.${NC}"
-echo -e "${GREEN} - Use ./log_viewer.sh to view and follow log files.${NC}"
-
+echo " - Please run each start script once; Docker containers auto-restart on reboot/crashes afterward."
 echo ""
-
 echo ""
 echo "copying over helper scripts"
 chmod +x start_consensus.sh
@@ -424,10 +420,14 @@ sudo mv stop_remove_images.sh "$CUSTOM_PATH"
 echo "finished copying helper scripts"
 echo ""
 
-read -p "Would you like to create a Lighthouse validator? (y/n):" VALIDATOR_CHOICE
+echo -e "${GREEN} - Congratulations, node installation/setup is now complete.${NC}"
+echo ""
+read -p "Would you like to create a Lighthouse validator too? (y/n):" VALIDATOR_CHOICE
 echo ""
 if [ "$VALIDATOR_CHOICE" = "y" ]; then
+  echo ""
   echo "Running validator_test.sh script"
+  echo ""
   chmod +x validator_test.sh
   sudo ./validator_test.sh
 else
