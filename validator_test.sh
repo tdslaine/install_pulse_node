@@ -4,7 +4,7 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo "Now setting up the Lighthouse_validator"
+echo "Now setting up the Lighthouse-Validator"
 echo ""
 
 # Check if Python 3.10 is installed
@@ -53,7 +53,9 @@ if [[ -z "${python_check}" || -z "${docker_check}" || -z "${docker_compose_check
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose
 
 else
+    echo ""
     echo "Required packages are already installed."
+    echo ""
 fi
 
 # Create the lhvalidator user with no home directory and add it to the docker group
@@ -65,7 +67,7 @@ if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
 fi
 
 # Define the custom path for the validator directory
-read -e -p  "please enter the path for the validator data like keys, pw etc.. (default: /blockchain):" custompath
+read -e -p  " > Enter the path to store validator data (default: /blockchain):" custompath
 
 # Set the default value for custom path if the user enters nothing
 if [ -z "$custompath" ]; then
@@ -110,8 +112,14 @@ read has_previous_key
 echo ""
 
 if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
-    read -e -p "Please enter the path to the source folder containing your 'validator_key' folder, which needs to be imported (ensure that the 'validator_key' folder is present in the source directory, and not zipped or archived. Default location: /backupPath):" backup_path
-    
+    echo ""
+    echo "Importing pre-existing validator_keys:"
+    echo ""
+    echo -e "Enter the path to the directory with your 'validator_keys' backup."
+    echo -e "Make sure it's unzipped and available. Use tab-autocomplete when entering the path."
+    echo -e "This could be an external folder, e.g., /media/username/USB_drive_name"
+    read -e -p "(default: /backupPath):" backup_path
+       
     # Set the default value for backup path if the user enters nothing
     if [ -z "$backup_path" ]; then
         backup_path="/backup"
@@ -130,15 +138,21 @@ if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
         echo "Source directory does not exist. Please check the provided path and try again. Now exiting"
         exit 1
     fi
-else
-    # Run the deposit.sh script with the entered fee-receiption address
+    # Ask the user if they want to generate a new key after importing
+read -e -p "Do you want to generate a new validator_key as well? (y/n) [n]: " generate_new_key
+# Set the default value for generating a new key if the user enters nothing
+if [ -z "$generate_new_key" ]; then
+  generate_new_key="n"
+fi
+    
+if ! [[ "$has_previous_key" =~ ^[Yy]$ ]] || [[ "$generate_new_key" =~ ^[Yy]$ ]]; then
+    # Run the deposit.sh script
     echo "Now generating the validator keys - please follow the instructions and make sure to READ! everything"
     sudo ./deposit.sh new-mnemonic --mnemonic_language=english --chain=pulsechain-testnet-v3 --folder="${custompath}"
     cd "${custompath}"
 
 echo ""
-echo "please upload your generated "deposit_data-xxxyyyzzzz.json" to the validator dashboard at https://launchpad.v3.testnet.pulsechain.com; Upload the deposit_xxxx.json only after you completed the full chain sync process - otherwise youll might get slashed."
-#echo "now sleeping for 10"
+echo "Upload your 'deposit_data-xxxyyyzzzz.json' to https://launchpad.v3.testnet.pulsechain.com after the full chain sync. Uploading before completion may result in slashing."
 sleep 5
 echo ""
 
@@ -147,7 +161,7 @@ fi
 
 # Ask the user to enter the fee-receiption address
 echo ""
-echo "Please enter the fee-receiption address (if none is entered, my adress will be used. You can change the adress later in start_validator_lh script):"
+echo "Please enter the fee-receiption address (if none is entered, my adress will be used. You can change the adress later in start_validator.sh script):"
 read fee_wallet
 
 # Use a regex pattern to validate the input wallet address
@@ -162,6 +176,7 @@ fi
 random_number=$(shuf -i 1000-9999 -n 1)
 
 # Ask the user to enter their desired graffiti
+echo ""
 echo "Please enter your desired graffiti (default: HexForLife_${random_number}):"
 read user_graffiti
 
@@ -171,10 +186,10 @@ if [ -z "$user_graffiti" ]; then
 fi
 
 echo "Using graffiti: ${user_graffiti}"
+echo ""
 
-
-echo "importing keys using lighthouse"
-
+echo "Importing validator_keys using the lighthouse-client"
+echo ""
 
 ## Run the Lighthouse Pulse docker container as the validator user
 sudo docker run -it \
@@ -203,12 +218,16 @@ VALIDATOR_LH="sudo -u validator docker run -it --network=host --restart=always \
     --graffiti='${user_graffiti}' \\
     --beacon-nodes=http://127.0.0.1:5052 "
 
-# Use a heredoc to create the start_validator_lh.sh file
-cat << EOF > "${custompath}/start_validator.sh"
+echo ""
+echo -e "Creating the start_validator.sh script with the following contents:\n${VALIDATOR_LH}"
+echo ""
+
+# Use a heredoc to create the start_validator.sh file
+sudo bash -c "cat << EOF > '${custompath}/start_validator.sh'
 #!/bin/bash
 ${VALIDATOR_LH}
-EOF
-#sudo mv start_validator.sh "${custompath}/start_validator.sh"
+EOF"
+
 cd ${custompath}
 sudo chmod +x "${custompath}/start_validator.sh"
 
@@ -216,18 +235,25 @@ sudo chmod +x "${custompath}/start_validator.sh"
 sudo chown -R validator:validator "${custompath}"
 sudo chmod -R 644 "${custompath}/validator_keys"
 
-echo -e "${GREEN}start_execution.sh, start_consensus.sh, and start_validator.sh created successfully!${NC}"
 echo ""
-echo -e "${GREEN}Initial node and validator setup complete! Begin syncing Pulse chain by starting execution, consensus Clients, once synced start the validator client.${NC}"
-echo -e "${GREEN}Enter cd \"$custompath\" in your terminal to access the script directory.${NC}"
-echo -e "${GREEN}Run ./start_execution.sh and ./start_consensus.sh  to start the clients.${NC}"
+echo -e " - start_execution.sh, start_consensus.sh, and start_validator.sh created successfully"
 echo ""
-echo -e "${GREEN} - Run each start script once; Docker container will auto-restart on reboot/crashes.${NC}"
-echo -e "${GREEN} - Use ./log_viewer.sh to view and follow log files.${NC}"
+echo -e "${GREEN} - Begin syncing Pulse chain by starting execution and consensus Clients.${NC}"
+echo -e "${GREEN} - Enter cd \"$custompath\" in your terminal to access the script directory.${NC}"
+echo -e "${GREEN} - Run ./start_execution.sh and ./start_consensus.sh to start the inital sync.${NC}"
+echo -e "${GREEN} - Once the chain is fully synced you can start the validator client with ./start_validator.sh. ${NC}"
+echo ""
+echo " - Run each start script once; Docker containers auto-restart on reboot/crashes afterward."
+echo " - Use ./log_viewer.sh to view and follow log files."
 echo "" 
-echo -e " - Sync the chain fully before starting the validator. Don't use the same keys on multiple machines."
+echo " - Please Sync the chain fully before starting the validator! Don't use the same keys on multiple machines."
 echo ""
 echo " - For errors, check running docker images with \"sudo docker ps\". Stop them with \"sudo docker stop ID-NUMBER or NAME\"."
 echo " - Prune the container using \"sudo docker container prune\" if needed."
 echo ""
 echo " - Find more information in the repository's README."
+echo ""
+echo ""
+echo -e "${GREEN} - Congratulations installation/setup is now fully completed. - ${NC}"
+echo ""
+echo -e "${GREEN} ** If you found this script helpful and would like to show your appreciation, donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA ** ${NC}"
