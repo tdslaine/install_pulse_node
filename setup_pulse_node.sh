@@ -48,14 +48,14 @@ echo "enabling ntp for timesync"
 sudo timedatectl set-ntp true
 echo "enabled ntp timesync"
 echo "please choose your ${RED}correct timezone${NC}"
-sleep 2
+sleep 3
 sudo dpkg-reconfigure tzdata
 echo "timezone set"
 sleep 1
 
 echo "Choose your Execution client:"
 echo "1) Geth (full node, authors choice)"
-echo "2) Erigon (archive)"
+echo "2) Erigon (archive node)"
 read -p "Enter the number (1 or 2): " ETH_CLIENT_CHOICE
 
 case $ETH_CLIENT_CHOICE in
