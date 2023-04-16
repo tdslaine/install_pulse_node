@@ -4,8 +4,27 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo "Now setting up the Lighthouse-Validator"
+echo "Setting up Lighthouse-Validator now"
 echo ""
+
+read -p "Is this a first-time setup or are you adding to an existing setup? (1: first-time, 2: existing) " setup_choice
+
+if [[ "$setup_choice" == "2" ]]; then
+    echo -e "${RED}! To add a key, stop any running validator first!"
+    echo -e "1. List validator: 'sudo docker ps'"
+    echo -e "2. Stop instance: 'sudo docker stop VALIDATOR_NAME'"
+    echo -e "After you have successfully imported your validator key please restart your validator by running ./start_validator.sh."${NC}
+
+    read -p "Have you stopped all running instances of the validator? (y/N): " stopped_instances
+    if [[ "$stopped_instances" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+        echo "Proceeding with adding the key..."
+    else
+        echo "Please stop all running instances before continuing."
+        exit 1
+    fi
+else
+    echo "Proceeding with first-time setup..."
+fi
 
 # Check if Python 3.10 is installed
 python_check=$(python3.10 --version 2>/dev/null)
@@ -132,7 +151,8 @@ if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
             # Restore the validator_keys from the backup
             sudo cp -R "${backup_path}/validator_keys" "${custompath}/validator_keys"
         else
-            echo "Source and destination paths are the same. Skipping the restore operation."
+            echo "Source and destination paths match. Skipping restore; keys seem already in place."
+            echo "Key import will still proceed..."
         fi
     else
         echo "Source directory does not exist. Please check the provided path and try again. Now exiting"
@@ -162,8 +182,10 @@ fi
 
 # Ask the user to enter the fee-receiption address
 echo ""
-echo "Please enter the fee-receiption address (if none is entered, my adress will be used. You can change the adress later in start_validator.sh script):"
+echo "Enter fee-receipt address (leave blank for my address; change later in start_validator.sh):"
+echo ""
 read fee_wallet
+echo ""
 
 # Use a regex pattern to validate the input wallet address
 if [[ -z "${fee_wallet}" ]] || ! [[ "${fee_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
@@ -244,7 +266,7 @@ echo -e "${GREEN} - Access the script directory by entering cd \"$custompath\" i
 echo -e "${GREEN} - Once the chain is fully synced, start the validator client with ./start_validator.sh.${NC}"
 echo ""
 echo " - Please run each start script once; Docker containers auto-restart on reboot/crashes afterward."
-echo " - Use ./log_viewer.sh to view and follow log files."
+echo " - Use ./log_viewer.sh to view logs (for graphical Ubuntu-based OS; on terminal-only, use tmux)."
 echo ""
 echo " - Note: Sync the chain fully before starting the validator, and avoid using the same keys on multiple machines."
 echo ""
