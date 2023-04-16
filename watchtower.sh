@@ -7,7 +7,7 @@ docker pull containrrr/watchtower
 # Launch watchtower container with the --run-once flag
 echo "Launching watchtower with the --run-once flag..."
 docker run \
-    --it \
+    -d \
     --rm \
     -v /var/run/docker.sock:/var/run/docker.sock \
     containrrr/watchtower \
