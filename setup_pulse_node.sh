@@ -345,7 +345,8 @@ EOL
   chmod +x start_pulsechain.sh
   sudo mv start_pulsechain.sh "$CUSTOM_PATH"
 
-  echo "${GREEN}The start_pulsechain.sh script has been generated successfully! To start the script, run ./start_pulsechain.sh. You can find everything related to the script in the ${CUSTOM_PATH} directory. You can modify any options or flags inside the script itself using a text editor such as nano.${NC}"
+  echo -e "${GREEN} - To begin syncing Pulse chain, start the execution and consensus clients by running ./start_pulsechain.sh${NC}"
+  echo -e "${GREEN} - Access the script directory by entering cd \"$custompath\" in your terminal.${NC}"
 fi
 
 
@@ -424,6 +425,8 @@ echo ""
 
 echo -e "${GREEN} - Congratulations, node installation/setup is now complete.${NC}"
 echo ""
+echo " - View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only). -"
+echo ""
 read -p "Would you like to create a Lighthouse validator too? (y/n):" VALIDATOR_CHOICE
 echo ""
 if [ "$VALIDATOR_CHOICE" = "y" ]; then
@@ -435,4 +438,5 @@ if [ "$VALIDATOR_CHOICE" = "y" ]; then
 else
   echo "Skipping creation of validator."
   echo "You can always create a validator later by running the ./validator_test.sh script separately."
+ 
 fi
