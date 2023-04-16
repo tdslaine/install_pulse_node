@@ -204,12 +204,13 @@ VALIDATOR_LH="sudo -u validator docker run -it --network=host --restart=always \
     --beacon-nodes=http://127.0.0.1:5052 "
 
 # Use a heredoc to create the start_validator_lh.sh file
-cat << EOF > start_validator_lh.sh
+cat << EOF > "${custompath}/start_validator.sh"
 #!/bin/bash
 ${VALIDATOR_LH}
 EOF
+#sudo mv start_validator.sh "${custompath}/start_validator.sh"
 cd ${custompath}
-sudo chmod +x start_validator_lh.sh
+sudo chmod +x "${custompath}/start_validator.sh"
 
 # Change the ownership of the custompath/validator directory to validator user and group
 sudo chown -R validator:validator "${custompath}"
