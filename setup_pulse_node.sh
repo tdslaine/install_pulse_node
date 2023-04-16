@@ -54,7 +54,7 @@ echo "timezone set"
 sleep 1
 
 echo "Choose your Execution client:"
-echo "1) Geth (full node)"
+echo "1) Geth (full node, authors choice)"
 echo "2) Erigon (archive)"
 read -p "Enter the number (1 or 2): " ETH_CLIENT_CHOICE
 
