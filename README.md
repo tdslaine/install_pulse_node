@@ -172,7 +172,7 @@ cd /blockchain
 
 ./start_execution.sh
 ./start_consensus.sh
-./start_validator_lh.sh
+./start_validator.sh
 ```
 
 # - Changing flags/options  -
