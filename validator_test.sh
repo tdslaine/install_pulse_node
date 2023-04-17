@@ -160,7 +160,7 @@ if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
     fi
 fi
     # Ask the user if they want to generate a new key after importing
-read -e -p "Do you want to generate a new validator_key as well? (y/n) [n]: " generate_new_key
+read -e -p "Do you want to generate a new validator_key? (y/n) [n]: " generate_new_key
 # Set the default value for generating a new key if the user enters nothing
 if [ -z "$generate_new_key" ]; then
   generate_new_key="n"
