@@ -61,7 +61,7 @@ The setup will create several start_###.sh scripts inside the folder you chose i
 ```bash
 start_execution.sh
 start_consensus.sh
-start_validator_lh.sh
+start_validator.sh
 ```
 
 There will also be a copy of three helper_scripts to ease up the task of stopping, viewing/following logs and updating the Docker Images/Containers. Read bellow for further informaion
@@ -79,7 +79,7 @@ cd /blockchain
 
 ./start_execution.sh
 ./start_consensus.sh
-./start_validator_lh.sh
+./start_validator.sh
 ```
 
 ## Logging:
