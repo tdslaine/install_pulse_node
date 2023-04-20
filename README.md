@@ -1,4 +1,7 @@
 
+![small](https://user-images.githubusercontent.com/46573429/233297633-132cecdc-71b2-4370-ac62-4fbbb2aa5aa8.png)
+
+
 ## Interactive Setup
 Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace of Mind with this interactive setup script 
 
