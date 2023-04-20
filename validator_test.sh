@@ -169,11 +169,11 @@ fi
 if ! [[ "$has_previous_key" =~ ^[Yy]$ ]] || [[ "$generate_new_key" =~ ^[Yy]$ ]]; then
     # Run the deposit.sh script
     echo "Now generating the validator keys - please follow the instructions and make sure to READ! everything"
-    sudo ./deposit.sh new-mnemonic --mnemonic_language=english --chain=pulsechain-testnet-v3 --folder="${custompath}"
+    sudo ./deposit.sh new-mnemonic --mnemonic_language=english --chain=pulsechain-testnet-v4 --folder="${custompath}"
     cd "${custompath}"
 
 echo ""
-echo "Upload your 'deposit_data-xxxyyyzzzz.json' to https://launchpad.v3.testnet.pulsechain.com after the full chain sync. Uploading before completion may result in slashing."
+echo "Upload your 'deposit_data-xxxyyyzzzz.json' to https://launchpad.v4.testnet.pulsechain.com after the full chain sync. Uploading before completion may result in slashing."
 sleep 5
 echo ""
 
@@ -221,7 +221,7 @@ sudo docker run -it \
     -v ${custompath}:/blockchain \
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \
     lighthouse \
-    --network=pulsechain_testnet_v3 \
+    --network=pulsechain_testnet_v4 \
     account validator import \
     --directory=/blockchain/validator_keys \
     --datadir=/blockchain
@@ -235,7 +235,7 @@ VALIDATOR_LH="sudo -u validator docker run -it --network=host --restart=always \
     --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
     lighthouse vc \\
-    --network=pulsechain_testnet_v3 \\
+    --network=pulsechain_testnet_v4 \\
     --validators-dir=/blockchain/validators \\
     --suggested-fee-recipient=${fee_wallet} \\
     --graffiti='${user_graffiti}' \\
