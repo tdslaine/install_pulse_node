@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create a new tmux session named 'logs' and run 'sudo docker logs -f execution' in it
-tmux new-session -d -s logs -n "Execution Logs" 'sudo docker logs -f execution'
+tmux new-session -d -s logs -n "Logs" 'sudo docker logs -f execution'
 
 # Split the window horizontally and run 'sudo docker logs -f beacon'
 tmux split-window -h -t logs:0.0 'sudo docker logs -f beacon'
