@@ -107,6 +107,10 @@ CHECKPOINT="https://checkpoint.v4.testnet.pulsechain.com"
 # Working BootNode, temp fix for low peerCount on the consensus client - kudos to @SIN3R6Y for sharing this BootNode
 BOOTNODE="enr:-L64QNIt1R1_ou9Aw5ci8gLAsV1TrK2MtWiPNGy21YsTW0HpA86hGowakgk3IVEZNjBOTVdqtXObXyErbEfxEi8Y8Z-CARSHYXR0bmV0c4j__________4RldGgykFuckgYAAAlE__________-CaWSCdjSCaXCEA--2T4lzZWNwMjU2azGhArzEiK-HUz_pnQBn_F8g7sCRKLU4GUocVeq_TX6UlFXIiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo"
 
+sudo chmod 666 /var/run/docker.sock
+sudo docker pull registry.gitlab.com/pulsechaincom/go-pulse:latest
+sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
+
 # Docker run commands for Ethereum clients
 GETH_CMD="sudo -u geth docker run -t --restart=always \\
 --network=host \\
