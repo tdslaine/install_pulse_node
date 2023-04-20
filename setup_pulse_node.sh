@@ -431,8 +431,6 @@ sudo mv tmux_logviewer.sh "$CUSTOM_PATH"
 echo "finished copying helper scripts"
 echo ""
 
-echo -e "${GREEN} - Congratulations, node installation/setup is now complete.${NC}"
-echo ""
 echo -e "- To begin syncing Pulse chain, start the execution and consensus clients by running ./start_execution.sh and ./start_consensus.sh respectively."
 echo ""
 echo -e  "- Access the script directory by entering cd \"$CUSTOM_PATH\" in your terminal."
@@ -452,5 +450,55 @@ if [ "$VALIDATOR_CHOICE" = "y" ]; then
 else
   echo "Skipping creation of validator."
   echo "You can always create a validator later by running the ./validator_test.sh script separately."
- 
+  # Prompt the user if they want to run the scripts
+  echo ""
 fi
+
+read -p "Do you want to start the execution and consensus scripts now? [Y/n] " choice
+
+# Check if the user wants to run the scripts
+if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
+
+  # Generate the command to start the scripts
+  command="${CUSTOM_PATH}/./start_execution.sh > /dev/null 2>&1 & ${CUSTOM_PATH}./start_consensus.sh > /dev/null 2>&1 &"
+
+  # Print the command to the terminal
+  echo "Running command: $command"
+
+  # Run the command
+  eval $command
+
+  echo ""
+  echo -e "${GREEN} - Congratulations, node installation/setup is now complete.${NC}"
+  echo ""
+  echo -e "${GREEN} ** If you found this script helpful and would like to show your appreciation, donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA ** ${NC}"
+  echo ""
+  echo -e "Brought to you by:
+  ████████▄___▄█_____▄███████▄____▄████████__▄█__________▄████████_▄██___▄______▄████████____▄████████_
+  ███___▀███_███____███____███___███____███_███_________███____███_███___██▄___███____███___███____███_
+  ███____███_███▌___███____███___███____█▀__███_________███____███_███▄▄▄███___███____█▀____███____███_
+  ███____███_███▌___███____███___███________███_________███____███_▀▀▀▀▀▀███__▄███▄▄▄______▄███▄▄▄▄██▀_
+  ███____███_███▌_▀█████████▀__▀███████████_███_______▀███████████_▄██___███_▀▀███▀▀▀_____▀▀███▀▀▀▀▀___
+  ███____███_███____███_________________███_███_________███____███_███___███___███____█▄__▀███████████_
+  ███___▄███_███____███___________▄█____███_███▌____▄___███____███_███___███___███____███___███____███_
+  ████████▀__█▀____▄████▀_______▄████████▀__█████▄▄██___███____█▀___▀█████▀____██████████___███____███_
+  __________________________________________▀_______________________________________________███____███_"
+else
+echo ""
+echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
+echo ""
+echo -e "${GREEN} ** If you found this script helpful and would like to show your appreciation, donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA ** ${NC}"
+echo ""
+echo -e "Brought to you by:
+  ████████▄___▄█_____▄███████▄____▄████████__▄█__________▄████████_▄██___▄______▄████████____▄████████_
+  ███___▀███_███____███____███___███____███_███_________███____███_███___██▄___███____███___███____███_
+  ███____███_███▌___███____███___███____█▀__███_________███____███_███▄▄▄███___███____█▀____███____███_
+  ███____███_███▌___███____███___███________███_________███____███_▀▀▀▀▀▀███__▄███▄▄▄______▄███▄▄▄▄██▀_
+  ███____███_███▌_▀█████████▀__▀███████████_███_______▀███████████_▄██___███_▀▀███▀▀▀_____▀▀███▀▀▀▀▀___
+  ███____███_███____███_________________███_███_________███____███_███___███___███____█▄__▀███████████_
+  ███___▄███_███____███___________▄█____███_███▌____▄___███____███_███___███___███____███___███____███_
+  ████████▀__█▀____▄████▀_______▄████████▀__█████▄▄██___███____█▀___▀█████▀____██████████___███____███_
+  __________________________________________▀_______________________________________________███____███_"
+
+fi
+
