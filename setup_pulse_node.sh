@@ -432,14 +432,14 @@ echo ""
 
 echo -e "${GREEN} - Congratulations, node installation/setup is now complete.${NC}"
 echo ""
-echo -e "${GREEN} - To begin syncing Pulse chain, start the execution and consensus clients by running ./start_execution.sh and ./start_consensus.sh respectively."
+echo -e "- To begin syncing Pulse chain, start the execution and consensus clients by running ./start_execution.sh and ./start_consensus.sh respectively."
 echo -e "- Access the script directory by entering cd \"$custompath\" in your terminal."
 echo ""
 echo -e "- Please run each start script once; Docker containers auto-restart on reboot/crashes afterward."
 echo ""
-echo " - View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only). -${NC}"
+echo "- View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only). -"
 echo ""
-read -p "Would you like to setup a Lighthouse validator too? (y/n):" VALIDATOR_CHOICE
+read -p "--> Would you like to setup a Lighthouse validator too? (y/n):" VALIDATOR_CHOICE
 echo ""
 if [ "$VALIDATOR_CHOICE" = "y" ]; then
   echo ""
