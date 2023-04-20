@@ -126,7 +126,7 @@ sudo python3 setup.py install
 #./deposit.sh install
 echo ""
 # Ask the user if they have previously created a validator_key
-echo "Do you already have a validator_key and want to IMPORT it instead of creating a new one? (y/n)"
+echo " - Do you already have a validator_key and want to IMPORT it instead of creating a new one? (y/n)"
 read has_previous_key
 echo ""
 
@@ -141,7 +141,7 @@ if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
        
     # Set the default value for backup path if the user enters nothing
     if [ -z "$backup_path" ]; then
-        backup_path="/backup"
+        backup_path="/backupPath"
     fi
 
     # Check if the source directory exists
@@ -151,7 +151,7 @@ if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
             # Restore the validator_keys from the backup
             sudo cp -R "${backup_path}/validator_keys" "${custompath}/validator_keys"
         else
-            echo "Source and destination paths match. Skipping restore; keys seem already in place."
+            echo "Source and destination paths match. Skipping restore-copy; keys seem already in place."
             echo "Key import will still proceed..."
         fi
     else
@@ -160,10 +160,10 @@ if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
     fi
 fi
     # Ask the user if they want to generate a new key after importing
-read -e -p "Do you want to generate a new validator_key? (y/n) [n]: " generate_new_key
+read -e -p " - Do you want to generate a new validator_key? (y/n): " generate_new_key
 # Set the default value for generating a new key if the user enters nothing
 if [ -z "$generate_new_key" ]; then
-  generate_new_key="n"
+  generate_new_key="y"
 fi
     
 if [[ "$generate_new_key" =~ ^[Yy]$ ]]; then
@@ -183,17 +183,15 @@ fi
 
 # Ask the user to enter the fee-receiption address
 echo ""
-echo "Enter fee-receipt address (leave blank for my address; change later in start_validator.sh):"
-echo ""
-read fee_wallet
+read -e -p " - Enter fee-receipt address (leave blank for my address; change later in start_validator.sh):" fee_wallet
 echo ""
 
 # Use a regex pattern to validate the input wallet address
 if [[ -z "${fee_wallet}" ]] || ! [[ "${fee_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
     fee_wallet="0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA"
-    echo "Using default fee-receiption address: ${fee_wallet}"
+    echo " - Using default fee-receiption address: ${fee_wallet}"
 else
-    echo "Using provided fee-receiption address: ${fee_wallet}"
+    echo " - Using provided fee-receiption address: ${fee_wallet}"
 fi
 
 # Generate a random number between 1000 and 9999
@@ -201,15 +199,14 @@ random_number=$(shuf -i 1000-9999 -n 1)
 
 # Ask the user to enter their desired graffiti
 echo ""
-echo "Please enter your desired graffiti (default: HexForLife_${random_number}):"
-read user_graffiti
+read -e -p  " - Please enter your desired graffiti (default: HexForLife_${random_number}):" user_graffiti
 
 # Set the default value for graffiti if the user enters nothing
 if [ -z "$user_graffiti" ]; then
     user_graffiti="HexForLife_${random_number}"
 fi
 
-echo "Using graffiti: ${user_graffiti}"
+echo " - Using graffiti: ${user_graffiti}"
 echo ""
 
 echo "Importing validator_keys using the lighthouse-client"
@@ -285,17 +282,13 @@ read -p "Do you want to start the execution, consensus and validator scripts now
 if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 
   # Generate the command to start the scripts
-  command="${custompath}/./start_execution.sh && ${custompath}./start_consensus.sh && ${custompath}./start_validator.sh > /dev/null 2>&1"
+  command="${custompath}/./start_execution.sh > /dev/null 2>&1 & ${custompath}./start_consensus.sh > /dev/null 2>&1 & ${custompath}./start_validator.sh > /dev/null 2>&1 &"
 
   # Print the command to the terminal
   echo "Running command: $command"
 
   # Run the command
   eval $command
-
-else
-  echo "Exiting script"
-fi
 
 echo ""
 echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
@@ -312,3 +305,22 @@ echo -e "Brought to you by:
   ███___▄███_███____███___________▄█____███_███▌____▄___███____███_███___███___███____███___███____███_
   ████████▀__█▀____▄████▀_______▄████████▀__█████▄▄██___███____█▀___▀█████▀____██████████___███____███_
   __________________________________________▀_______________________________________________███____███_"
+
+else
+echo ""
+echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
+echo ""
+echo -e "${GREEN} ** If you found this script helpful and would like to show your appreciation, donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA ** ${NC}"
+echo ""
+echo -e "Brought to you by:
+  ████████▄___▄█_____▄███████▄____▄████████__▄█__________▄████████_▄██___▄______▄████████____▄████████_
+  ███___▀███_███____███____███___███____███_███_________███____███_███___██▄___███____███___███____███_
+  ███____███_███▌___███____███___███____█▀__███_________███____███_███▄▄▄███___███____█▀____███____███_
+  ███____███_███▌___███____███___███________███_________███____███_▀▀▀▀▀▀███__▄███▄▄▄______▄███▄▄▄▄██▀_
+  ███____███_███▌_▀█████████▀__▀███████████_███_______▀███████████_▄██___███_▀▀███▀▀▀_____▀▀███▀▀▀▀▀___
+  ███____███_███____███_________________███_███_________███____███_███___███___███____█▄__▀███████████_
+  ███___▄███_███____███___________▄█____███_███▌____▄___███____███_███___███___███____███___███____███_
+  ████████▀__█▀____▄████▀_______▄████████▀__█████▄▄██___███____█▀___▀█████▀____██████████___███____███_
+  __________________________________________▀_______________________________________________███____███_"
+
+fi
