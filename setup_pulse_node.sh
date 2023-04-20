@@ -64,6 +64,10 @@ case $ETH_CLIENT_CHOICE in
   *) echo "Invalid choice. Exiting."; exit 1 ;;
 esac
 
+sudo chmod 666 /var/run/docker.sock
+sudo docker pull registry.gitlab.com/pulsechaincom/go-pulse:latest
+sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
+
 echo "Choose your Consensus client:"
 echo "1) Prysm"
 echo "2) Lighthouse (authors choice)"
