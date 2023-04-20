@@ -157,7 +157,7 @@ registry.gitlab.com/pulsechaincom/go-pulse:latest \\
 --http \\
 --txlookuplimit 0 \\
 --gpo.ignoreprice 1 \\
---cache 8192 \\
+--cache 16384 \\
 --http.api eth,net,engine,admin "
 
 ERIGON_CMD="sudo -u erigon docker run --restart=always  \\
