@@ -46,13 +46,15 @@ echo "We are going to setup the timezone first, it is important to be synced in 
 sleep 2
 echo "enabling ntp for timesync"
 sudo timedatectl set-ntp true
+echo ""
 echo "enabled ntp timesync"
-echo -e "${RED}Please choose your correct timezone${NC}"
+echo ""
+echo -e "Please choose your correct timezone"
 sleep 3
 sudo dpkg-reconfigure tzdata
 echo "timezone set"
 sleep 1
-
+echo ""
 echo "Choose your Execution client:"
 echo "1) Geth (full node, authors choice)"
 echo "2) Erigon (archive node)"
