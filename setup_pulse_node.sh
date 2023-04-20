@@ -54,38 +54,21 @@ echo "
 |_|                    
 "
 echo ""                                                                                                                                                                                                                           
-DISCLAIMER="Disclaimer !
-
-This script automates the installation and setup process
-for pls-test-v4 NODE plus lighthouse validator. 
-By using this script, you acknowledge that you understand
-the potential risks involved and accept full responsibility for the
-security and custody of your own assets. 
-
-It is strongly recommended that you review the script
-and understand its workings before proceeding."
-
-# Calculate the length of the message
-MSG_LEN=$(echo "$DISCLAIMER" | awk '{ print length }' | sort -rn | head -1)
-
-# Define the box dimensions
-BOX_WIDTH=$((MSG_LEN + 8))
-BOX_HEIGHT=$(echo "$DISCLAIMER" | wc -l)
-
-# Print the top of the box
-printf "+%0.s-" $(seq 1 $BOX_WIDTH)
-echo "+"
-
-# Print the sides of the box
-while IFS= read -r line; do
-  printf "|  %s" "$line"
-  printf "%*s" $((BOX_WIDTH - ${#line} - 3)) ""
-  printf "|\n"
-done <<< "$DISCLAIMER"
-
-# Print the bottom of the box
-printf "+%0.s-" $(seq 1 $BOX_WIDTH)
-echo "+"
+echo -e "\033[1;33m"
+echo "┌─────────────────────────────────────────────────────────┐"
+echo "│   Please read the following carefully                   │"
+echo "├─────────────────────────────────────────────────────────┤"
+echo "│ This script automates the installation and setup process│"
+echo "│ for pls-test-v4 NODE plus lighthouse validator.         │"
+echo "│ By using this script, you                               |"
+echo "| acknowledge that you understand the potential risks     │"
+echo "│ involved and accept full responsibility for the         │"
+echo "│ security and custody of your own assets.                │"
+echo "│                                                         │"
+echo "│ It is strongly recommended that you review the script   │"
+echo "│ and understand its workings before proceeding.          │"
+echo "└─────────────────────────────────────────────────────────┘"
+echo -e "\033[0m"
 
 read -p "Do you wish to continue? (y/n): " CONFIRM
 if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
