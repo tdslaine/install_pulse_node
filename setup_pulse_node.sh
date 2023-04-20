@@ -5,7 +5,7 @@
 #Three shapes in symmetry dance,
 #Nature's art is shown.
 
-# v. 0.8
+# v. 0.9
 # By tdslaine aka Peter L Dipslayer 
 #
 # Set color variables
