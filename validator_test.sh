@@ -166,17 +166,18 @@ if [ -z "$generate_new_key" ]; then
   generate_new_key="n"
 fi
     
-if ! [[ "$has_previous_key" =~ ^[Yy]$ ]] || [[ "$generate_new_key" =~ ^[Yy]$ ]]; then
-    # Run the deposit.sh script
+if [[ "$generate_new_key" =~ ^[Yy]$ ]]; then
+    # Run the deposit.sh script to generate a new mnemonic and keys
     echo "Now generating the validator keys - please follow the instructions and make sure to READ! everything"
     sudo ./deposit.sh new-mnemonic --mnemonic_language=english --chain=pulsechain-testnet-v4 --folder="${custompath}"
     cd "${custompath}"
-
-echo ""
-echo "Upload your 'deposit_data-xxxyyyzzzz.json' to https://launchpad.v4.testnet.pulsechain.com after the full chain sync. Uploading before completion may result in slashing."
-sleep 5
-echo ""
-
+    
+    echo ""
+    echo "Upload your 'deposit_data-xxxyyyzzzz.json' to https://launchpad.v4.testnet.pulsechain.com after the full chain sync. Uploading before completion may result in slashing."
+    sleep 5
+    echo ""
+else
+    echo "Using existing key"
 fi
 
 
@@ -276,6 +277,26 @@ echo -e " - Prune the container using \"sudo docker container prune\" if needed.
 echo ""
 echo -e " - Find more information in the repository's README."
 echo ""
+
+# Prompt the user if they want to run the scripts
+read -p "Do you want to start the execution, consensus and validator scripts now? [Y/n] " choice
+
+# Check if the user wants to run the scripts
+if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
+
+  # Generate the command to start the scripts
+  command="${custompath}/./start_execution.sh && ${custompath}./start_consensus.sh && ${custompath}./start_validator.sh > /dev/null 2>&1"
+
+  # Print the command to the terminal
+  echo "Running command: $command"
+
+  # Run the command
+  eval $command
+
+else
+  echo "Exiting script"
+fi
+
 echo ""
 echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
 echo ""
