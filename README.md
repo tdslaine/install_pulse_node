@@ -1,5 +1,6 @@
 <div align="center">
-<img src="https://user-images.githubusercontent.com/46573429/233297907-bf1b7eb8-c90c-4ac8-9c36-a076caf1d5e2.png" style="max-width: 100%; margin: 0 auto;"/>
+   
+<img src="https://user-images.githubusercontent.com/46573429/233395501-99a54d99-7184-4d96-9d00-7b82f9da3939.png" style="max-width: 100%; margin: 0 auto;"/>
 </div>
 
 ## Interactive Setup
