@@ -405,14 +405,13 @@ EOL
   fi
 
 
-echo "${GREEN}start_execution.sh and start_consensus.sh created successfully!${NC}"
+echo -e "${GREEN}start_execution.sh and start_consensus.sh created successfully!${NC}"
 echo ""
-echo -e "${GREEN} - To begin syncing Pulse chain, start the execution and consensus clients by running ./start_execution.sh and ./start_consensus.sh respectively.${NC}"
-echo -e "${GREEN} - Access the script directory by entering cd \"$custompath\" in your terminal.${NC}"
+
 
 fi
 
-echo " - Please run each start script once; Docker containers auto-restart on reboot/crashes afterward."
+
 echo ""
 echo ""
 echo "copying over helper scripts"
@@ -431,9 +430,14 @@ echo ""
 
 echo -e "${GREEN} - Congratulations, node installation/setup is now complete.${NC}"
 echo ""
-echo " - View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only). -"
+echo -e "${GREEN} - To begin syncing Pulse chain, start the execution and consensus clients by running ./start_execution.sh and ./start_consensus.sh respectively."
+echo -e "- Access the script directory by entering cd \"$custompath\" in your terminal."
 echo ""
-read -p "Would you like to create a Lighthouse validator too? (y/n):" VALIDATOR_CHOICE
+echo -e "- Please run each start script once; Docker containers auto-restart on reboot/crashes afterward."
+echo ""
+echo " - View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only). -${NC}"
+echo ""
+read -p "Would you like to setup a Lighthouse validator too? (y/n):" VALIDATOR_CHOICE
 echo ""
 if [ "$VALIDATOR_CHOICE" = "y" ]; then
   echo ""
