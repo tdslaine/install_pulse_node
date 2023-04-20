@@ -64,10 +64,6 @@ case $ETH_CLIENT_CHOICE in
   *) echo "Invalid choice. Exiting."; exit 1 ;;
 esac
 
-sudo chmod 666 /var/run/docker.sock
-sudo docker pull registry.gitlab.com/pulsechaincom/go-pulse:latest
-sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
-
 echo "Choose your Consensus client:"
 echo "1) Prysm"
 echo "2) Lighthouse (authors choice)"
@@ -206,6 +202,8 @@ echo -e "${GREEN}Starting and enabling docker service${NC}"
 sudo systemctl start docker
 sudo systemctl enable docker
 
+sudo chmod 666 /var/run/docker.sock
+
 echo -e "${GREEN}Creating ${CUSTOM_PATH} Main-Folder${NC}"
 sudo mkdir "${CUSTOM_PATH}"
 echo ""
@@ -312,6 +310,7 @@ tmux send-keys "echo 'Starting ${CONSENSUS_CLIENT} client'" C-m
 EOL
 
   if [ "$ETH_CLIENT" = "geth" ]; then
+sudo docker pull registry.gitlab.com/pulsechaincom/go-pulse:latest
     cat >> start_pulsechain.sh << EOL
 tmux select-pane -t 0
 tmux send-keys "${GETH_CMD}" C-m
@@ -319,6 +318,7 @@ tmux send-keys "${GETH_CMD}" C-m
 EOL
 
   elif [ "$ETH_CLIENT" = "erigon" ]; then
+sudo docker pull registry.gitlab.com/pulsechaincom/erigon-pulse:latest
     cat >> start_pulsechain.sh << EOL
 tmux select-pane -t 0
 tmux send-keys "${ERIGON_CMD}" C-m
@@ -328,12 +328,14 @@ EOL
 
 
   if [ "$CONSENSUS_CLIENT" = "prysm" ]; then
+sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse:latest
     cat >> start_pulsechain.sh << EOL
 tmux select-pane -t 1
 tmux send-keys "${PRYSM_CMD}" C-m
 
 EOL
   elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then
+sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
     cat >> start_pulsechain.sh << EOL
 tmux select-pane -t 1
 tmux send-keys "${LIGHTHOUSE_CMD}" C-m
