@@ -290,7 +290,7 @@ read -e -p "$(echo -e "${GREEN}Do you want to start the execution, consensus and
 if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 
   # Generate the command to start the scripts
-  command="sudo ${custompath}/./start_execution.sh > /dev/null 2>&1 & sudo ${custompath}/./start_consensus.sh > /dev/null 2>&1 & sudo ${custompath}/./start_validator.sh > /dev/null 2>&1 &"
+  command="sudo ${custompath}/./start_execution.sh > /dev/null 2>&1 &; sudo ${custompath}/./start_consensus.sh > /dev/null 2>&1 &; sudo ${custompath}/./start_validator.sh > /dev/null 2>&1 &"
 
   # Print the command to the terminal
   echo "Running command: $command"
@@ -309,7 +309,7 @@ echo "Brought to you by:
   ██___██_██_██████__███████_██______███████___████___█████___██████__
   ██___██_██_██___________██_██______██___██____██____██______██___██_
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
-
+exit 0
 else
 echo ""
 echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
