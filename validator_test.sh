@@ -261,10 +261,7 @@ sudo chmod +x "${custompath}/start_validator.sh"
 
 # Change the ownership of the custompath/validator directory to validator user and group
 sudo chown -R validator:docker "$custompath"
-#sudo chmod 755 "$custompath/validator_keys"
-#sudo chmod -R 755 "$custompath/validator_keys"
-sudo chmod -R 775 "$custompath"
-#sudo chmod 777 "${custompath}/start_validator.sh"
+sudo chmod -R 777 "$custompath"
 echo "${custompath}/start_validator.sh"
 echo "debug"
 
