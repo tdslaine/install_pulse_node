@@ -242,7 +242,7 @@ VALIDATOR_LH='sudo -u validator docker run -it --network=host --restart=always \
     lighthouse vc \\
     --network=pulsechain_testnet_v4 \\
     --validators-dir=/blockchain/validators \\
-    --suggested-fee-recipient=${fee_wallet} \\
+    --suggested-fee-recipient='${fee_wallet}' \\
     --graffiti='${user_graffiti}' \\
     --beacon-nodes=http://127.0.0.1:5052 '
 
