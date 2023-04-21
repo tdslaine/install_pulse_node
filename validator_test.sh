@@ -260,10 +260,10 @@ cd ${custompath}
 sudo chmod +x "${custompath}/start_validator.sh"
 
 # Change the ownership of the custompath/validator directory to validator user and group
-sudo chown -R validator:validator "${custompath}/validator_keys"
-sudo chmod -R 666 "${custompath}/validator_keys"
+sudo chown -R validator:validator "$custompath/validator_keys"
+sudo chmod -R 666 "$custompath/validator_keys"
 
-sudo chown validator:validator "${custompath}/start_validator.sh"
+sudo chown validator:validator "$custompath/start_validator.sh"
 
 echo ""
 echo " - start_execution.sh, start_consensus.sh, and start_validator.sh created successfully"
