@@ -351,7 +351,7 @@ chmod +x start_execution.sh
 sudo mv start_execution.sh "$CUSTOM_PATH"
 
 echo "Generating start_consensus.sh script"
-cat > start_consensus.sh << EOL
+cat >> start_consensus.sh << EOL
 #!/bin/bash
 
 echo "Starting ${CONSENSUS_CLIENT}"
