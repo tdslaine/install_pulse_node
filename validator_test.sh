@@ -183,7 +183,7 @@ if [[ "$generate_new_key" =~ ^[Yy]$ ]]; then
     sleep 5
     echo ""
 else
-    echo "Using existing key"
+    echo " - Using existing key"
 fi
 
 
