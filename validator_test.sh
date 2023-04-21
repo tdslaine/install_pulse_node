@@ -126,7 +126,7 @@ sudo python3 setup.py install
 #./deposit.sh install
 echo ""
 # Ask the user if they have previously created a validator_key
-read -e -i "n" " - Do you already have a validator key that you want to use instead of creating a new one? (y/n): " has_previous_key
+read -e -i "n" -p " - Do you already have a validator key that you want to use instead of creating a new one? (y/n): " has_previous_key
 echo ""
 
 if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
