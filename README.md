@@ -21,9 +21,9 @@ erc20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA
 
 # - Installation Steps -
 
-### 1. Install the GitHub client** (if not already installed) 
+### 1. Install Git** (if not already installed) 
 
-To install the GitHub client on a Unix-based system, you can use the package manager specific to your operating system. For example, on Ubuntu or Debian, you can use the following command:
+To install Git on a Unix-based system, you can use the package manager specific to your operating system. For example, on Ubuntu or Debian, you can use the following command:
 
    ```bash
    sudo apt-get install git
