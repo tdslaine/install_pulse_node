@@ -380,8 +380,6 @@ echo ""
 echo ""
 echo ""
 echo "copying over helper scripts"
-chmod +x start_consensus.sh
-sudo mv start_consensus.sh "$CUSTOM_PATH"
 chmod +x log_viewer.sh
 sudo mv log_viewer.sh "$CUSTOM_PATH"
 chmod +x watchtower.sh
