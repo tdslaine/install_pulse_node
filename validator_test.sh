@@ -126,8 +126,7 @@ sudo python3 setup.py install
 #./deposit.sh install
 echo ""
 # Ask the user if they have previously created a validator_key
-echo " - Do you already have a validator_key and want to IMPORT it instead of creating a new one? (y/n)"
-read has_previous_key
+read -e -i "n" " - Do you already have a validator key that you want to use instead of creating a new one? (y/n): " has_previous_key
 echo ""
 
 if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
@@ -135,7 +134,7 @@ if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
     echo "Importing pre-existing validator_keys:"
     echo ""
     echo -e "Enter the path to the directory with your 'validator_keys' backup."
-    echo -e "Make sure it's unzipped and available. Use tab-autocomplete when entering the path."
+    echo -e "Make sure it's unzipped and available. You are able to use tab-autocomplete when entering the path."
     echo -e "This could be an external folder, e.g., /media/username/USB_drive_name"
     read -e -p "(default: /backupPath):" backup_path
        
@@ -160,6 +159,7 @@ if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
     fi
 fi
     # Ask the user if they want to generate a new key after importing
+echo ""
 read -e -p " - Do you want to generate a new validator_key? (y/n): " generate_new_key
 # Set the default value for generating a new key if the user enters nothing
 if [ -z "$generate_new_key" ]; then
@@ -168,12 +168,17 @@ fi
     
 if [[ "$generate_new_key" =~ ^[Yy]$ ]]; then
     # Run the deposit.sh script to generate a new mnemonic and keys
+    echo ""
     echo "Now generating the validator keys - please follow the instructions and make sure to READ! everything"
+    sleep 3
     sudo ./deposit.sh new-mnemonic --mnemonic_language=english --chain=pulsechain-testnet-v4 --folder="${custompath}"
     cd "${custompath}"
     
     echo ""
     echo "Upload your 'deposit_data-xxxyyyzzzz.json' to https://launchpad.v4.testnet.pulsechain.com after the full chain sync. Uploading before completion may result in slashing."
+    echo ""
+    echo -e "${RED}For security reasons, it's recommended to store the validator_keys file in a safe, offline location after importing it.${NC}"
+    echo -e "${RED}Consider removing the validator_keys folder from your local machine and storing it in a secure location, such as an offline backup or a hardware wallet.${NC}"
     sleep 5
     echo ""
 else
@@ -199,13 +204,14 @@ random_number=$(shuf -i 1000-9999 -n 1)
 
 # Ask the user to enter their desired graffiti
 echo ""
-read -e -p  " - Please enter your desired graffiti (default: HexForLife_${random_number}):" user_graffiti
+read -e -p  " - Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: HexForLife_${random_number}):" user_graffiti
 
 # Set the default value for graffiti if the user enters nothing
 if [ -z "$user_graffiti" ]; then
     user_graffiti="HexForLife_${random_number}"
 fi
 
+echo ""
 echo " - Using graffiti: ${user_graffiti}"
 echo ""
 
@@ -224,9 +230,9 @@ sudo docker run -it \
     --directory=/blockchain/validator_keys \
     --datadir=/blockchain
 
-sudo docker stop -t 10 validator_import
+sudo docker stop -t 10 -f validator_import
 
-sudo docker container prune
+sudo docker container prune -f
 
 VALIDATOR_LH="sudo -u validator docker run -it --network=host --restart=always \\
     -v ${custompath}:/blockchain \\
@@ -266,7 +272,7 @@ echo -e " - Please run each start script once; Docker containers auto-restart on
 echo ""
 echo -e " - View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only)."
 echo ""
-echo -e " ${RED}- Note: Sync the chain fully before submitting your deposit_keys; avoid using the same keys on multiple machines.${NC}"
+echo -e " ${RED}- Note: Sync the chain fully before submitting your deposit_keys to prevent slashing; avoid using the same keys on multiple machines.${NC}"
 echo ""
 echo -e " - For errors, check running docker images with \"sudo docker ps\". Stop them with \"sudo docker stop ID-NUMBER or NAME\"."
 echo -e " - Prune the container using \"sudo docker container prune\" if needed."
