@@ -236,7 +236,7 @@ sudo docker stop -t 10 -f validator_import
 sudo docker container prune -f
 
 VALIDATOR_LH='sudo -u validator docker run -it --network=host --restart=always \\
-    -v ${custompath}:/blockchain \\
+    -v '${custompath}':/blockchain \\
     --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
     lighthouse vc \\
