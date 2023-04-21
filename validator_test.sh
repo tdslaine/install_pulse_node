@@ -262,7 +262,7 @@ sudo chown validator:validator "${custompath}/start_validator.sh"
 # Change the ownership of the custompath/validator directory to validator user and group
 sudo chown -R validator:validator "$custompath"
 sudo chmod -R 666 "$custompath/validator_keys"
-
+sudo chown 777 "${custompath}/start_validator.sh"
 echo "${custompath}/start_validator.sh"
 echo "debug"
 
