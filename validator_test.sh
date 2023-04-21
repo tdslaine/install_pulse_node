@@ -235,7 +235,7 @@ sudo docker stop -t 10 -f validator_import
 
 sudo docker container prune -f
 
-VALIDATOR_LH="sudo -u validator docker run -it --network=host --restart=always \\
+VALIDATOR_LH='sudo -u validator docker run -it --network=host --restart=always \\
     -v ${custompath}:/blockchain \\
     --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
@@ -244,7 +244,7 @@ VALIDATOR_LH="sudo -u validator docker run -it --network=host --restart=always \
     --validators-dir=/blockchain/validators \\
     --suggested-fee-recipient=${fee_wallet} \\
     --graffiti='${user_graffiti}' \\
-    --beacon-nodes=http://127.0.0.1:5052 "
+    --beacon-nodes=http://127.0.0.1:5052 '
 
 echo ""
 echo -e "Creating the start_validator.sh script with the following contents:\n${VALIDATOR_LH}"
