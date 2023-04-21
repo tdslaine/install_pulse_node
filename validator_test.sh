@@ -235,7 +235,7 @@ sudo docker stop -t 10 -f validator_import
 
 sudo docker container prune -f
 
-VALIDATOR_LH='sudo -u validator docker run -it --network=host --restart=always \\
+VALIDATOR_LH='sudo -u validator docker run -d --network=host --restart=always \\
     -v '${custompath}':/blockchain \\
     --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
@@ -260,9 +260,9 @@ sudo chmod +x "${custompath}/start_validator.sh"
 sudo chown validator:validator "${custompath}/start_validator.sh"
 
 # Change the ownership of the custompath/validator directory to validator user and group
-sudo chown -R validator:validator "$custompath"
-sudo chmod -R 666 "$custompath/validator_keys"
-sudo chmod 777 "${custompath}/start_validator.sh"
+sudo chown -R validator:validator "$custompath/validators"
+sudo chmod 755 "$custompath/validator_keys"
+#sudo chmod 777 "${custompath}/start_validator.sh"
 echo "${custompath}/start_validator.sh"
 echo "debug"
 
@@ -291,7 +291,7 @@ read -e -p "$(echo -e "${GREEN}Do you want to start the execution, consensus and
 if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 
   # Generate the command to start the scripts
-  command="sudo ${custompath}/./start_execution.sh > /dev/null 2>&1 & sudo ${custompath}/./start_consensus.sh > /dev/null 2>&1 & sudo ${custompath}/./start_validator.sh > /dev/null 2>&1 &"
+  command="${custompath}/./start_execution.sh > /dev/null 2>&1 & ${custompath}/./start_consensus.sh > /dev/null 2>&1 & ${custompath}/./start_validator.sh > /dev/null 2>&1 &"
 
   # Print the command to the terminal
   echo "Running command: $command"
