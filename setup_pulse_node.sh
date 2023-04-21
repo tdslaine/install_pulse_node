@@ -412,6 +412,7 @@ if [ "$VALIDATOR_CHOICE" = "y" ]; then
   echo ""
   chmod +x validator_test.sh
   sudo ./validator_test.sh
+exit 0
 else
   echo "Skipping creation of validator."
   echo "You can always create a validator later by running the ./validator_test.sh script separately."
