@@ -314,6 +314,7 @@ elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then #as per https://lighthouse-boo
   sudo ufw allow 9000
 fi
 
+echo ""
 echo "enabling firewall now..."
 sudo ufw enable
 echo ""
@@ -324,7 +325,8 @@ echo "The scripts will be generated in the directory \"$CUSTOM_PATH\"."
 echo ""
 echo "Generating scripts..."
 
-echo "Generating start_execution.sh script"
+echo ""
+echo -e "${GREEN}Generating start_execution.sh script${NC}"
 cat > start_execution.sh << EOL
 #!/bin/bash
 
@@ -350,7 +352,8 @@ fi
 chmod +x start_execution.sh
 sudo mv start_execution.sh "$CUSTOM_PATH"
 
-echo "Generating start_consensus.sh script"
+echo ""
+echo -e "${GREEN}Generating start_consensus.sh script${NC}"
 cat >> start_consensus.sh << EOL
 #!/bin/bash
 
@@ -375,11 +378,12 @@ fi
 chmod +x start_consensus.sh
 sudo mv start_consensus.sh "$CUSTOM_PATH"
 
+echo ""
 echo -e "${GREEN}start_execution.sh and start_consensus.sh created successfully!${NC}"
 echo ""
 echo ""
 echo ""
-echo "copying over helper scripts"
+echo -e "${GREEN}copying over helper scripts${NC}"
 chmod +x log_viewer.sh
 sudo mv log_viewer.sh "$CUSTOM_PATH"
 chmod +x watchtower.sh
@@ -388,7 +392,8 @@ chmod +x stop_remove_images.sh
 sudo mv stop_remove_images.sh "$CUSTOM_PATH"
 chmod +x tmux_logviewer.sh
 sudo mv tmux_logviewer.sh "$CUSTOM_PATH"
-echo "finished copying helper scripts"
+echo ""
+echo -e "${GREEN}finished copying helper scripts${NC}"
 echo ""
 
 echo -e "- To begin syncing Pulse chain, start the execution and consensus clients by running ./start_execution.sh and ./start_consensus.sh respectively."
@@ -397,7 +402,7 @@ echo -e  "- Access the script directory by entering cd \"$CUSTOM_PATH\" in your 
 echo ""
 echo -e "- Please run each start script once; Docker containers auto-restart on reboot/crashes afterward."
 echo ""
-echo "- View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only). -"
+echo -e "- View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only). -"
 echo ""
 read -p "--> Would you like to setup a Lighthouse validator too? (y/n):" VALIDATOR_CHOICE
 echo ""
