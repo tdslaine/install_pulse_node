@@ -291,7 +291,7 @@ read -e -p "$(echo -e "${GREEN}Do you want to start the execution, consensus and
 if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 
   # Generate the command to start the scripts
-  command="sudo ${custompath}/./start_execution.sh > /dev/null 2>&1 &; sudo ${custompath}/./start_consensus.sh > /dev/null 2>&1 &; sudo ${custompath}/./start_validator.sh > /dev/null 2>&1 &"
+  command="sudo ${custompath}/./start_execution.sh > /dev/null 2>&1 & sudo ${custompath}/./start_consensus.sh > /dev/null 2>&1 & sudo ${custompath}/./start_validator.sh > /dev/null 2>&1 &"
 
   # Print the command to the terminal
   echo "Running command: $command"
