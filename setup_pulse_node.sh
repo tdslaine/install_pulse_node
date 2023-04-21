@@ -425,7 +425,7 @@ read -p "Do you want to start the execution and consensus scripts now? [Y/n] " c
 if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 
   # Generate the command to start the scripts
-  command="${CUSTOM_PATH}/./start_execution.sh > /dev/null 2>&1 & ${CUSTOM_PATH}./start_consensus.sh > /dev/null 2>&1 &"
+  command="${CUSTOM_PATH}/./start_execution.sh > /dev/null 2>&1 & ${CUSTOM_PATH}/./start_consensus.sh > /dev/null 2>&1 &"
 
   # Print the command to the terminal
   echo "Running command: $command"
