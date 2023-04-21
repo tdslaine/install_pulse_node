@@ -289,7 +289,6 @@ echo ""
 echo -e "${GREEN}Setting to default deny incomming and allow outgoing, enabling the Firewall${NC}"
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw enable
 echo ""
 # Allow inbound traffic for specific ports based on user choices 
 if [ "$ETH_CLIENT_CHOICE" = "1" ]; then # as per https://geth.ethereum.org/docs/fundamentals/security
@@ -314,143 +313,70 @@ if [ "$CONSENSUS_CLIENT" = "prysm" ]; then #as per https://docs.prylabs.network/
 elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then #as per https://lighthouse-book.sigmaprime.io/faq.html
   sudo ufw allow 9000
 fi
+
+echo "enabling firewall now..."
+sudo ufw enable
 echo ""
-echo "Choose whether you want to start the Ethereum and Consensus clients separately or together:"
+echo "The Ethereum and Consensus clients will be started separately using two different scripts."
+echo "The start_execution.sh script will start the execution client."
+echo "The start_consensus.sh script will start the consensus (beacon) client."
+echo "The scripts will be generated in the directory \"$CUSTOM_PATH\"."
 echo ""
-echo -e "${RED}1)Option 1 - ADVANCED${NC} - will start both clients at the same time using a single script, which is run inside a tmux session. THIS IS ADVANCED! and should only be used by people who know how to control tmux.( will result in a single start_pulsechain.sh script)"
-echo ""
-echo -e "${GREEN}2)Option 2 - EASY${NC} - involves starting the two clients separately using two different scripts - one for execution and one for consensus. (will result in two script, start_execution.sh and start_consensus.sh)"
-read -p "Enter the number (1 or 2): " START_SCRIPT_CHOICE
+echo "Generating scripts..."
 
-case $START_SCRIPT_CHOICE in
-  1) START_SCRIPT_MODE="single" ;;
-  2) START_SCRIPT_MODE="separate" ;;
-  *) echo "Invalid choice. Exiting."; exit 1 ;;
-esac
-
-
-if [ "$START_SCRIPT_MODE" = "single" ]; then
-
-  echo "Generating start_pulsechain.sh script"
-  cat > start_pulsechain.sh << EOL
+echo "Generating start_execution.sh script"
+cat > start_execution.sh << EOL
 #!/bin/bash
 
-echo "Starting Docker containers in tmux"
-
-tmux new-session -d -s pulsechain
-tmux split-window -v
-
-tmux select-pane -t 0
-tmux send-keys "echo 'Starting ${ETH_CLIENT} client'" C-m
-
-tmux select-pane -t 1
-tmux send-keys "echo 'Starting ${CONSENSUS_CLIENT} client'" C-m
-
-EOL
-
-  if [ "$ETH_CLIENT" = "geth" ]; then
-sudo docker pull registry.gitlab.com/pulsechaincom/go-pulse:latest
-    cat >> start_pulsechain.sh << EOL
-tmux select-pane -t 0
-tmux send-keys "${GETH_CMD}" C-m
-
-EOL
-
-  elif [ "$ETH_CLIENT" = "erigon" ]; then
-sudo docker pull registry.gitlab.com/pulsechaincom/erigon-pulse:latest
-    cat >> start_pulsechain.sh << EOL
-tmux select-pane -t 0
-tmux send-keys "${ERIGON_CMD}" C-m
-
-EOL
-  fi
-
-
-  if [ "$CONSENSUS_CLIENT" = "prysm" ]; then
-sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse:latest
-    cat >> start_pulsechain.sh << EOL
-tmux select-pane -t 1
-tmux send-keys "${PRYSM_CMD}" C-m
-
-EOL
-  elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then
-sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
-    cat >> start_pulsechain.sh << EOL
-tmux select-pane -t 1
-tmux send-keys "${LIGHTHOUSE_CMD}" C-m
-
-EOL
-  fi
-
-  cat >> start_pulsechain.sh << EOL
-
-tmux attach-session -t pulsechain
-EOL
-
-  chmod +x start_pulsechain.sh
-  sudo mv start_pulsechain.sh "$CUSTOM_PATH"
-
-  echo -e "${GREEN} - To begin syncing Pulse chain, start the execution and consensus clients by running ./start_pulsechain.sh${NC}"
-  echo -e "${GREEN} - Access the script directory by entering cd \"$custompath\" in your terminal.${NC}"
-fi
-
-
-
-# If the user selects the separate script mode
-if [ "$START_SCRIPT_MODE" = "separate" ]; then
-
-  echo "Generating start_execution.sh script"
-  cat > start_execution.sh << EOL
-  #!/bin/bash
-
-  echo "Starting ${ETH_CLIENT}"
+echo "Starting ${ETH_CLIENT}"
 
 EOL
 
 if [ "$ETH_CLIENT" = "geth" ]; then
+sudo docker pull registry.gitlab.com/pulsechaincom/go-pulse:latest
   cat >> start_execution.sh << EOL
 ${GETH_CMD}
 
 EOL
 
-  elif [ "$ETH_CLIENT" = "erigon" ]; then
-    cat >> start_execution.sh << EOL
+elif [ "$ETH_CLIENT" = "erigon" ]; then
+sudo docker pull registry.gitlab.com/pulsechaincom/erigon-pulse:latest
+  cat >> start_execution.sh << EOL
 ${ERIGON_CMD}
 
 EOL
-  fi
+fi
 
-  chmod +x start_execution.sh
-  sudo mv start_execution.sh "$CUSTOM_PATH"
+chmod +x start_execution.sh
+sudo mv start_execution.sh "$CUSTOM_PATH"
 
-  echo "Generating start_consensus.sh script"
-  cat > start_consensus.sh << EOL
-  #!/bin/bash
+echo "Generating start_consensus.sh script"
+cat > start_consensus.sh << EOL
+#!/bin/bash
 
-  echo "Starting ${CONSENSUS_CLIENT}"
+echo "Starting ${CONSENSUS_CLIENT}"
 
 EOL
 
-  if [ "$CONSENSUS_CLIENT" = "prysm" ]; then
-    cat >> start_consensus.sh << EOL
+if [ "$CONSENSUS_CLIENT" = "prysm" ]; then
+sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse:latest
+  cat >> start_consensus.sh << EOL
 ${PRYSM_CMD}
 
 EOL
-  elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then
-    cat >> start_consensus.sh << EOL
+elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then
+sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
+  cat >> start_consensus.sh << EOL
 ${LIGHTHOUSE_CMD}
 
 EOL
-  fi
+fi
 
+chmod +x start_consensus.sh
+sudo mv start_consensus.sh "$CUSTOM_PATH"
 
 echo -e "${GREEN}start_execution.sh and start_consensus.sh created successfully!${NC}"
 echo ""
-
-
-fi
-
-
 echo ""
 echo ""
 echo "copying over helper scripts"
