@@ -7,7 +7,7 @@ NC='\033[0m' # No Color
 echo "Setting up Lighthouse-Validator now"
 echo ""
 
-read -p "Is this a first-time setup or are you adding to an existing setup? (1: first-time, 2: existing) " setup_choice
+read -e -p "${GREEN}Is this a first-time setup or are you adding to an existing setup? (1: first-time, 2: existing):${NC} " setup_choice
 
 if [[ "$setup_choice" == "2" ]]; then
     echo -e "${RED}! To add a key, stop any running validator first!"
@@ -15,7 +15,7 @@ if [[ "$setup_choice" == "2" ]]; then
     echo -e "2. Stop instance: 'sudo docker stop VALIDATOR_NAME'"
     echo -e "After you have successfully imported your validator key please restart your validator by running ./start_validator.sh."${NC}
 
-    read -p "Have you stopped all running instances of the validator? (y/N): " stopped_instances
+    read -e -p "${GREEN}Have you stopped all running instances of the validator? (y/N):${NC} " stopped_instances
     if [[ "$stopped_instances" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         echo "Proceeding with adding the key..."
     else
@@ -23,6 +23,7 @@ if [[ "$setup_choice" == "2" ]]; then
         exit 1
     fi
 else
+    echo ""
     echo "Proceeding with first-time setup..."
 fi
 
@@ -86,7 +87,7 @@ if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
 fi
 
 # Define the custom path for the validator directory
-read -e -p  " > Enter the path to store validator data (default: /blockchain):" custompath
+read -e -p  "${GREEN}Enter the path to store validator data (default: /blockchain):${NC}" custompath
 
 # Set the default value for custom path if the user enters nothing
 if [ -z "$custompath" ]; then
@@ -126,7 +127,7 @@ sudo python3 setup.py install
 #./deposit.sh install
 echo ""
 # Ask the user if they have previously created a validator_key
-read -e -i "n" -p " - Do you already have a validator key that you want to use instead of creating a new one? (y/n): " has_previous_key
+read -e -i "n" -p "${GREEN}Do you already have a validator key that you want to use instead of creating a new one? (y/n):${NC}" has_previous_key
 echo ""
 
 if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
@@ -160,7 +161,7 @@ if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
 fi
     # Ask the user if they want to generate a new key after importing
 echo ""
-read -e -p " - Do you want to generate a new validator_key? (y/n): " generate_new_key
+read -e -p "${GREEN}Do you want to generate a new validator_key? (y/n):${NC} " generate_new_key
 # Set the default value for generating a new key if the user enters nothing
 if [ -z "$generate_new_key" ]; then
   generate_new_key="y"
@@ -188,7 +189,7 @@ fi
 
 # Ask the user to enter the fee-receiption address
 echo ""
-read -e -p " - Enter fee-receipt address (leave blank for my address; change later in start_validator.sh):" fee_wallet
+read -e -p " ${GREEN}Enter fee-receipt address (leave blank for my address; change later in start_validator.sh):${NC}" fee_wallet
 echo ""
 
 # Use a regex pattern to validate the input wallet address
@@ -204,7 +205,7 @@ random_number=$(shuf -i 1000-9999 -n 1)
 
 # Ask the user to enter their desired graffiti
 echo ""
-read -e -p  " - Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: HexForLife_${random_number}):" user_graffiti
+read -e -p  "${GREEN} Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: HexForLife_${random_number}):${NC}" user_graffiti
 
 # Set the default value for graffiti if the user enters nothing
 if [ -z "$user_graffiti" ]; then
@@ -281,7 +282,7 @@ echo -e " - Find more information in the repository's README."
 echo ""
 
 # Prompt the user if they want to run the scripts
-read -p "Do you want to start the execution, consensus and validator scripts now? [Y/n] " choice
+read -e -p "${GREEN}Do you want to start the execution, consensus and validator scripts now? [y/n]:${NC}" choice
 
 # Check if the user wants to run the scripts
 if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
