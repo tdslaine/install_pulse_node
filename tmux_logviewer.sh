@@ -16,4 +16,4 @@ tmux new-window -n "HTOP" -t logs:1 'htop'
 tmux new-window -n "DiskUsage" -t logs:2 'sudo watch df -H'
 
 # Attach to the tmux session
-tmux attach-session -t logs
+tmux attach-session -t logs:0.0
