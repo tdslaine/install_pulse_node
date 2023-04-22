@@ -3,17 +3,17 @@
 # Create a new tmux session named 'logs'
 tmux new-session -d -s logs
 
-# Split the window vertically
-tmux split-window -v -t logs
+# Split the window horizontally
+tmux split-window -h -t logs
 
-# Select the first pane and split it horizontally
-tmux split-window -h -t logs:0.0
+# Select the first pane and split it vertically
+tmux split-window -v -t logs:0.0
 
-# Select the second pane (beacon) and split it horizontally
-tmux split-window -h -t logs:0.1
+# Select the second pane and split it vertically
+tmux split-window -v -t logs:0.1
 
 # Evenly distribute the pane sizes
-tmux select-layout -t logs even-horizontal
+tmux select-layout -t logs tiled
 
 # Send the commands to the respective panes
 tmux send-keys -t logs:0.0 'sudo docker logs -f execution' Enter
@@ -28,4 +28,5 @@ tmux new-window -n "DiskUsage" -t logs:1 'sudo watch df -H'
 tmux select-pane -t logs:0.0
 
 # Attach to the tmux session
-tmux attach-session -t logs
+tm
+
