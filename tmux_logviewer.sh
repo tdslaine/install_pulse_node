@@ -28,4 +28,4 @@ tmux new-window -n "DiskUsage" -t logs:1 'sudo watch df -H'
 tmux select-pane -t logs:0.0
 
 # Attach to the tmux session
-tmux attach-session -t logs
+tmux attach-session -t logs:0.0
