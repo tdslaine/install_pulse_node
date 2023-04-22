@@ -1,19 +1,25 @@
 #!/bin/bash
 
-# Create a new tmux session named 'logs' and run 'sudo docker logs -f execution' in it
-tmux new-session -d -s logs 'sudo docker logs -f execution'
+# Create a new tmux session named 'logs'
+tmux new-session -d -s logs
 
-# Split the window vertically and run 'sudo docker logs -f beacon'
-tmux split-window -v -t logs 'sudo docker logs -f beacon'
+# Split the window vertically
+tmux split-window -v -t logs
 
-# Select the first pane and split it horizontally to run 'sudo docker logs -f validator'
-tmux split-window -h -t logs:0.0 'sudo docker logs -f validator'
+# Select the first pane and split it horizontally
+tmux split-window -h -t logs:0.0
 
-# Select the second pane (beacon) and split it horizontally to run 'htop'
-tmux split-window -h -t logs:0.1 'htop'
+# Select the second pane (beacon) and split it horizontally
+tmux split-window -h -t logs:0.1
 
 # Evenly distribute the pane sizes
 tmux select-layout -t logs even-horizontal
+
+# Send the commands to the respective panes
+tmux send-keys -t logs:0.0 'sudo docker logs -f execution' Enter
+tmux send-keys -t logs:0.1 'sudo docker logs -f validator' Enter
+tmux send-keys -t logs:0.2 'sudo docker logs -f beacon' Enter
+tmux send-keys -t logs:0.3 'htop' Enter
 
 # Create a new window with 'sudo watch df -H' running
 tmux new-window -n "DiskUsage" -t logs:1 'sudo watch df -H'
