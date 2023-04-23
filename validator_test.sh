@@ -237,7 +237,7 @@ sudo docker run -it \
 
 sudo docker stop -t 10 validator_import
 
-sudo docker container prune
+sudo docker container prune -f
 
 VALIDATOR_LH='sudo -u validator docker run -d --network=host --restart=always \\
     -v '${custompath}':/blockchain \\
