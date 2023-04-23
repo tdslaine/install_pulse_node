@@ -4,6 +4,10 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+LAUNCHPAD_URL="https://launchpad.v4.testnet.pulsechain.com"
+DEPOSIT_CLI_NETWORK="pulsechain-testnet-v4"
+LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
+
 echo "Setting up Lighthouse-Validator now"
 echo ""
 
@@ -172,11 +176,11 @@ if [[ "$generate_new_key" =~ ^[Yy]$ ]]; then
     echo ""
     echo "Now generating the validator keys - please follow the instructions and make sure to READ! everything"
     sleep 3
-    sudo ./deposit.sh new-mnemonic --mnemonic_language=english --chain=pulsechain-testnet-v4 --folder="${custompath}"
+    sudo ./deposit.sh new-mnemonic --mnemonic_language=english --chain=${DEPOSIT_CLI_NETWORK} --folder="${custompath}"
     cd "${custompath}"
     
     echo ""
-    echo "Upload your 'deposit_data-xxxyyyzzzz.json' to https://launchpad.v4.testnet.pulsechain.com after the full chain sync. Uploading before completion may result in slashing."
+    echo -e "Upload your 'deposit_data-xxxyyyzzzz.json' to ${LAUNCHPAD_URL} after the full chain sync. Uploading before completion may result in slashing."
     echo ""
     echo -e "${RED}For security reasons, it's recommended to store the validator_keys file in a safe, offline location after importing it.${NC}"
     echo -e "${RED}Consider removing the validator_keys folder from your local machine and storing it in a secure location, such as an offline backup or a hardware wallet.${NC}"
@@ -226,7 +230,7 @@ sudo docker run -it \
     -v ${custompath}:/blockchain \
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \
     lighthouse \
-    --network=pulsechain_testnet_v4 \
+    --network=${LIGHTHOUSE_NETWORK_FLAG} \
     account validator import \
     --directory=/blockchain/validator_keys \
     --datadir=/blockchain
@@ -240,7 +244,7 @@ VALIDATOR_LH='sudo -u validator docker run -d --network=host --restart=always \\
     --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
     lighthouse vc \\
-    --network=pulsechain_testnet_v4 \\
+    --network=${LIGHTHOUSE_NETWORK_FLAG} \\
     --validators-dir=/blockchain/validators \\
     --suggested-fee-recipient='${fee_wallet}' \\
     --graffiti='${user_graffiti}' \\
