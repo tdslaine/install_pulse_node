@@ -4,9 +4,13 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+
 LAUNCHPAD_URL="https://launchpad.v4.testnet.pulsechain.com"
 DEPOSIT_CLI_NETWORK="pulsechain-testnet-v4"
 LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
+
+DEFAULT_GRAFFITI="DipslayerRulez"
+DEFAULT_FEE_WALLET="0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA"
 
 echo "Setting up Lighthouse-Validator now"
 echo ""
@@ -198,22 +202,19 @@ echo ""
 
 # Use a regex pattern to validate the input wallet address
 if [[ -z "${fee_wallet}" ]] || ! [[ "${fee_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-    fee_wallet="0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA"
+    fee_wallet="${DEFAULT_FEE_WALLET}"
     echo " - Using default fee-receiption address: ${fee_wallet}"
 else
     echo " - Using provided fee-receiption address: ${fee_wallet}"
 fi
 
-# Generate a random number between 1000 and 9999
-random_number=$(shuf -i 1000-9999 -n 1)
-
 # Ask the user to enter their desired graffiti
 echo ""
-read -e -p "$(echo -e "${GREEN} Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: HexForLife_${random_number}):${NC}")" user_graffiti
+read -e -p "$(echo -e "${GREEN} Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: \"${DEFAULT_GRAFFITI}\":${NC}")" user_graffiti
 
 # Set the default value for graffiti if the user enters nothing
 if [ -z "$user_graffiti" ]; then
-    user_graffiti="HexForLife_${random_number}"
+    user_graffiti="${DEFAULT_GRAFFITI}"
 fi
 
 echo ""
@@ -239,16 +240,16 @@ sudo docker stop -t 10 validator_import
 
 sudo docker container prune
 
-VALIDATOR_LH='sudo -u validator docker run -d --network=host --restart=always \\
-    -v '${custompath}':/blockchain \\
+VALIDATOR_LH="sudo -u validator docker run -d --network=host --restart=always \\
+    -v \"${custompath}\":/blockchain \\
     --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
     lighthouse vc \\
-    --network=${LIGHTHOUSE_NETWORK_FLAG} \\
+    --network=\"${LIGHTHOUSE_NETWORK_FLAG}\" \\
     --validators-dir=/blockchain/validators \\
-    --suggested-fee-recipient='${fee_wallet}' \\
-    --graffiti='${user_graffiti}' \\
-    --beacon-nodes=http://127.0.0.1:5052 '
+    --suggested-fee-recipient=\"${fee_wallet}\" \\
+    --graffiti=\"${user_graffiti}\" \\
+    --beacon-nodes=http://127.0.0.1:5052 "
 
 echo ""
 echo -e "Creating the start_validator.sh script with the following contents:\n${VALIDATOR_LH}"
