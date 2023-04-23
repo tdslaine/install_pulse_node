@@ -74,6 +74,8 @@ There will also be a copy of three helper_scripts to ease up the task of stoppin
 
 ## Launching:
 
+! This only applies if you didn't choose to autostart the scripts during the setup script when asked if you want to start them now !
+
 After completing the initial setup, you will have to run each start_###.sh script at least once manually. Once you have done so, the Docker container will automatically restart in the event of a reboot or crash, without requiring manual intervention. You will only need to run the scripts manually again if you have manually stopped the containers.
 
 cd into the folder you provided in the setup (default: /blockchain) f.e.:
