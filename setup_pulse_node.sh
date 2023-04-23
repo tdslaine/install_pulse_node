@@ -13,6 +13,14 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+# Checkpoint sync url
+CHECKPOINT="https://checkpoint.v4.testnet.pulsechain.com"
+# Execution Network FLAG
+EXECUTION_NETWORK_FLAG="pulsechain-testnet-v4"
+# PRYSM Network FLAG
+PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
+# Lighthouse Network FLAG
+LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 
 echo "
                                                                                 
@@ -139,8 +147,6 @@ fi
 #    echo "Using provided fee-receiption address: ${fee_wallet}"
 #fi
 
-# Checkpoint sync url
-CHECKPOINT="https://checkpoint.v4.testnet.pulsechain.com"
 
 # Working BootNode, temp fix for low peerCount on the consensus client - kudos to @SIN3R6Y for sharing this BootNode
 BOOTNODE="enr:-L64QNIt1R1_ou9Aw5ci8gLAsV1TrK2MtWiPNGy21YsTW0HpA86hGowakgk3IVEZNjBOTVdqtXObXyErbEfxEi8Y8Z-CARSHYXR0bmV0c4j__________4RldGgykFuckgYAAAlE__________-CaWSCdjSCaXCEA--2T4lzZWNwMjU2azGhArzEiK-HUz_pnQBn_F8g7sCRKLU4GUocVeq_TX6UlFXIiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo"
@@ -151,7 +157,7 @@ GETH_CMD="sudo -u geth docker run -t --restart=always \\
 --name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
 registry.gitlab.com/pulsechaincom/go-pulse:latest \\
---pulsechain-testnet-v4 \\
+--${EXECUTION_NETWORK_FLAG} \\
 --authrpc.jwtsecret=/blockchain/jwt.hex \\
 --datadir=/blockchain/execution/geth \\
 --http \\
@@ -165,7 +171,7 @@ ERIGON_CMD="sudo -u erigon docker run --restart=always  \\
 --name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
 registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
---chain=pulsechain-testnet-v4 \\
+--chain=${EXECUTION_NETWORK_FLAG} \\
 --authrpc.jwtsecret=/blockchain/jwt.hex \\
 --datadir=/blockchain/execution/erigon \\
 --externalcl "
@@ -176,7 +182,7 @@ PRYSM_CMD="sudo -u prysm docker run -t --restart=always \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
 registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest \\
---pulsechain-testnet-v4 \\
+--${PRYSM_NETWORK_FLAG} \\
 --jwt-secret=/blockchain/jwt.hex \\
 --datadir=/blockchain/consensus/prysm \\
 --checkpoint-sync-url=${CHECKPOINT} \\
@@ -190,7 +196,7 @@ LIGHTHOUSE_CMD="sudo -u lighthouse docker run -t --restart=always \\
 -v ${CUSTOM_PATH}:/blockchain \\
 registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
 lighthouse bn \\
---network=pulsechain_testnet_v4 \\
+--network=${LIGHTHOUSE_NETWORK_FLAG} \\
 --execution-jwt=/blockchain/jwt.hex \\
 --datadir=/blockchain/consensus/lighthouse \\
 --execution-endpoint=http://localhost:8551 \\
