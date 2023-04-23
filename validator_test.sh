@@ -256,7 +256,7 @@ echo -e "Creating the start_validator.sh script with the following contents:\n${
 echo ""
 
 # Use a heredoc to create the start_validator.sh file
-sudo bash -c "cat << EOF > '${custompath}/start_validator.sh'
+sudo bash -c "cat << 'EOF' > '${custompath}/start_validator.sh'
 #!/bin/bash
 ${VALIDATOR_LH}
 EOF"
