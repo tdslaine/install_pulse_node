@@ -258,7 +258,7 @@ echo ""
 # Use a heredoc to create the start_validator.sh file
 sudo bash -c "cat << 'EOF' > '${custompath}/start_validator.sh'
 #!/bin/bash
-${VALIDATOR_LH}
+$(echo "${VALIDATOR_LH}")
 EOF"
 
 sudo chmod +x "${custompath}/start_validator.sh"
