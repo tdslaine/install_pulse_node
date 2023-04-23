@@ -8,4 +8,4 @@ sudo docker rm execution
 sudo docker rm beacon
 sudo docker rm validator
 
-sudo docker container prune
+sudo docker container prune -f
