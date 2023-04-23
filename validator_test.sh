@@ -240,15 +240,15 @@ sudo docker stop -t 10 validator_import
 
 sudo docker container prune
 
-VALIDATOR_LH="sudo -u validator docker run -d --network=host --restart=always \\
-    -v \"${custompath}\":/blockchain \\
-    --name validator \\
-    registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
-    lighthouse vc \\
-    --network=\"${LIGHTHOUSE_NETWORK_FLAG}\" \\
-    --validators-dir=/blockchain/validators \\
-    --suggested-fee-recipient=\"${fee_wallet}\" \\
-    --graffiti=\"${user_graffiti}\" \\
+VALIDATOR_LH="sudo -u validator docker run -d --network=host --restart=always \
+    -v \"${custompath}\":/blockchain \
+    --name validator \
+    registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \
+    lighthouse vc \
+    --network=\"${LIGHTHOUSE_NETWORK_FLAG}\" \
+    --validators-dir=/blockchain/validators \
+    --suggested-fee-recipient=\"${fee_wallet}\" \
+    --graffiti=\"${user_graffiti}\" \
     --beacon-nodes=http://127.0.0.1:5052 "
 
 echo ""
