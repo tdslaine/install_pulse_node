@@ -22,7 +22,7 @@ PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
 # Lighthouse Network FLAG
 LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 
-tput reset
+clear
 
 echo "
                                                                                 
@@ -113,6 +113,7 @@ case $ETH_CLIENT_CHOICE in
   2) ETH_CLIENT="erigon" ;;
   *) echo "Invalid choice. Exiting."; exit 1 ;;
 esac
+echo ""
 
 echo "Choose your Consensus client:"
 echo "1) Lighthouse (authors choice)"
