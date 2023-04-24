@@ -308,16 +308,17 @@ if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
   
   
   # Run the commands
-  echo "Running command: $command1"
+  #echo "Running command: $command1"
   eval $command1
   sleep 1
-  echo "Running command: $command2"
+  #echo "Running command: $command2"
   eval $command2
   sleep 1
-  echo "Running command: $command3"
+  #echo "Running command: $command3"
   eval $command3
   sleep 1
 
+clear
 echo ""
 echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
 echo ""
