@@ -22,6 +22,8 @@ PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
 # Lighthouse Network FLAG
 LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 
+tput reset
+
 echo "
                                                                                 
                                                                                 
@@ -85,6 +87,7 @@ if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
 fi
 
 #enabling ntp for timesyncronization
+clear
 echo ""
 echo "We are going to setup the timezone first, it is important to be synced in time for the Chain to work correctly"
 sleep 2
@@ -99,6 +102,7 @@ sudo dpkg-reconfigure tzdata
 echo "timezone set"
 sleep 1
 echo ""
+clear
 echo "Choose your Execution client:"
 echo "1) Geth (full node, authors choice)"
 echo "2) Erigon (archive node)"
@@ -111,13 +115,13 @@ case $ETH_CLIENT_CHOICE in
 esac
 
 echo "Choose your Consensus client:"
-echo "1) Prysm"
-echo "2) Lighthouse (authors choice)"
+echo "1) Lighthouse (authors choice)"
+echo "2) Prysm"
 read -p "Enter the number (1 or 2): " CONSENSUS_CLIENT_CHOICE
 
 case $CONSENSUS_CLIENT_CHOICE in
-  1) CONSENSUS_CLIENT="prysm" ;;
-  2) CONSENSUS_CLIENT="lighthouse" ;;
+  1) CONSENSUS_CLIENT="lighthouse" ;;
+  2) CONSENSUS_CLIENT="prysm" ;;
   *) echo "Invalid choice. Exiting."; exit 1 ;;
 esac
 
@@ -152,7 +156,7 @@ fi
 BOOTNODE="enr:-L64QNIt1R1_ou9Aw5ci8gLAsV1TrK2MtWiPNGy21YsTW0HpA86hGowakgk3IVEZNjBOTVdqtXObXyErbEfxEi8Y8Z-CARSHYXR0bmV0c4j__________4RldGgykFuckgYAAAlE__________-CaWSCdjSCaXCEA--2T4lzZWNwMjU2azGhArzEiK-HUz_pnQBn_F8g7sCRKLU4GUocVeq_TX6UlFXIiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo"
 
 # Docker run commands for Ethereum clients
-GETH_CMD="sudo -u geth docker run -t --restart=always \\
+GETH_CMD="sudo -u geth docker run -dt --restart=always \\
 --network=host \\
 --name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
@@ -166,7 +170,7 @@ registry.gitlab.com/pulsechaincom/go-pulse:latest \\
 --cache 16384 \\
 --http.api eth,net,engine,admin "
 
-ERIGON_CMD="sudo -u erigon docker run --restart=always  \\
+ERIGON_CMD="sudo -u erigon docker -t run --restart=always  \\
 --network=host \\
 --name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
@@ -177,7 +181,7 @@ registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
 --externalcl "
 
 # Docker run commands for Consensus clients
-PRYSM_CMD="sudo -u prysm docker run -t --restart=always \\
+PRYSM_CMD="sudo -u prysm docker run -dt --restart=always \\
 --network=host \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
@@ -190,7 +194,7 @@ registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest \\
 --min-sync-peers 1 \\
 --genesis-beacon-api-url=${CHECKPOINT} "
 
-LIGHTHOUSE_CMD="sudo -u lighthouse docker run -t --restart=always \\
+LIGHTHOUSE_CMD="sudo -u lighthouse docker run -dt --restart=always \\
 --network=host \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
@@ -205,7 +209,7 @@ lighthouse bn \\
 --http "
 
 # Use the variables in both single and separate script modes
-
+clear
 # Add the deadsnakes PPA repository to install the latest Python version
 echo -e "${GREEN}Adding deadsnakes PPA to get the latest Python Version${NC}"
 sudo add-apt-repository ppa:deadsnakes/ppa -y
@@ -243,6 +247,7 @@ sudo apt-get update -y
 echo ""
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose
 echo ""
+clear
 echo -e "${GREEN}Starting and enabling docker service${NC}"
 sudo systemctl start docker
 sudo systemctl enable docker
@@ -265,9 +270,9 @@ sudo useradd -M -G docker $ETH_CLIENT
 sudo useradd -M -G docker $CONSENSUS_CLIENT
 sudo chown -R ${ETH_CLIENT}: "${CUSTOM_PATH}/execution/$ETH_CLIENT"
 sudo chown -R ${CONSENSUS_CLIENT}: "${CUSTOM_PATH}/consensus/$CONSENSUS_CLIENT"
-
+clear
 echo ""
-echo -e "${GREEN}Setting up firewall including port 22 and 8545 for internal connection to the RPC${NC}"
+echo -e "${GREEN}Setting up firewall including port 22 for SSH and port 8545 for internal connection to the RPC${NC}"
 read -p "Do you want to allow RPC (8545) access from localhost? (y/n): " rpc_choice
 
 if [[ $rpc_choice == "y" ]]; then
@@ -323,6 +328,8 @@ fi
 echo ""
 echo "enabling firewall now..."
 sudo ufw enable
+sleep 1
+clear
 echo ""
 echo "The Ethereum and Consensus clients will be started separately using two different scripts."
 echo "The start_execution.sh script will start the execution client."
@@ -399,6 +406,7 @@ sudo mv stop_remove_images.sh "$CUSTOM_PATH"
 chmod +x tmux_logviewer.sh
 sudo mv tmux_logviewer.sh "$CUSTOM_PATH"
 echo ""
+clear
 echo -e "${GREEN}finished copying helper scripts${NC}"
 echo ""
 
@@ -439,7 +447,9 @@ if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 
   # Run the command
   eval $command
-
+  sleep 1
+  
+clear
   echo ""
   echo -e "${GREEN} - Congratulations, node installation/setup is now complete.${NC}"
   echo ""
@@ -452,6 +462,7 @@ echo "Brought to you by:
   ██___██_██_██████__███████_██______███████___████___█████___██████__
   ██___██_██_██___________██_██______██___██____██____██______██___██_
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
+  sleep 1
 else
 echo ""
 echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
