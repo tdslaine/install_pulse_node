@@ -319,6 +319,9 @@ if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
   sleep 1
 
 clear
+# Reset the terminal
+tput reset
+
 echo ""
 echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
 echo ""
@@ -330,8 +333,10 @@ echo "Brought to you by:
   ██___██_██_██████__███████_██______███████___████___█████___██████__
   ██___██_██_██___________██_██______██___██____██____██______██___██_
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
+echo ""
+sleep 1
+read -e -p "$(echo -e "${GREEN}Do you want to start the logviewer now to follow the clients? [y/n]:${NC}")" log_it
 
-read -e -p "$(echo -e "${GREEN}Do you want to start the logviewer now to follow the clients?${NC}")" log_it
 
 if [[ "$log_it" =~ ^[Yy]$ ]]; then
     echo "Choose a log viewer:"
