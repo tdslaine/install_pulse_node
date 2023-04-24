@@ -235,6 +235,7 @@ sudo apt-get install -y \
     tmux \
     openssl \
     lsb-release \
+    dbus-x11 \
     python3.10 python3.10-venv python3.10-dev python3-pip
 echo ""
 # Downloading Docker
