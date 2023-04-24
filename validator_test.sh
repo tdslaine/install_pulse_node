@@ -270,8 +270,12 @@ sudo cp start_validator.sh "$custompath"
 sudo chown -R validator:docker "$custompath"
 sudo chmod -R 777 "$custompath"
 
-echo "${custompath}/start_validator.sh"
-echo "debug"
+# Change docker /var/run/docker.sock permission to be able to view logs withouth being in docker grp
+sudo chmod 666 /var/run/docker.sock
+
+#debug 
+#echo "${custompath}/start_validator.sh"
+#echo "debug"
 
 echo ""
 echo " - start_execution.sh, start_consensus.sh, and start_validator.sh created successfully"
