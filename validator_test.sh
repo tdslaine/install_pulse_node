@@ -239,36 +239,37 @@ sudo docker stop -t 10 validator_import
 
 sudo docker container prune -f
 
-VALIDATOR_LH='sudo -u validator docker run -d --network=host --restart=always \\
-    -v '${custompath}':/blockchain \\
+sudo docker container prune -f
+
+VALIDATOR_LH="sudo -u validator docker run -dt --network=host --restart=always \\
+    -v "${custompath}":/blockchain \\
     --name validator \\
     registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \\
     lighthouse vc \\
     --network=${LIGHTHOUSE_NETWORK_FLAG} \\
     --validators-dir=/blockchain/validators \\
-    --suggested-fee-recipient='${fee_wallet}' \\
-    --graffiti='${user_graffiti}' \\
-    --beacon-nodes=http://127.0.0.1:5052 '
+    --suggested-fee-recipient="${fee_wallet}" \\
+    --graffiti="${user_graffiti}" \\
+    --beacon-nodes=http://127.0.0.1:5052 "
 
 echo ""
+echo "debug info:"
 echo -e "Creating the start_validator.sh script with the following contents:\n${VALIDATOR_LH}"
 echo ""
 
-# Use a heredoc to create the start_validator.sh file
-sudo bash -c "cat << EOF > '${custompath}/start_validator.sh'
-#!/bin/bash
-${VALIDATOR_LH}
-EOF"
+#write start_validator.sh
 
-sudo chmod +x "${custompath}/start_validator.sh"
-#sudo chown validator:validator "${custompath}/start_validator.sh"
+cat > start_validator.sh << EOL
+${VALIDATOR_LH}
+EOL
+
+sudo chmod +x "start_validator.sh"
+sudo cp start_validator.sh "$custompath"
 
 # Change the ownership of the custompath/validator directory to validator user and group
 sudo chown -R validator:docker "$custompath"
-#sudo chmod 755 "$custompath/validator_keys"
-#sudo chmod -R 755 "$custompath/validator_keys"
 sudo chmod -R 777 "$custompath"
-#sudo chmod 777 "${custompath}/start_validator.sh"
+
 echo "${custompath}/start_validator.sh"
 echo "debug"
 
@@ -297,13 +298,21 @@ read -e -p "$(echo -e "${GREEN}Do you want to start the execution, consensus and
 if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 
   # Generate the command to start the scripts
-  command="${custompath}/./start_execution.sh > /dev/null 2>&1 & ${custompath}/./start_consensus.sh > /dev/null 2>&1 & ${custompath}/./start_validator.sh > /dev/null 2>&1 &"
-
-  # Print the command to the terminal
-  echo "Running command: $command"
-
-  # Run the command
-  eval $command
+  command1="sudo ${custompath}/./start_execution.sh > /dev/null 2>&1 &" 
+  command2="sudo ${custompath}/./start_consensus.sh > /dev/null 2>&1 &"
+  command3="sudo ${custompath}/./start_validator.sh > /dev/null 2>&1 &"
+  
+  
+  # Run the commands
+  echo "Running command: $command1
+  eval $command1
+  sleep 1
+  echo "Running command: $command2
+  eval $command2
+  sleep 1
+  echo "Running command: $command3
+  eval $command3
+  sleep 1
 
 echo ""
 echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
@@ -316,6 +325,29 @@ echo "Brought to you by:
   ██___██_██_██████__███████_██______███████___████___█████___██████__
   ██___██_██_██___________██_██______██___██____██____██______██___██_
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
+
+read -e -p "$(echo -e "${GREEN}Do you want to start the logviewer now to follow the clients?${NC}")" log_it
+
+if [[ "$log_it" =~ ^[Yy]$ ]]; then
+    echo "Choose a log viewer:"
+    echo "1. GUI/TAB Based Logviewer (serperate tabs; easy)"
+    echo "2. TMUX Logviewer (AIO logs; advanced)"
+    
+    read -p "Enter your choice (1 or 2): " choice
+    
+    case $choice in
+        1)
+            ${custompath}/./log_viewer.sh
+            ;;
+        2)
+            ${custompath}/./tmux_logviewer.sh
+            ;;
+        *)
+            echo "Invalid choice. Exiting."
+            ;;
+    esac
+fi
+
 exit 0
 else
 echo ""
