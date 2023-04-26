@@ -87,24 +87,31 @@ cd /blockchain
 ./start_consensus.sh
 ./start_validator.sh
 ```
-## Prometheus/Grafana:
-```bash
+## Prometheus/Grafana Monitoring:
+### Setup
+
+1.  Make the `monitor.sh` script executable: 
+```bash 
 sudo chmod +x monitor.sh
 ```
-```bash
+2.  Run the `monitor.sh` script to start the Prometheus and Grafana Docker containers: 
+```bash 
 ./monitor.sh
 ```
-Once done:
-Open Grafana in browser: http://127.0.0.1:3000
+3.  Wait for the containers to start up. Once done, open Grafana in your browser at 
+```bash
+http://127.0.0.1:3000
+```
+4.  Log in to Grafana with the following credentials:
+    -   User: `admin`
+    -   Password: `admin`
+5.  To add dashboards, go to 
+```bash 
+http://127.0.0.1:3000/dashboard/import
+```
+and import JSONs from your local `install_pulse_node` directory (which was downloaded during the `monitor.sh` setup).
 
-User: admin
-
-Password: admin
-
-Add dashboards via: http://127.0.0.1:3000/dashboard/import
-
-Import JSONs from your local install_pulse_node (been downloaded during the monitor.sh setup)
-
+6.  That's it! You should now have Prometheus and Grafana up and running on your machine, with the ability to import dashboards for your use case.
 ## Logging:
 
 To view the log files for the execution, beacon, and validator after a reboot you can use the provided log_viewer.sh or tmux_logviewer.sh script that should be inside the folder you chose in the setup (default: /blockchain) You can also use sepperate commands inside a terminal:
