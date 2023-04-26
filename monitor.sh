@@ -1,5 +1,4 @@
 # v.0.1 - Testing the monitoring add-on for my original install_pulse_node/validator script... this IS STILL in testing but should work !
-# flags needed in the start_xyz.sh scripts:
 # --pprof --metrics for start_execution.sh
 # --metrics for start_consensus.sh and start_validator.sh
 # docker container needs to be restartet in order to run with the flags
@@ -192,18 +191,7 @@ sleep 5
 echo ""
 echo "Dashboard Download complete."
 echo ""
-echo ""
-#echo "Required flags for scripts:"
-#echo " - start_execution.sh: --metrics --pprof"
-#echo " - start_consensus.sh: --staking --metrics --validator-monitor-auto"
-#echo " - start_validator.sh: --metrics"
-#echo ""
-#echo "Restart containers with:"
-#echo " - sudo docker restart execution"
-#echo " - sudo docker restart beacon"
-#echo " - sudo docker restart validator"
-#echo ""
-#echo ""
+
 
 echo "Do you want to add the required flags to the start_xyz.sh scripts The Docker images will restart? (y/n)"
 read answer
@@ -237,6 +225,17 @@ if [[ $answer == "y" ]]; then
   else
     echo "start_validator.sh not found. Skipping."
   fi
+
+  echo "Script finished. Check your files for updates."
+  
+  echo "Restarting Docker containers..."
+
+  sudo docker restart execution
+  sudo docker restart beacon
+  sudo docker restart validator
+
+  echo "Docker containers restarted successfully."
+  echo ""
 else
     echo "Make sure you have these in your startup Commands"
     echo "Required flags for scripts:"
@@ -251,23 +250,15 @@ else
     echo ""
     echo ""
   fi
-
-  echo "Script finished. Check your files for updates."
-  
-  echo "Restarting Docker containers..."
-
-  sudo docker restart execution
-  sudo docker restart beacon
-  sudo docker restart validator
-
-  echo "Docker containers restarted successfully."
-
-echo "..."
-sleep 2
-echo "..."
-echo -e "${GREEN} - Congratulations, setup is now complete.${NC}"
 echo ""
-echo -e "${GREEN} ** If you found this script helpful and would like to show your appreciation, donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA"
+echo -e "${GREEN}Congratulations, setup is now complete.${NC}"
+echo ""
+echo "Open Grafana: http://127.0.0.1:3000"
+echo "User: admin"
+echo "Password: admin"
+echo ""
+echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import"
+echo "Import JSONs from '${start_dir}'"
 echo ""
 
 echo "Brought to you by:
@@ -276,5 +267,6 @@ echo "Brought to you by:
   ██___██_██_██████__███████_██______███████___████___█████___██████__
   ██___██_██_██___________██_██______██___██____██____██______██___██_
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
-  sleep 1
+echo -e "${GREEN}ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
+sleep 1
 exit 0
