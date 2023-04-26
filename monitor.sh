@@ -14,6 +14,7 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+clear
 # Create users
 echo "Adding users for prometheus and grafana"
 sudo useradd -M -G docker prometheus
@@ -29,7 +30,8 @@ if [ -z "$config_location" ]; then
 fi
 
 # Create directories
-echo "creating directorys for the prometheus and grafana container"
+echo ""
+echo "Creating directorys for the prometheus and grafana container"
 sudo mkdir -p "$config_location/prometheus"
 sudo mkdir -p "$config_location/grafana"
 
@@ -60,21 +62,24 @@ scrape_configs:
 	 
 	 
 # Create prometheus.yml file
-echo "creating the yml file for promethesu"
+echo ""
+echo "Creating the yml file for promethesu"
 sudo bash -c "cat > $config_location/prometheus.yml << 'EOF'
 $PROMETHEUS_YML
 EOF"
 
 
 # Set ownership and permissions
-echo "setting ownership for container-folders"
+echo ""
+echo "Setting ownership for container-folders"
 sudo chown -R prometheus:prometheus "$config_location/prometheus"
 sudo chown -R grafana:grafana "$config_location/grafana"
 sudo chmod 644 "$config_location/prometheus.yml"
 sudo chmod -R 777 "$config_location/grafana"
 
 # Set UFW Rules
-echo "setting up firewall rules to allow local connection for metric ports"
+echo ""
+echo "Setting up firewall rules to allow local connection to metric ports"
 sudo ufw allow from 127.0.0.1 to any port 8545 proto tcp
 sudo ufw allow from 127.0.0.1 to any port 8546 proto tcp
 sudo ufw allow from 127.0.0.1 to any port 5052 proto tcp
@@ -104,7 +109,8 @@ GRAFANA_CMD="sudo -u grafana docker run -dt --name grafana --restart=always \\
   "
 
 # Create start_monitoring.sh script
-echo "creating start_monitor.sh script"
+echo ""
+echo "Creating start_monitor.sh script"
 sudo bash -c "cat > $config_location/start_monitoring.sh << 'EOF'
 #!/bin/bash
 
@@ -116,19 +122,21 @@ EOF"
 # Make start_monitoring.sh executable
 sudo chmod +x $config_location/start_monitoring.sh
 
-echo "created Monitoring-Scripts and Set Firewall rules"
+echo ""
+echo "Created Monitoring-Scripts and Set Firewall rules"
 cd $config_location
 echo "..."
 sleep 2
 
-echo "launching prometheus, node-exporter and grafana containers"
+echo ""
+echo "Launching prometheus, node-exporter and grafana containers"
 echo ""
 sudo $config_location/start_monitoring.sh
 sleep 2
 
 # checking if they are running 
 echo ""
-echo "checking if the docker started" 
+echo "Checking if the docker started" 
 echo ""
 if sudo docker ps --format '{{.Names}}' | grep -q '^grafana$'; then
   echo "Grafana container is running"
@@ -238,6 +246,7 @@ if [[ $answer == "y" ]]; then
   echo "Docker containers restarted successfully."
   echo ""
 else
+  clear
   echo "Please ensure your startup scripts contain the following required flags:"
   echo " - geth/execution: --metrics --pprof"
   echo " - ligthhouse/beacon: --staking --metrics --validator-monitor-auto"
@@ -279,6 +288,6 @@ echo "Brought to you by:
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 echo -e "${GREEN}For Donations use ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
 sleep 1
-echo "Press enter to exit script"
+echo "Press enter to continue to the log_viewer selection"
 read -p ""
 exit 0
