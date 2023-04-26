@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the ASCII table as a multi-line string
-table="
+TABLE="
 +-------------------------------------------------------------+
 | This script will reset and remove everything Node/Validator |
 | related! It defaults to /blockchain folder, and deletes     |
