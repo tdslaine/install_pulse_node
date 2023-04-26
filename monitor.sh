@@ -181,14 +181,6 @@ wget -qO- https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashb
 wget -qO- https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/ValidatorClient.json > "${start_dir}/Lighthouse_validator_dashboard.json"
 wget -qO- https://raw.githubusercontent.com/raskitoma/pulse-staking-dashboard/main/Yoldark_ETH_staking_dashboard.json > "${start_dir}/Staking_dashboard.json"
 echo ""
-echo "Shoutouts to raskitoma (@raskitoma) for forking the Yoldark_ETH_staking_dashboard. His Github can be found here: https://github.com/raskitoma/pulse-staking-dashboard"
-echo "Shoutouts to Jexxa (@JexxaJ) for providing further improvments of the dashboard."
-echo "Shoutouts to @rainbowtopgun for alpha/beta testing and providing awesome feedback while tuning the scripts" 
-echo ""
-echo "THIS COMMUNITY IS AWESOME !!!"
-echo "..."
-sleep 5
-echo ""
 echo "Dashboard Download complete."
 echo ""
 
@@ -261,7 +253,14 @@ echo ""
 echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import"
 echo "Import JSONs from '${start_dir}'"
 echo ""
-
+echo ""
+echo "Shoutouts to raskitoma (@raskitoma) for forking the Yoldark_ETH_staking_dashboard.Github link: https://github.com/raskitoma/pulse-staking-dashboard"
+echo "Shoutouts to Jexxa (@JexxaJ) for providing further improvments to the forked dashboard. Github link: https://github.com/JexxaJ/Pulsechain-Validator-Script"
+echo "Shoutouts to @rainbowtopgun for alpha/beta testing and providing awesome feedback while tuning the scripts" 
+echo ""
+echo "THIS COMMUNITY IS AWESOME !!!"
+echo ""
+echo "..."
 echo "Brought to you by:
   ██████__██_██████__███████_██_______█████__██____██_███████_██████__
   ██___██_██_██___██_██______██______██___██__██__██__██______██___██_
