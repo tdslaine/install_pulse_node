@@ -87,6 +87,21 @@ cd /blockchain
 ./start_consensus.sh
 ./start_validator.sh
 ```
+## Prometheus/Grafana:
+```bash
+sudo chmod +x monitor.sh
+```
+```bash
+./monitor.sh
+```
+Once done:
+"Open Grafana in browser: http://127.0.0.1:3000
+
+User: admin
+Password: admin (change it)
+
+Add dashboards via: http://127.0.0.1:3000/dashboard/import
+Import JSONs from your local install_pulse_node (been downloaded during the monitor.sh setup)
 
 ## Logging:
 
