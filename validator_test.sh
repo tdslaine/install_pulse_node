@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+start_dir=$(pwd)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
@@ -323,7 +324,7 @@ clear
 tput reset
 
 echo ""
-echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
+echo -e "${GREEN} - Congratulations, Validator installation/setup is now complete.${NC}"
 echo ""
 echo -e "${GREEN} ** If you found this script helpful and would like to show your appreciation, donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA ** ${NC}"
 echo ""
@@ -335,6 +336,16 @@ echo "Brought to you by:
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 echo ""
 sleep 1
+echo ""
+echo "Do you want to run the Prometheus/Grafana Monitoring Setup now? (y/n)"
+read answer
+
+if [[ $answer == "y" ]] || [[ $answer == "Y" ]]; then
+  $start_dir/./monitor.sh
+else
+  echo "Skipping Prometheus/Grafana Monitoring Setup."
+fi
+
 read -e -p "$(echo -e "${GREEN}Do you want to start the logviewer now to follow the clients? [y/n]:${NC}")" log_it
 
 
