@@ -1,6 +1,12 @@
-# v.0.1 - Testing the monitoring add-on for my original install_pulse_node/validator script... this IS STILL in testing but should work !
+
+# v.0.1 
+# Testing the monitoring add-on for my original install_pulse_node/validator script... this IS STILL in testing but should work
+# ONLY WORKS FOR LIGHTHOUSE and GETH !
+# these flags are req. in order for prometheus to receive data from your clients:
 # --pprof --metrics for start_execution.sh
-# --metrics for start_consensus.sh and start_validator.sh
+# --staking --metrics --validator-monitor-auto for start_consensus.sh 
+# --metrics for start_validator.sh
+# There is a part in this script that prompts, if you wanna add these flags, only confirm with y if you use my script to setup a node/validator prior to 26.April
 # docker container needs to be restartet in order to run with the flags
 
 start_dir=$(pwd)
@@ -143,7 +149,6 @@ else
 fi
 echo ""
 
-echo "..."
 sleep 2
 
 # Set variables for the API endpoint, authentication, and datasource configuration
@@ -185,8 +190,9 @@ echo "Dashboard Download complete."
 echo ""
 
 
-echo "Do you want to add the required flags to the start_xyz.sh scripts. The Docker images will be restarted to activate the changes? (y/n)"
-echo "NOTE: This is only required if you ran MY setup-script prior to 26.04.2023 as flags are now beeing set during initial setup"
+echo -e "${GREEN}Do you want to add the required flags to the start_xyz.sh scripts and restart Docker containers? (y/n)${NC}"
+echo ""
+echo -e "${RED}NOTE: This step is only necessary if you used my setup-script before April 26, 2023. From that date onwards, the required flags are already included in the start_ scripts during the initial setup.${NC}"
 read answer
 
 if [[ $answer == "y" ]]; then
@@ -195,10 +201,9 @@ if [[ $answer == "y" ]]; then
   if [ -f "${config_location}/start_execution.sh" ]; then
     sudo sed -i '14s:^:--metrics \\\n:' "${config_location}/start_execution.sh"
     sudo sed -i '15s:^:--pprof \\\n:' "${config_location}/start_execution.sh"
-    echo "Updated start_execution.sh with --metrics and --pprof flags."
+    echo -e "Updated start_execution.sh with --metrics and --pprof flags."
   else
-    echo "start_execution.sh not found. Skipping."
-
+    echo -e "start_execution.sh not found. Skipping."
   fi
 
   # Update start_consensus.sh script
@@ -206,23 +211,26 @@ if [[ $answer == "y" ]]; then
     sudo sed -i '14s:^:--metrics \\\n:' "${config_location}/start_consensus.sh"
     sudo sed -i '15s:^:--staking \\\n:' "${config_location}/start_consensus.sh"
     sudo sed -i '16s:^:--validator-monitor-auto \\\n:' "${config_location}/start_consensus.sh"
-    echo "Updated start_consensus.sh with --metrics, --staking, and --validator-monitor-auto flags."
+    echo -e "Updated start_consensus.sh with --metrics, --staking, and --validator-monitor-auto flags."
   else
-    echo "start_consensus.sh not found. Skipping."
+    echo -e "start_consensus.sh not found. Skipping."
   fi
 
   # Update start_validator.sh script
   if [ -f "${config_location}/start_validator.sh" ]; then
     sudo sed -i '7s:^:--metrics \\\n:' "${config_location}/start_validator.sh"
-    echo "Updated start_validator.sh with --metrics flag."
+    echo -e "Updated start_validator.sh with --metrics flag."
   else
-    echo "start_validator.sh not found. Skipping."
+    echo -e "start_validator.sh not found. Skipping."
   fi
 
-  echo "Script finished. Check your files for updates."
-  
-  echo "Restarting Docker containers..."
-
+  echo -e "${GREEN}Script finished. Check your files for updates.${NC}"
+  echo ""
+  echo "Please press Enter to continue..."
+  read -p ""
+  clear
+  echo -e "${GREEN}Restarting Docker containers...${NC}"
+  echo ""
   sudo docker restart execution
   sudo docker restart beacon
   sudo docker restart validator
@@ -230,43 +238,47 @@ if [[ $answer == "y" ]]; then
   echo "Docker containers restarted successfully."
   echo ""
 else
-    echo "Make sure you have these in your startup Commands"
-    echo "Required flags for scripts:"
-    echo " - start_execution.sh: --metrics --pprof"
-    echo " - start_consensus.sh: --staking --metrics --validator-monitor-auto"
-    echo " - start_validator.sh: --metrics"
-    echo ""
-    echo "Restart containers with:"
-    echo " - sudo docker restart execution"
-    echo " - sudo docker restart beacon"
-    echo " - sudo docker restart validator"
-    echo ""
-    echo ""
-  fi
+  echo "Please ensure your startup scripts contain the following required flags:"
+  echo " - geth/execution: --metrics --pprof"
+  echo " - ligthhouse/beacon: --staking --metrics --validator-monitor-auto"
+  echo " - ligthhouse/validator: --metrics"
+  echo ""
+  echo "To restart containers after changes are applied, use:"
+  echo " - sudo docker restart execution"
+  echo " - sudo docker restart beacon"
+  echo " - sudo docker restart validator"
+  echo ""
+fi
 echo ""
 echo -e "${GREEN}Congratulations, setup is now complete.${NC}"
 echo ""
-echo "Open Grafana: http://127.0.0.1:3000"
-echo "User: admin"
+echo "Access Grafana: http://127.0.0.1:3000"
+echo "Username: admin"
 echo "Password: admin"
 echo ""
 echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import"
 echo "Import JSONs from '${start_dir}'"
 echo ""
+echo "Please press Enter to continue..."
+read -p ""
+clear
 echo ""
-echo "Shoutouts to raskitoma (@raskitoma) for forking the Yoldark_ETH_staking_dashboard.Github link: https://github.com/raskitoma/pulse-staking-dashboard"
-echo "Shoutouts to Jexxa (@JexxaJ) for providing further improvments to the forked dashboard. Github link: https://github.com/JexxaJ/Pulsechain-Validator-Script"
-echo "Shoutouts to @rainbowtopgun for alpha/beta testing and providing awesome feedback while tuning the scripts" 
+echo "Special thanks to raskitoma (@raskitoma) for forking the Yoldark_ETH_staking_dashboard. GitHub link: https://github.com/raskitoma/pulse-staking-dashboard"
+echo "Thanks to Jexxa (@JexxaJ) for providing further improvements to the forked dashboard. GitHub link: https://github.com/JexxaJ/Pulsechain-Validator-Script"
+echo "Shoutout to @rainbowtopgun for his valuable contributions in alpha/beta testing and providing awesome feedback while refining the scripts."
+echo "Greetings to the whole plsdev tg-channel, you guys rock"
 echo ""
-echo "THIS COMMUNITY IS AWESOME !!!"
-echo ""
+echo "HAPPY VALIDATIN' FRENS :p "
 echo "..."
+echo ""
 echo "Brought to you by:
   ██████__██_██████__███████_██_______█████__██____██_███████_██████__
   ██___██_██_██___██_██______██______██___██__██__██__██______██___██_
   ██___██_██_██████__███████_██______███████___████___█████___██████__
   ██___██_██_██___________██_██______██___██____██____██______██___██_
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
-echo -e "${GREEN}ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
+echo -e "${GREEN}For Donations use ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
 sleep 1
+echo "Press enter to exit script"
+read -p ""
 exit 0
