@@ -416,8 +416,6 @@ chmod +x stop_remove_images.sh
 sudo mv stop_remove_images.sh "$CUSTOM_PATH"
 chmod +x tmux_logviewer.sh
 sudo mv tmux_logviewer.sh "$CUSTOM_PATH"
-chmod +x remove_monitoring.sh
-sudo mv remove_monitoring.sh "$CUSTOM_PATH"
 echo ""
 echo -e "${GREEN}Finished copying helper scripts${NC}"
 echo ""
