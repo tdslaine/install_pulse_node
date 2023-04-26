@@ -288,6 +288,6 @@ echo "Brought to you by:
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 echo -e "${GREEN}For Donations use ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
 sleep 1
-echo "Press enter to continue to the log_viewer selection"
+echo "Press enter to continue..."
 read -p ""
 exit 0
