@@ -193,8 +193,8 @@ echo "Dashboard Download complete."
 echo ""
 
 
-echo "Do you want to add the required flags to the start_xyz.sh scripts The Docker images will restart? (y/n)"
-echo "This is only required if you ran my setup-script prior to 26.04.2023 as flags are now beeing set during initial setup"
+echo "Do you want to add the required flags to the start_xyz.sh scripts. The Docker images will be restarted to activate the changes? (y/n)"
+echo "NOTE: This is only required if you ran MY setup-script prior to 26.04.2023 as flags are now beeing set during initial setup"
 read answer
 
 if [[ $answer == "y" ]]; then
