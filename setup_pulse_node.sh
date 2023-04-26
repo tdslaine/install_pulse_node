@@ -23,10 +23,8 @@ PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
 LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 
 clear
-echo " Pulse Node/Validator/Montitoring Setup by Dipslayer"
-echo "
-                                                                                
-                                                                                
+echo "     Pulse Node/Validator/Montitoring Setup by Dipslayer"
+echo "                                                                                                                                                    
                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                          
                  ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         
                 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒                       
@@ -49,10 +47,8 @@ echo "
                ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                      
                 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                        
                  ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         
-                   ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                          
-                                                                                
-                                                                                "
-echo ""
+                   ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                                                                                                   
+                                                                             "
 echo "
        _       _            _              _             ___ 
       | |     | |          | |            | |           /   |
