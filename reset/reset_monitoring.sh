@@ -20,6 +20,7 @@ TABLE="\
 +-------------------------------------------------------------+
 
 "
+clear
 echo "$TABLE"
 read -p "Enter 'y' to continue or 'n' to cancel: " answer
 
