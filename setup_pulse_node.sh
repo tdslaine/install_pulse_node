@@ -23,7 +23,7 @@ PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
 LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 
 clear
-
+echo " Pulse Node/Validator/Montitoring Setup by Dipslayer"
 echo "
                                                                                 
                                                                                 
@@ -63,7 +63,9 @@ echo "
 | |                                                          
 |_|                    
 "
-echo ""                                                                                                                                                                                                                           
+echo "Please press Enter to continue..."
+read -p ""
+clear                                                                                                                                                                                                                          
 echo -e "\033[1;33m"
 echo "┌─────────────────────────────────────────────────────────┐"
 echo "│   Please read the following carefully                   │"
@@ -96,8 +98,10 @@ sudo timedatectl set-ntp true
 echo ""
 echo "enabled ntp timesync"
 echo ""
-echo -e "${RED}Please choose your correct timezone at the following screen${NC}"
-sleep 2
+echo -e "${RED}Please choose your CORRECT timezone at the following screen${NC}"
+echo ""
+echo "Press Enter to continue..."
+read -p ""
 sudo dpkg-reconfigure tzdata
 echo "timezone set"
 sleep 1
@@ -412,8 +416,8 @@ chmod +x stop_remove_images.sh
 sudo mv stop_remove_images.sh "$CUSTOM_PATH"
 chmod +x tmux_logviewer.sh
 sudo mv tmux_logviewer.sh "$CUSTOM_PATH"
-chmod +x remove_monitor.sh
-sudo mv remove_monitor.sh "$CUSTOM_PATH"
+chmod +x remove_monitoring.sh
+sudo mv remove_monitoring.sh "$CUSTOM_PATH"
 echo ""
 echo -e "${GREEN}Finished copying helper scripts${NC}"
 echo ""
