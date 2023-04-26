@@ -10,9 +10,9 @@ Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace
 
 This guide will help you install and run the Pulse Node using the provided `setup_pulse_node.sh` script.
 
-donations accepted so I might be able to work on mainnet too 😃
+:point_right: donations accepted so I might be able to work on mainnet too 😃
 
-erc20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA
+erc20: `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
 
 ## Prerequisites
 
@@ -70,15 +70,49 @@ start_validator.sh
 
 There will also be a copy of three helper_scripts to ease up the task of stopping, viewing/following logs and updating the Docker Images/Containers. Read bellow for further informaion
 
-# - Launching, Logging, and Stopping the Execution, Beacon and Validator Docker-Containers -
 
-## Launching:
+## Prometheus/Grafana Monitoring:
+### Setup
 
-! This only applies if you didn't choose to autostart the scripts during the setup script when asked if you want to start them now !
+:exclamation: If you opted not to run the monitoring setup during the validator setup, follow these steps:
 
-After completing the initial setup, you will have to run each start_###.sh script at least once manually. Once you have done so, the Docker container will automatically restart in the event of a reboot or crash, without requiring manual intervention. You will only need to run the scripts manually again if you have manually stopped the containers.
 
-cd into the folder you provided in the setup (default: /blockchain) f.e.:
+Make the `monitor.sh` script executable: 
+```bash 
+sudo chmod +x monitor.sh
+```
+Run the `monitor.sh` script to start the Prometheus and Grafana Docker containers: 
+```bash 
+./monitor.sh
+```
+### Adding Dashboards
+
+After the containers have started, open Grafana in your browser at:
+
+```bash
+http://127.0.0.1:3000
+```
+Log in to Grafana with the following credentials:
+    -   User: `admin`
+    -   Password: `admin`
+To add dashboards, navigate to:
+```bash 
+http://127.0.0.1:3000/dashboard/import
+```
+Import the JSON files from your local install_pulse_node directory (these were downloaded during the monitor.sh setup).
+
+That's it! Prometheus and Grafana should now be up and running on your machine, allowing you to import dashboards tailored to your needs.
+
+
+## Launching, Logging, and Stopping the Execution, Beacon and Validator Docker-Containers
+
+### Launching
+
+:exclamation: This only applies if you didn't choose to autostart the scripts during the setup script when asked if you want to start them now!
+
+After completing the initial setup, you will have to run each `start_###.sh` script at least once manually. Once you have done so, the Docker container will automatically restart in the event of a reboot or crash, without requiring manual intervention. You will only need to run the scripts manually again if you have manually stopped the containers.
+
+cd into the folder you provided in the setup (default: `/blockchain`) f.e.:
 
 ```bash
 cd /blockchain
@@ -87,37 +121,7 @@ cd /blockchain
 ./start_consensus.sh
 ./start_validator.sh
 ```
-## Prometheus/Grafana Monitoring:
-### Setup
 
-If you did not choose to run the monitoring setup after the validator setup, the following steps will apply.
-
-
-1.  Make the `monitor.sh` script executable: 
-```bash 
-sudo chmod +x monitor.sh
-```
-2.  Run the `monitor.sh` script to start the Prometheus and Grafana Docker containers: 
-```bash 
-./monitor.sh
-```
-### Adding Dashboards
-
-Wait for the containers to start up. Once done, open Grafana in your browser at 
-
-```bash
-http://127.0.0.1:3000
-```
-4.  Log in to Grafana with the following credentials:
-    -   User: `admin`
-    -   Password: `admin`
-5.  To add dashboards, go to 
-```bash 
-http://127.0.0.1:3000/dashboard/import
-```
-and import JSONs from your local `install_pulse_node` directory (which were downloaded during the `monitor.sh` setup).
-
-6.  That's it! You should now have Prometheus and Grafana up and running on your machine, with the ability to import dashboards for your use case.
 ## Logging:
 
 To view the log files for the execution, beacon, and validator after a reboot you can use the provided log_viewer.sh or tmux_logviewer.sh script that should be inside the folder you chose in the setup (default: /blockchain) You can also use sepperate commands inside a terminal:
@@ -211,7 +215,7 @@ cd /blockchain
 ./start_validator.sh
 ```
 
-# - Changing flags/options  -
+## Changing flags/options
 
 If you ever find yourself in the need to change/add/remove some option-flags or alter the config you can achieve this by first stopping the docker-images/containers, then editing the start_###.sh script as you desire. You can use any editor available, just make sure you run these as sudo to be able to save changes inside the .sh file. Also pay attention to end each line with a \ 
 
@@ -231,7 +235,7 @@ sudo nano start_execution.sh
 sudo docker restart execution
 ```
 
-## - Updating the Docker-Images should pulse-devs update clients etc. -
+## Updating the Docker-Images
 
 To update your Docker containers/images you can use the provided the watchtower.sh script which can be found inside the folder you chose in the setup (default: /blockchain):
 
@@ -243,14 +247,15 @@ cd /blockchain
 chmod +x watchtower.sh
 ```
 
-### 2. Run the script: 
+Run the script: 
 
 ```bash
 cd /blockchain
 
 ./watchtower.sh
 ```
-### 3. Review the output: 
+
+Review the output: 
 
 The script will automatically check for updates and update the necessary containers and images. Review the output of the script to ensure that the update process was successful.
 
@@ -271,7 +276,6 @@ validator launchpad: https://launchpad.v4.testnet.pulsechain.com/en/overview
 
 pulsedev telegram: https://t.me/PulseDEV
 
-Other:
 
 ssh: https://www.digitalocean.com/community/tutorials/how-to-harden-openssh-on-ubuntu-20-04
 
