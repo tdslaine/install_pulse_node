@@ -194,6 +194,7 @@ echo ""
 
 
 echo "Do you want to add the required flags to the start_xyz.sh scripts The Docker images will restart? (y/n)"
+echo "This is only required if you ran my setup-script prior to 26.04.2023 as flags are now beeing set during initial setup"
 read answer
 
 if [[ $answer == "y" ]]; then
