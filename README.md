@@ -90,6 +90,9 @@ cd /blockchain
 ## Prometheus/Grafana Monitoring:
 ### Setup
 
+If you did not choose to run the monitoring setup after the validator setup, the following steps will apply.
+
+
 1.  Make the `monitor.sh` script executable: 
 ```bash 
 sudo chmod +x monitor.sh
@@ -98,7 +101,10 @@ sudo chmod +x monitor.sh
 ```bash 
 ./monitor.sh
 ```
-3.  Wait for the containers to start up. Once done, open Grafana in your browser at 
+### Adding Dashboards
+
+Wait for the containers to start up. Once done, open Grafana in your browser at 
+
 ```bash
 http://127.0.0.1:3000
 ```
@@ -109,7 +115,7 @@ http://127.0.0.1:3000
 ```bash 
 http://127.0.0.1:3000/dashboard/import
 ```
-and import JSONs from your local `install_pulse_node` directory (which was downloaded during the `monitor.sh` setup).
+and import JSONs from your local `install_pulse_node` directory (which were downloaded during the `monitor.sh` setup).
 
 6.  That's it! You should now have Prometheus and Grafana up and running on your machine, with the ability to import dashboards for your use case.
 ## Logging:
@@ -209,8 +215,8 @@ cd /blockchain
 
 If you ever find yourself in the need to change/add/remove some option-flags or alter the config you can achieve this by first stopping the docker-images/containers, then editing the start_###.sh script as you desire. You can use any editor available, just make sure you run these as sudo to be able to save changes inside the .sh file. Also pay attention to end each line with a \ 
 
-1. Stop containers via provided script or manually as described above.
-2. Edit desired start_###.sh script
+
+1. Edit desired start_###.sh script
 
 ```bash
 cd \blockchain
@@ -218,9 +224,12 @@ cd \blockchain
 sudo nano start_execution.sh
 ```
 
-3. save changes
-4. restart the docker container-images as described above manually.
+2. save changes
+3. restart the docker container-images as described above manually via f.e.
 
+```bash
+sudo docker restart execution
+```
 
 ## - Updating the Docker-Images should pulse-devs update clients etc. -
 
