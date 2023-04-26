@@ -307,7 +307,7 @@ clear
 # Reset the terminal
 
 echo ""
-echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitoring Setup now? (y/n)${NC}" read answer
+read -e -p "$(echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitoring Setup now (y/n):${NC}")" answer
 
 if [[ $answer == "y" ]] || [[ $answer == "Y" ]]; then
   sudo chmod +x $start_dir/monitor.sh
