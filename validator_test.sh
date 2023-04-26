@@ -324,30 +324,19 @@ clear
 tput reset
 
 echo ""
-echo -e "${GREEN} - Congratulations, Validator installation/setup is now complete.${NC}"
+echo -e "${GREEN}Congratulations, Validator installation/setup is now complete.${NC}"
 echo ""
-echo -e "${GREEN} ** If you found this script helpful and would like to show your appreciation, donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA ** ${NC}"
-echo ""
-echo "Brought to you by:
-  ██████__██_██████__███████_██_______█████__██____██_███████_██████__
-  ██___██_██_██___██_██______██______██___██__██__██__██______██___██_
-  ██___██_██_██████__███████_██______███████___████___█████___██████__
-  ██___██_██_██___________██_██______██___██____██____██______██___██_
-  ██████__██_██______███████_███████_██___██____██____███████_██___██_"
-echo ""
-sleep 1
-echo ""
-echo "Do you want to run the Prometheus/Grafana Monitoring Setup now? (y/n)"
+echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitoring Setup now? (y/n)${NC}"
 read answer
 
 if [[ $answer == "y" ]] || [[ $answer == "Y" ]]; then
-  $start_dir/./monitor.sh
+  sudo chmod +x $start_dir/monitor.sh
+  $start_dir/monitor.sh
 else
   echo "Skipping Prometheus/Grafana Monitoring Setup."
 fi
 
-read -e -p "$(echo -e "${GREEN}Do you want to start the logviewer now to follow the clients? [y/n]:${NC}")" log_it
-
+read -e -p "$(echo -e "${GREEN}Would you like to start the logviewer to monitor the client logs? [y/n]:${NC}")" log_it
 
 if [[ "$log_it" =~ ^[Yy]$ ]]; then
     echo "Choose a log viewer:"
@@ -368,19 +357,13 @@ if [[ "$log_it" =~ ^[Yy]$ ]]; then
             ;;
     esac
 fi
+echo ""
+echo "Brought to you by:"
+echo "  ██████__██_██████__███████_██_______█████__██____██_███████_██████__"
+echo "  ██___██_██_██___██_██______██______██___██__██__██__██______██___██_"
+echo "  ██___██_██_██████__███████_██______███████___████___█████___██████__"
+echo "  ██___██_██_██___________██_██______██___██____██____██______██___██_"
+echo "  ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 
 exit 0
-else
-echo ""
-echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
-echo ""
-echo -e "${GREEN} ** If you found this script helpful and would like to show your appreciation, donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA ** ${NC}"
-echo ""
-echo "Brought to you by:
-  ██████__██_██████__███████_██_______█████__██____██_███████_██████__
-  ██___██_██_██___██_██______██______██___██__██__██__██______██___██_
-  ██___██_██_██████__███████_██______███████___████___█████___██████__
-  ██___██_██_██___________██_██______██___██____██____██______██___██_
-  ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 
-fi
