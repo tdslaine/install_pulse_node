@@ -412,20 +412,13 @@ chmod +x stop_remove_images.sh
 sudo mv stop_remove_images.sh "$CUSTOM_PATH"
 chmod +x tmux_logviewer.sh
 sudo mv tmux_logviewer.sh "$CUSTOM_PATH"
+chmod +x remove_monitor.sh
+sudo mv remove_monitor.sh "$CUSTOM_PATH"
+echo ""
+echo -e "${GREEN}Finished copying helper scripts${NC}"
 echo ""
 clear
-echo -e "${GREEN}finished copying helper scripts${NC}"
-echo ""
-
-echo -e "- To begin syncing Pulse chain, start the execution and consensus clients by running ./start_execution.sh and ./start_consensus.sh respectively."
-echo ""
-echo -e  "- Access the script directory by entering cd \"$CUSTOM_PATH\" in your terminal."
-echo ""
-echo -e "- Please run each start script once; Docker containers auto-restart on reboot/crashes afterward."
-echo ""
-echo -e "- View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only). -"
-echo ""
-read -p "--> Would you like to setup a Lighthouse validator too? (y/n):" VALIDATOR_CHOICE
+read -p "$(echo -e ${GREEN})Would you like to setup a Lighthouse validator? (y/n):$(echo -e ${NC}) " VALIDATOR_CHOICE
 echo ""
 if [ "$VALIDATOR_CHOICE" = "y" ]; then
   echo ""
@@ -437,7 +430,6 @@ exit 0
 else
   echo "Skipping creation of validator."
   echo "You can always create a validator later by running the ./validator_test.sh script separately."
-  # Prompt the user if they want to run the scripts
   echo ""
 fi
 
@@ -454,34 +446,22 @@ if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 
   # Run the command
   eval $command
-  sleep 1
-  
-clear
+  sleep 2
+fi  
+  clear
   echo ""
-  echo -e "${GREEN} - Congratulations, node installation/setup is now complete.${NC}"
+  echo -e "${GREEN}Congratulations, node installation/setup is now complete.${NC}"
   echo ""
-  echo -e "${GREEN} ** If you found this script helpful and would like to show your appreciation, donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA ** ${NC}"
+  echo -e "${GREEN} If you found this script helpful and would like to show your appreciation,${NC}"
+  echo -e "${GREEN} donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
   echo ""
-
-echo "Brought to you by:
+  echo "Brought to you by:
   ██████__██_██████__███████_██_______█████__██____██_███████_██████__
   ██___██_██_██___██_██______██______██___██__██__██__██______██___██_
   ██___██_██_██████__███████_██______███████___████___█████___██████__
   ██___██_██_██___________██_██______██___██____██____██______██___██_
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
   sleep 1
-else
-echo ""
-echo -e "${GREEN} - Congratulations, installation/setup is now complete.${NC}"
-echo ""
-echo -e "${GREEN} ** If you found this script helpful and would like to show your appreciation, donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA ** ${NC}"
-echo ""
-echo "Brought to you by:
-  ██████__██_██████__███████_██_______█████__██____██_███████_██████__
-  ██___██_██_██___██_██______██______██___██__██__██__██______██___██_
-  ██___██_██_██████__███████_██______███████___████___█████___██████__
-  ██___██_██_██___________██_██______██___██____██____██______██___██_
-  ██████__██_██______███████_███████_██___██____██____███████_██___██_"
-
-fi
-
+  echo "Please press Enter to exit"
+  read -p ""
+  exit 0
