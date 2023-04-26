@@ -22,7 +22,7 @@ TABLE="
 | Are you sure you want to continue? (y/n)                    |
 +-------------------------------------------------------------+"
 
-
+clear
 # Print the ASCII table to the terminal
 echo "$TABLE"
 
