@@ -251,6 +251,7 @@ VALIDATOR_LH="sudo -u validator docker run -dt --network=host --restart=always \
     --validators-dir=/blockchain/validators \\
     --suggested-fee-recipient="${fee_wallet}" \\
     --graffiti="${user_graffiti}" \\
+    --metrics \\
     --beacon-nodes=http://127.0.0.1:5052 "
 
 echo ""
@@ -300,14 +301,13 @@ if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
   #echo "Running command: $command3"
   eval $command3
   sleep 1
+fi
 
 clear
 # Reset the terminal
-tput reset
 
 echo ""
-echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitoring Setup now? (y/n)${NC}"
-read answer
+echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitoring Setup now? (y/n)${NC}" read answer
 
 if [[ $answer == "y" ]] || [[ $answer == "Y" ]]; then
   sudo chmod +x $start_dir/monitor.sh
@@ -356,7 +356,7 @@ echo "Brought to you by:
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 echo -e "${GREEN}For Donations use ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
 echo ""
-echo "Please press Enter to exit the script"
+echo "Please press Enter to continue to logviewer selection"
 read -p ""
 exit 0
 
