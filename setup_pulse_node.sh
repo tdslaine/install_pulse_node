@@ -169,6 +169,8 @@ registry.gitlab.com/pulsechaincom/go-pulse:latest \\
 --txlookuplimit 0 \\
 --gpo.ignoreprice 1 \\
 --cache 16384 \\
+--metrics \\
+--pprof \\
 --http.api eth,net,engine,admin "
 
 ERIGON_CMD="sudo -u erigon docker -t run --restart=always  \\
@@ -207,6 +209,9 @@ lighthouse bn \\
 --execution-endpoint=http://localhost:8551 \\
 --checkpoint-sync-url=${CHECKPOINT} \\
 --boot-nodes=${BOOTNODE} \\
+--staking \\
+--metrics \\
+--validator-monitor-auto \\
 --http "
 
 # Use the variables in both single and separate script modes
@@ -351,14 +356,14 @@ EOL
 
 if [ "$ETH_CLIENT" = "geth" ]; then
 sudo docker pull registry.gitlab.com/pulsechaincom/go-pulse:latest
-  cat >> start_execution.sh << EOL
+  cat > start_execution.sh << EOL
 ${GETH_CMD}
 
 EOL
 
 elif [ "$ETH_CLIENT" = "erigon" ]; then
 sudo docker pull registry.gitlab.com/pulsechaincom/erigon-pulse:latest
-  cat >> start_execution.sh << EOL
+  cat > start_execution.sh << EOL
 ${ERIGON_CMD}
 
 EOL
@@ -369,7 +374,7 @@ sudo mv start_execution.sh "$CUSTOM_PATH"
 
 echo ""
 echo -e "${GREEN}Generating start_consensus.sh script${NC}"
-cat >> start_consensus.sh << EOL
+cat > start_consensus.sh << EOL
 #!/bin/bash
 
 echo "Starting ${CONSENSUS_CLIENT}"
@@ -378,13 +383,13 @@ EOL
 
 if [ "$CONSENSUS_CLIENT" = "prysm" ]; then
 sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse:latest
-  cat >> start_consensus.sh << EOL
+  cat > start_consensus.sh << EOL
 ${PRYSM_CMD}
 
 EOL
 elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then
 sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
-  cat >> start_consensus.sh << EOL
+  cat > start_consensus.sh << EOL
 ${LIGHTHOUSE_CMD}
 
 EOL
