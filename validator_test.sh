@@ -278,26 +278,8 @@ sudo chmod 666 /var/run/docker.sock
 #echo "${custompath}/start_validator.sh"
 #echo "debug"
 
-echo ""
-echo " - start_execution.sh, start_consensus.sh, and start_validator.sh created successfully"
-echo ""
-echo -e "${GREEN} - To begin syncing Pulse chain, start the execution and consensus clients by running ./start_execution.sh and ./start_consensus.sh respectively.${NC}"
-echo -e "${GREEN} - Access the script directory by entering cd \"$custompath\" in your terminal.${NC}"
-echo ""
-echo -e " - Please run each start script once; Docker containers auto-restart on reboot/crashes afterward."
-echo ""
-echo -e " - View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based only)."
-echo ""
-echo -e " ${RED}- Note: Sync the chain fully before submitting your deposit_keys to prevent slashing; avoid using the same keys on multiple machines.${NC}"
-echo ""
-echo -e " - For errors, check running docker images with \"sudo docker ps\". Stop them with \"sudo docker stop ID-NUMBER or NAME\"."
-echo -e " - Prune the container using \"sudo docker container prune\" if needed."
-echo ""
-echo -e " - Find more information in the repository's README."
-echo ""
-
 # Prompt the user if they want to run the scripts
-read -e -p "$(echo -e "${GREEN}Do you want to start the execution, consensus and validator scripts now? [y/n]:${NC}")" choice
+read -e -p "$(echo -e "${GREEN}Would you like to start the execution, consensus and validator scripts now? [y/n]:${NC}")" choice
 
 # Check if the user wants to run the scripts
 if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
@@ -323,8 +305,6 @@ clear
 # Reset the terminal
 tput reset
 
-echo ""
-echo -e "${GREEN}Congratulations, Validator installation/setup is now complete.${NC}"
 echo ""
 echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitoring Setup now? (y/n)${NC}"
 read answer
@@ -357,6 +337,16 @@ if [[ "$log_it" =~ ^[Yy]$ ]]; then
             ;;
     esac
 fi
+echo ""
+echo -e "${GREEN}Congratulations, Node and Validator setup is now complete.${NC}"
+echo ""
+echo -e "- Access the script directory by entering cd \"$custompath\" in your terminal."
+echo ""
+echo -e " - View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based)."
+echo ""
+echo -e " ${RED}- Note: Sync the chain fully before submitting your deposit_keys to prevent slashing; avoid using the same keys on multiple machines.${NC}"
+echo ""
+echo -e " - Find more information in the repository's README."
 echo ""
 echo "Brought to you by:
   ██████__██_██████__███████_██_______█████__██____██_███████_██████__
