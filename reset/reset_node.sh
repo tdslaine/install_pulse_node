@@ -1,19 +1,27 @@
 #!/bin/bash
 
 # Define the ASCII table as a multi-line string
-TABLE="
-╔══════════════════════════════════════════════════╗
-║ WARNING! WARNING! WARNING! WARNING!              ║
-╟──────────────────────────────────────────────────╢
-║ This script will reset and remove all            ║
-║ Node/Validator related files, including          ║
-║ downloaded Docker images. By default, this script║
-║ will delete everything in the /blockchain folder.║
-╟──────────────────────────────────────────────────╢
-║ The files deleted cannot be recovered. Are you   ║
-║ sure you want to continue (y/n)?                 ║
-╚══════════════════════════════════════════════════╝
-"
+table="
++-------------------------------------------------------------+
+| This script will reset and remove everything Node/Validator |
+| related! It defaults to /blockchain folder, and deletes     |
+| everything that has been put in there, including the        |
+| downloaded Docker images.                                   |
++-------------------------------------------------------------+
+| WARNING: The files deleted are gone and cannot be recovered!|
++-------------------------------------------------------------+
+|                    Action Summary                           |
++-------------------------------------------------------------+
+| 1. Stop Docker containers                                   |
+| 2. Remove containers                                        |
+| 3. Remove stopped containers                                |
+| 4. Remove Node and Validator users                          |
+| 5. Remove Node and Validator data directories !             |
+| 6. Remove configuration files                               |
++-------------------------------------------------------------+
+| Are you sure you want to continue? (y/n)                    |
++-------------------------------------------------------------+"
+
 
 # Print the ASCII table to the terminal
 echo "$TABLE"
