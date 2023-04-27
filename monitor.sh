@@ -190,13 +190,12 @@ echo ""
 
 sudo mkdir -p "${config_location}/Dashboards"
 echo "Downloading dashboard JSON..."
-sudo wget -qO- https://gist.githubusercontent.com/karalabe/e7ca79abdec54755ceae09c08bd090cd/raw/dashboard.json -P "${config_location}/Dashboards" > /dev/null
-sudo wget -qO- https://grafana.com/api/dashboards/11074/revisions/9/download -P "${config_location}/Dashboards" > /dev/null
-sudo wget -qO- https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/Summary.json -P "${config_location}/Dashboards" > /dev/null
-sudo wget -qO- https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/ValidatorClient.json -P "${config_location}/Dashboards" > /dev/null
-sudo wget -qO- https://raw.githubusercontent.com/raskitoma/pulse-staking-dashboard/main/Yoldark_ETH_staking_dashboard.json -P "${config_location}/Dashboards" > /dev/null
+sudo wget -qO "${config_location}/Dashboards/02_Geth_dashboard.json" -P "${config_location}/Dashboards" https://gist.githubusercontent.com/karalabe/e7ca79abdec54755ceae09c08bd090cd/raw/dashboard.json > /dev/null
+sudo wget -qO "${config_location}/Dashboards/03_System_dashboard.json" -P "${config_location}/Dashboards" https://grafana.com/api/dashboards/11074/revisions/9/download > /dev/null
+sudo wget -qO "${config_location}/Dashboards/04_Lighthouse_beacon_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/Summary.json > /dev/null
+sudo wget -qO "${config_location}/Dashboards/05_Lighthouse_validator_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/ValidatorClient.json > /dev/null
+sudo wget -qO "${config_location}/Dashboards/01_Staking_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/raskitoma/pulse-staking-dashboard/main/Yoldark_ETH_staking_dashboard.json > /dev/null
 echo ""
-echo "Dashboard download complete."
 echo ""
 sudo chmod -R 755 "${config_location}/Dashboards"
 
