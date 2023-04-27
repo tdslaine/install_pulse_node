@@ -8,11 +8,23 @@ Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace
 
 ## Installing and Running a Pulsechain Node with an optional Lighthouse Validator and Prometheus/Grafana Monitoring
 
-This guide will help you to install and run the Pulsechain Node/Validator using the provided `setup_pulse_node.sh` script.
+This setup is split into three parts to provide greater flexibility for users based on their needs.
 
-:point_right: donations accepted so I might be able to validate on mainnet too 😃
+The first part is the node setup, which involves setting up the core node infrastructure. This includes installing necessary packages and dependencies to run a node. (`setup_pulse_node.sh`)
 
-erc20: `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
+The second part is the validator setup, which involves configuring the node as a validator, setting up validators keys,wallets, and importing those. (`setup_validator.sh`)
+
+The third part is the monitoring setup, which involves setting up Prometheus/Grafana to keep track of the node and its performance via webinterface. (`setup_monitoring.sh`)
+
+You can run each step individually, based on your requirements, by calling the appropriate setup_###.sh script. This provides a convenient way to install and configure only the necessary components.
+
+Additionally, it's worth noting that after completing each installation step, you'll be prompted to continue with the next setup. This means that there's no need to run each script separately, as the setup process will guide you through each step in sequence.
+
+This streamlined approach ensures that you have a smooth and hassle-free setup experience, and can get up and running quickly.
+
+#####  I am currently validating on the testnet and am hoping to expand my validator node to the mainnet as well. Donations are appreciated and will help cover the costs of running and maintaining the validator node, including staking requirements and infrastructure expenses. If you're interested in contributing, you can make a donation. Thank you for your support!
+
+Ethereum (ETH) &#x039E; : `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
 
 ## Prerequisites
 
@@ -22,6 +34,7 @@ erc20: `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
 # - Installation Steps -
 
 ### 1. Install Git** (if not already installed) 
+
 
 To install Git on a Unix-based system, you can use the package manager specific to your operating system. For example, on Ubuntu or Debian, you can use the following command:
 
