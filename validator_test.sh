@@ -312,6 +312,7 @@ read -e -p "$(echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitor
 if [[ $answer == "y" ]] || [[ $answer == "Y" ]]; then
   sudo chmod +x $start_dir/monitor.sh
   $start_dir/monitor.sh
+  exit 0
 else
   echo "Skipping Prometheus/Grafana Monitoring Setup."
 fi
@@ -337,16 +338,9 @@ if [[ "$log_it" =~ ^[Yy]$ ]]; then
             ;;
     esac
 fi
+echo -e " ${RED}Note: Sync the chain fully before submitting your deposit_keys to prevent slashing; avoid using the same keys on multiple machines.${NC}"
 echo ""
-echo -e "${GREEN}Congratulations, Node and Validator setup is now complete.${NC}"
-echo ""
-echo -e "- Access the script directory by entering cd \"$custompath\" in your terminal."
-echo ""
-echo -e " - View logs using ./log_viewer.sh (Ubuntu GUI) or tmux_logviewer.sh (terminal-based)."
-echo ""
-echo -e " ${RED}- Note: Sync the chain fully before submitting your deposit_keys to prevent slashing; avoid using the same keys on multiple machines.${NC}"
-echo ""
-echo -e " - Find more information in the repository's README."
+echo -e "Find more information in the repository's README."
 echo ""
 echo "Brought to you by:
   ██████__██_██████__███████_██_______█████__██____██_███████_██████__
@@ -356,7 +350,5 @@ echo "Brought to you by:
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 echo -e "${GREEN}For Donations use ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
 echo ""
-echo "Please press Enter to continue to logviewer selection"
-read -p ""
 exit 0
 
