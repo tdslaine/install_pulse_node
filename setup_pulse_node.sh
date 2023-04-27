@@ -430,7 +430,7 @@ if [ "$VALIDATOR_CHOICE" = "y" ]; then
 exit 0
 else
   echo "Skipping creation of validator."
-  echo "You can always create a validator later by running the ./validator_test.sh script separately."
+  echo "You can always create a validator later by running the ./setup_validator.sh script separately."
   echo ""
 fi
 
