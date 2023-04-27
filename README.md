@@ -81,7 +81,7 @@ start_consensus.sh
 start_validator.sh
 ```
 
-There will also be copys of a couple helper_scripts to ease up the task of stopping, viewing/following logs, stopping, restarting and updating the Docker Images. Read bellow for further informaion
+There will also be copys of a couple helper_scripts to ease up the task of viewing/following logs, stopping, restarting and updating the Docker Images. Read bellow for further informaion
 
 
 ## |#| Prometheus/Grafana Monitoring:
