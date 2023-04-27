@@ -164,25 +164,33 @@ sudo docker logs -f beacon
 sudo docker logs -f validator
 ```
 
-## Stopping Containers:
+## Stopping/Restarting Containers:
 
-Should you need to alter the original start_###.sh scripts you might need to stop/restart the docker-containers/images that are currently running. To achieve this, you can use the stop_remove_images.sh script provided which should be inside the folder you chose in the setup (default: /blockchain).
+Should you need to alter the original start_###.sh scripts you might need to stop/restart the docker-containers/images that are currently running. To achieve this, you can use the stop_docker.sh/ restart_docker.sh script provided which should be inside the folder you chose in the setup (default: /blockchain).
 
 ### A) via script:
 
-The script should already be executable, if not make the script executable via:
+The scripts should already be executable, if not make the script executable via:
 
 ```bash
 cd /blockchain
 
-sudo chmod +x stop_remove_images.sh
+sudo chmod +x stop_docker.sh
+
+or
+
+sudo chmod +x restart_docker.sh
 ```
 
 run the script:
 ```bash
 cd /blockchain
 
-./stop_remove_images.sh
+./stop_docker.sh
+
+or
+
+./restart_docker.sh
 ```
 
 ### B) singel commands:
@@ -202,7 +210,7 @@ sudo docker -rm validator
 Once the containers are stopped, you might also need to prune/clean the cache using the command:
 
 ```bash
-sudo docker container prune
+sudo docker container prune -f
 ```
 
 After you made desired changes, you can start the Docker Images/Containers again with the initial start_###.sh scripts from within the folder you chose in the setup (default: /blockchain):
