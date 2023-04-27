@@ -81,7 +81,7 @@ Make the `setup_monitoring.sh` script executable:
 ```bash 
 sudo chmod +x setup_monitoring.sh
 ```
-Run the `monitor.sh` script to start the Prometheus and Grafana Docker containers: 
+Run the `setup_monitoring.sh` script to start the Prometheus and Grafana Docker containers: 
 ```bash 
 ./setup_monitoring.sh
 ```
@@ -99,9 +99,9 @@ To add dashboards, navigate to:
 ```bash 
 http://127.0.0.1:3000/dashboard/import
 ```
-Import the JSON files from your local install_pulse_node directory (these were downloaded during the monitor.sh setup).
+Import the JSON files from your local install_pulse_node directory (default: `/blockchain/Dashboards` - these were downloaded during the setup process).
 
-That's it! Prometheus and Grafana should now be up and running on your machine, allowing you to import dashboards tailored to your needs.
+That's it! Prometheus and Grafana should now be up and running on your machine, allowing you to import more dashboards tailored to your needs.
 
 
 ## Launching, Logging, and Stopping the Execution, Beacon and Validator Docker-Containers
