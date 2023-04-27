@@ -141,19 +141,6 @@ if [ -z "$CUSTOM_PATH" ]; then
   CUSTOM_PATH="/blockchain"
 fi
 
-# Ask the user to enter the fee-receiption address
-#echo "Please enter the fee-receiption address (it is the address that will receive the fees your validator will earn) (Press Enter to use the default address, which is mine and can be changed later in the generated .sh script):"
-#read fee_wallet
-
-# Use a regex pattern to validate the input wallet address
-#if [[ -z "${fee_wallet}" ]] || ! [[ "${fee_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-#    fee_wallet="0x998D0ed46B837fbeAEb6988A6C00b721E33224Ec"
-#    echo "Using default fee-receiption address: ${fee_wallet}"
-#else
-#    echo "Using provided fee-receiption address: ${fee_wallet}"
-#fi
-
-
 # Working BootNode, temp fix for low peerCount on the consensus client - kudos to @SIN3R6Y for sharing this BootNode
 BOOTNODE="enr:-L64QNIt1R1_ou9Aw5ci8gLAsV1TrK2MtWiPNGy21YsTW0HpA86hGowakgk3IVEZNjBOTVdqtXObXyErbEfxEi8Y8Z-CARSHYXR0bmV0c4j__________4RldGgykFuckgYAAAlE__________-CaWSCdjSCaXCEA--2T4lzZWNwMjU2azGhArzEiK-HUz_pnQBn_F8g7sCRKLU4GUocVeq_TX6UlFXIiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo"
 
