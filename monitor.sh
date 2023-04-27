@@ -234,15 +234,30 @@ if [[ $answer == "y" ]]; then
 
   echo -e "${GREEN}Script finished. Check your files for updates.${NC}"
   echo ""
-  echo "Please press Enter to continue..."
+  echo "Docker Images needs to be restarted, please press Enter to continue..."
   read -p ""
   clear
   echo -e "${GREEN}Restarting Docker containers...${NC}"
   echo ""
-  sudo docker restart execution
-  sudo docker restart beacon
-  sudo docker restart validator
-
+ 
+  sudo docker stop execution
+  sudo docker stop beacon
+  sudo docker stop validator
+  
+  sudo docker rm exectuion
+  sudo docker rm beacon
+  sudo docker rm validator
+  
+  sudo docker container prune -f
+  
+  $config_location/start_execution.sh
+  sleep 1
+  $config_location/start_consensus.sh
+  sleep 1
+  $config_location/start_validator.sh
+  sleep 1
+  
+  echo ""
   echo "Docker containers restarted successfully."
   echo ""
 else
