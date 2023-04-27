@@ -310,9 +310,8 @@ echo ""
 read -e -p "$(echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitoring Setup now (y/n):${NC}")" answer
 
 if [[ $answer == "y" ]] || [[ $answer == "Y" ]]; then
-  sudo chmod +x $start_dir/monitor.sh
-  $start_dir/monitor.sh
-  exit 0
+  sudo chmod +x $start_dir/setup_monitoring.sh
+  $start_dir/setup_monitoring.sh
 else
   echo "Skipping Prometheus/Grafana Monitoring Setup."
 fi
@@ -337,7 +336,7 @@ if [[ "$log_it" =~ ^[Yy]$ ]]; then
             echo "Invalid choice. Exiting."
             ;;
     esac
-fi
+else
 echo -e " ${RED}Note: Sync the chain fully before submitting your deposit_keys to prevent slashing; avoid using the same keys on multiple machines.${NC}"
 echo ""
 echo -e "Find more information in the repository's README."
@@ -350,5 +349,6 @@ echo "Brought to you by:
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 echo -e "${GREEN}For Donations use ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
 echo ""
+fi
 exit 0
 
