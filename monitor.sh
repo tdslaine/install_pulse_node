@@ -187,6 +187,11 @@ $grafana_api
 sleep 1
 echo ""
 
+#debug
+cd $start_dir
+echo "$start_dir"
+#debug
+
 echo "Downloading dashboard JSON..."
 wget -qO- https://gist.githubusercontent.com/karalabe/e7ca79abdec54755ceae09c08bd090cd/raw/dashboard.json > "${start_dir}/Geth_dashboard.json"
 wget -qO- https://grafana.com/api/dashboards/11074/revisions/9/download > "${start_dir}/System_dashboard.json"
@@ -244,7 +249,7 @@ if [[ $answer == "y" ]]; then
   sudo docker stop beacon
   sudo docker stop validator
   
-  sudo docker rm exectuion
+  sudo docker rm execution
   sudo docker rm beacon
   sudo docker rm validator
   
@@ -262,26 +267,13 @@ if [[ $answer == "y" ]]; then
   echo ""
 else
   clear
-  echo "Please ensure your startup scripts contain the following required flags:"
+  echo "Please ensure your clients contain the following required flags:"
   echo " - geth/execution: --metrics --pprof"
   echo " - ligthhouse/beacon: --staking --metrics --validator-monitor-auto"
   echo " - ligthhouse/validator: --metrics"
   echo ""
-  echo "To restart containers after changes are applied, use:"
-  echo " - sudo docker restart execution"
-  echo " - sudo docker restart beacon"
-  echo " - sudo docker restart validator"
   echo ""
 fi
-echo ""
-echo -e "${GREEN}Congratulations, setup is now complete.${NC}"
-echo ""
-echo "Access Grafana: http://127.0.0.1:3000"
-echo "Username: admin"
-echo "Password: admin"
-echo ""
-echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import"
-echo "Import JSONs from '${start_dir}'"
 echo ""
 echo "Please press Enter to continue..."
 read -p ""
@@ -294,6 +286,15 @@ echo "Greetings to the whole plsdev tg-channel, you guys rock"
 echo ""
 echo "HAPPY VALIDATIN' FRENS :p "
 echo "..."
+echo ""
+echo -e "${GREEN}Congratulations, setup is now complete.${NC}"
+echo ""
+echo "Access Grafana: http://127.0.0.1:3000"
+echo "Username: admin"
+echo "Password: admin"
+echo ""
+echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import"
+echo "Import JSONs from '${start_dir}'"
 echo ""
 echo "Brought to you by:
   ██████__██_██████__███████_██_______█████__██____██_███████_██████__
