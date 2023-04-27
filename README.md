@@ -77,13 +77,13 @@ There will also be a copy of three helper_scripts to ease up the task of stoppin
 :exclamation: If you opted not to run the monitoring setup during the validator setup, follow these steps:
 
 
-Make the `monitor.sh` script executable: 
+Make the `setup_monitoring.sh` script executable: 
 ```bash 
-sudo chmod +x monitor.sh
+sudo chmod +x setup_monitoring.sh
 ```
 Run the `monitor.sh` script to start the Prometheus and Grafana Docker containers: 
 ```bash 
-./monitor.sh
+./setup_monitoring.sh
 ```
 ### Adding Dashboards
 
