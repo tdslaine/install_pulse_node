@@ -290,7 +290,7 @@ echo "Username: admin"
 echo "Password: admin"
 echo ""
 echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import"
-echo "Import JSONs from '${start_dir}'"
+echo "Import JSONs from '${config_location}/Dashboards'"
 echo ""
 echo "Brought to you by:
   ██████__██_██████__███████_██_______█████__██____██_███████_██████__
