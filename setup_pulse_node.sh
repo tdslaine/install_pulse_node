@@ -280,33 +280,58 @@ sudo chown -R ${ETH_CLIENT}: "${CUSTOM_PATH}/execution/$ETH_CLIENT"
 sudo chown -R ${CONSENSUS_CLIENT}: "${CUSTOM_PATH}/consensus/$CONSENSUS_CLIENT"
 clear
 echo ""
-echo -e "${GREEN}Setting up firewall including port 22 for SSH and port 8545 for internal connection to the RPC${NC}"
-read -p "Do you want to allow RPC (8545) access from localhost? (y/n): " rpc_choice
+
+# Firewall Setup
+
+#Function to get the IP-Adress Range from the local, private network
+
+function get_local_ip() {
+  local_ip=$(hostname -I | awk '{print $1}')
+  echo $local_ip
+}
+
+function get_ip_range() {
+  local_ip=$(get_local_ip)
+  ip_parts=(${local_ip//./ })
+  ip_range="${ip_parts[0]}.${ip_parts[1]}.${ip_parts[2]}.0/24"
+  echo $ip_range
+}
+
+# Prompt for the Rules to add
+
+echo -e "${GREEN}Setting up firewall to allow access to SSH and port 8545 for localhost and private network connection to the RPC.${NC}"
+
+ip_range=$(get_ip_range)
+read -p "Do you want to add UFW rules for the local-network range ($ip_range) too? (y/n): " local_network_choice
+read -p "Do you want to allow RPC (8545) access ?(y/n): " rpc_choice
 
 if [[ $rpc_choice == "y" ]]; then
   sudo ufw allow from 127.0.0.1 to any port 8545 proto tcp comment 'RPC Port'
-else
-  sudo ufw deny from 127.0.0.1 to any port 8545 proto tcp comment 'RPC Port'
+  if [[ $local_network_choice == "y" ]]; then
+    sudo ufw allow from $ip_range to any port 8545 proto tcp comment 'RPC Port for private IP range'
+  fi
 fi
 
 read -p "Do you want to allow SSH access to this server? (y/n): " ssh_choice
+
 if [[ $ssh_choice == "y" ]]; then
   read -p "Enter SSH port (default is 22): " ssh_port
   if [[ $ssh_port == "" ]]; then
     ssh_port=22
   fi
   sudo ufw allow $ssh_port/tcp comment 'SSH Port'
-else
-  read -p "Warning: Denying SSH access to this server may disconnect your current SSH connection. Please make sure you have an alternative way to access the server before proceeding. Do you want to proceed with denying SSH access? (y/n): " ssh_confirm
-  if [[ $ssh_confirm == "y" ]]; then
-    sudo ufw deny 22/tcp comment 'SSH Port'
-  else
-    echo "SSH access not denied. Make sure to allow SSH-Access if needed"
+  if [[ $local_network_choice == "y" ]]; then
+    sudo ufw allow from $ip_range to any port $ssh_port proto tcp comment 'SSH Port for private IP range'
   fi
 fi
+
+#############################################################################################################
+
 echo ""
 echo -e "${GREEN}Setting to default deny incomming and allow outgoing, enabling the Firewall${NC}"
+echo ""
 sudo ufw default deny incoming
+echo ""
 sudo ufw default allow outgoing
 echo ""
 # Allow inbound traffic for specific ports based on user choices 
