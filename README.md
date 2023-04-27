@@ -118,14 +118,17 @@ Import the JSON files from your local install_pulse_node directory (default: `/b
 That's it! Prometheus and Grafana should now be up and running on your machine, allowing you to import more dashboards tailored to your needs.
 
 ### Allow Access from within your local Network
-To find your own IP address range, you can use the ifconfig command. Open a terminal and enter the following command:
+:exclamation: If you opted not to allow access from within your local-network to Grafana during the monitoring setup, follow these steps:
+
+1. Find current local IP-Range:
+To find your own IP address range, you can use the `hostname -I` command. Open a terminal and enter the following command:
 
 ```bash
-sudo ifconfig
+sudo hostname -I | awk '{print $1}'
 ```
-This will display information about your network interfaces, including your IP address, netmask, and broadcast address. Look for the interface that is connected to your local network, and find the inet addr or inet field to see your IP address.
+This will display your IP address
 
-
+2. Set UFW Rule:
 To allow access to the Grafana dashboard within your local subnet, run the ufw command with the appropriate IP range. For example, if your local IP address is 192.168.0.10, you can allow the entire IP range of 192.168.0.0-192.168.0.254 to access port 3000 by using the following command:
 
 ```bash
