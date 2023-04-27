@@ -408,8 +408,8 @@ chmod +x log_viewer.sh
 sudo mv log_viewer.sh "$CUSTOM_PATH"
 chmod +x update_docker.sh
 sudo mv update_docker.sh "$CUSTOM_PATH"
-chmod +x stop_remove_images.sh
-sudo mv stop_remove_images.sh "$CUSTOM_PATH"
+chmod +x stop_docker.sh
+sudo mv stop_docker.sh "$CUSTOM_PATH"
 chmod +x tmux_logviewer.sh
 sudo mv tmux_logviewer.sh "$CUSTOM_PATH"
 echo ""
