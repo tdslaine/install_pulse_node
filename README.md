@@ -314,7 +314,7 @@ In case a recent update to the Geth or Lighthouse Docker image causes issues, yo
 
 1. Stop the running Docker clients: Execute the appropriate stop command or use docker stop with the container name or ID.
 
-2. Edit the corresponding start_###.sh script: Choose the appropriate script from start_execution.sh, start_consensus.sh, or start_validator.sh. Modify the line that refers to the Docker image, changing the image version from :latest to the desired older version. For example:
+2. Edit the corresponding start_###.sh script: Choose the appropriate script from start_execution.sh, start_consensus.sh, or start_validator.sh. Modify the line that refers to the Docker image, changing the image version from :latest to the desired older version. For this example in start_execution.sh:
 
 Change this line:
 ```bash
@@ -330,7 +330,7 @@ By following these steps, you can revert to a previous, stable version of the Do
 
 Note: you can find the version history for each docker-image on the gitlab https://gitlab.com/pulsechaincom from the pulsedevs.
 For example for geth it would be: https://gitlab.com/pulsechaincom/go-pulse/container_registry/2121084 - you have to click next until you are at the last page.
-(On the Page, choose your desired client > on left side navigation Panel click "Packages and registries" > then click "Packages and registries") 
+###### howto get there: On the Page, choose your desired client > on left side navigation Panel click "Packages and registries" > then click "Packages and registries" 
 
 
 
