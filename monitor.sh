@@ -187,21 +187,18 @@ $grafana_api
 sleep 1
 echo ""
 
-#debug
-cd $start_dir
-echo "$start_dir"
-#debug
 
+sudo mkdir -p "${config_location}/Dashboards"
 echo "Downloading dashboard JSON..."
-wget -qO- https://gist.githubusercontent.com/karalabe/e7ca79abdec54755ceae09c08bd090cd/raw/dashboard.json > "${start_dir}/Geth_dashboard.json"
-wget -qO- https://grafana.com/api/dashboards/11074/revisions/9/download > "${start_dir}/System_dashboard.json"
-wget -qO- https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/Summary.json > "${start_dir}/Lighthouse_beacon_dashboard.json"
-wget -qO- https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/ValidatorClient.json > "${start_dir}/Lighthouse_validator_dashboard.json"
-wget -qO- https://raw.githubusercontent.com/raskitoma/pulse-staking-dashboard/main/Yoldark_ETH_staking_dashboard.json > "${start_dir}/Staking_dashboard.json"
+sudo wget -qO- https://gist.githubusercontent.com/karalabe/e7ca79abdec54755ceae09c08bd090cd/raw/dashboard.json -P "${config_location}/Dashboards" > /dev/null
+sudo wget -qO- https://grafana.com/api/dashboards/11074/revisions/9/download -P "${config_location}/Dashboards" > /dev/null
+sudo wget -qO- https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/Summary.json -P "${config_location}/Dashboards" > /dev/null
+sudo wget -qO- https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/ValidatorClient.json -P "${config_location}/Dashboards" > /dev/null
+sudo wget -qO- https://raw.githubusercontent.com/raskitoma/pulse-staking-dashboard/main/Yoldark_ETH_staking_dashboard.json -P "${config_location}/Dashboards" > /dev/null
 echo ""
-echo "Dashboard Download complete."
+echo "Dashboard download complete."
 echo ""
-
+sudo chmod -R 755 "${config_location}/Dashboards"
 
 echo -e "${GREEN}Do you want to add the required flags to the start_xyz.sh scripts and restart Docker containers? (y/n)${NC}"
 echo ""
