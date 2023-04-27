@@ -85,6 +85,34 @@ sudo ufw allow from 127.0.0.1 to any port 8546 proto tcp
 sudo ufw allow from 127.0.0.1 to any port 5052 proto tcp
 sudo ufw allow from 127.0.0.1 to any port 5064 proto tcp
 
+# Prompt to allow access to Grafana Dashboard in Local Network
+
+function get_local_ip() {
+  local_ip=$(hostname -I | awk '{print $1}')
+  echo $local_ip
+}
+
+function get_ip_range() {
+  local_ip=$(get_local_ip)
+  ip_parts=(${local_ip//./ })
+  ip_range="${ip_parts[0]}.${ip_parts[1]}.${ip_parts[2]}.0/24"
+  echo $ip_range
+}
+
+echo ""
+ip_range=$(get_ip_range)
+read -p "Do you want to allow access to the Grafana Dashboard within your local network ($ip_range)? (y/n): " local_network_choice
+
+if [[ $local_network_choice == "y" ]]; then
+    echo ""
+    sudo ufw allow from $ip_range to any port 3000 proto tcp comment 'Grafana Port for private IP range'
+  
+fi
+
+echo ""
+sudo ufw reload 
+echo ""
+
 # Define Docker commands as variables
 PROMETHEUS_CMD="sudo -u prometheus docker run -dt --name prometheus --restart=always \\
   --net='host' \\
