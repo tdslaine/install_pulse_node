@@ -3,14 +3,14 @@
 <img src="https://user-images.githubusercontent.com/46573429/233395501-99a54d99-7184-4d96-9d00-7b82f9da3939.png" style="max-width: 100%; margin: 0 auto;"/>
 </div>
 
-## Interactive Setup
+## AIO Interactive Setup
 Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace of Mind with this interactive setup script 
 
-## Installing and Running Pulse Node with the option to add the lighthouse-validator
+## Installing and Running a Pulsechain Node with an optional Lighthouse Validator and Prometheus/Grafana Monitoring
 
-This guide will help you install and run the Pulse Node using the provided `setup_pulse_node.sh` script.
+This guide will help you to install and run the Pulsechain Node/Validator using the provided `setup_pulse_node.sh` script.
 
-:point_right: donations accepted so I might be able to work on mainnet too 😃
+:point_right: donations accepted so I might be able to validate on mainnet too 😃
 
 erc20: `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
 
