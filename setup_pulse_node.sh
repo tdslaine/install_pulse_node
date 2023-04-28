@@ -142,7 +142,7 @@ if [ -z "$CUSTOM_PATH" ]; then
 fi
 
 # Working BootNode, temp fix for low peerCount on the consensus client - kudos to @SIN3R6Y for sharing this BootNode
-BOOTNODE="enr:-L64QNIt1R1_ou9Aw5ci8gLAsV1TrK2MtWiPNGy21YsTW0HpA86hGowakgk3IVEZNjBOTVdqtXObXyErbEfxEi8Y8Z-CARSHYXR0bmV0c4j__________4RldGgykFuckgYAAAlE__________-CaWSCdjSCaXCEA--2T4lzZWNwMjU2azGhArzEiK-HUz_pnQBn_F8g7sCRKLU4GUocVeq_TX6UlFXIiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo"
+# BOOTNODE="enr:-L64QNIt1R1_ou9Aw5ci8gLAsV1TrK2MtWiPNGy21YsTW0HpA86hGowakgk3IVEZNjBOTVdqtXObXyErbEfxEi8Y8Z-CARSHYXR0bmV0c4j__________4RldGgykFuckgYAAAlE__________-CaWSCdjSCaXCEA--2T4lzZWNwMjU2azGhArzEiK-HUz_pnQBn_F8g7sCRKLU4GUocVeq_TX6UlFXIiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo"
 
 # Docker run commands for Ethereum clients
 GETH_CMD="sudo -u geth docker run -dt --restart=always \\
@@ -181,7 +181,6 @@ registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest \\
 --jwt-secret=/blockchain/jwt.hex \\
 --datadir=/blockchain/consensus/prysm \\
 --checkpoint-sync-url=${CHECKPOINT} \\
---bootstrap-node=${BOOTNODE} \\
 --min-sync-peers 1 \\
 --genesis-beacon-api-url=${CHECKPOINT} "
 
@@ -196,7 +195,6 @@ lighthouse bn \\
 --datadir=/blockchain/consensus/lighthouse \\
 --execution-endpoint=http://localhost:8551 \\
 --checkpoint-sync-url=${CHECKPOINT} \\
---boot-nodes=${BOOTNODE} \\
 --staking \\
 --metrics \\
 --validator-monitor-auto \\
