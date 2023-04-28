@@ -289,7 +289,7 @@ function get_ip_range() {
 echo -e "${GREEN}Setting up firewall to allow access to SSH and port 8545 for localhost and private network connection to the RPC.${NC}"
 
 ip_range=$(get_ip_range)
-read -p "Do you want to add UFW rules for the local-network range ($ip_range) too? (y/n): " local_network_choice
+read -p "Do you want to allow access to the RPC and SSH from within your local network ($ip_range)? (y/n): " local_network_choice
 read -p "Do you want to allow RPC (8545) access ?(y/n): " rpc_choice
 
 if [[ $rpc_choice == "y" ]]; then
