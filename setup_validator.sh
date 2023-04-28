@@ -167,7 +167,7 @@ import_validator_keys() {
         echo "Source directory does not exist. Please check the provided path and try again. Now exiting"
         exit 1
     fi
-    
+    if [[ "$setup_choice" == "2" ]]; then
     echo "Importing keys via Lighthouse-Clinet now"
 
 #   ## Run the Lighthouse Pulse docker container as the validator user
@@ -191,7 +191,8 @@ echo
 sudo ${custompath}/start_validator.sh
 echo ""
 echo "done."
-
+exit 0
+fi
 }
 
 generate_new_validator_key() {
@@ -265,7 +266,7 @@ done
 if [[ "$setup_choice" == "1" ]]; then
 
 clear
-echo "Now continuing the First-Time Setup"
+echo "Now continuing with initial Setup"
 echo ""
 read -e -p "$(echo -e " ${GREEN}Enter fee-receipt address (leave blank for my address; change later in start_validator.sh):${NC}")" fee_wallet
 echo ""
