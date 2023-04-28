@@ -187,7 +187,7 @@ sudo docker stop -t 10 validator_import
 
 sudo docker container prune -f
 echo "restarting validator docker-image"
-echo ""
+echo 
 sudo ${custompath}/start_validator.sh
 echo ""
 echo "done."
@@ -242,16 +242,16 @@ generate_new_validator_key() {
 
 # Selection menu
 PS3="Choose an option (1-2): "
-options=("Generate new validator_key" "Import existing validator_keys")
+options=("Import existing validator_keys" "Generate new validator_key")
 select opt in "${options[@]}"
 do
     case $REPLY in
         1)
-            generate_new_validator_key
+            import_validator_keys
             break
             ;;
         2)
-            import_validator_keys
+            generate_new_validator_key
             break
             ;;
         *)
@@ -298,7 +298,7 @@ echo "Importing validator_keys using the lighthouse-client"
 echo ""
 
 ## Run the Lighthouse Pulse docker container as the validator user
-
+fi
 
 sudo docker run -it \
     --name validator_import \
@@ -446,4 +446,3 @@ echo ""
 echo "done"
 echo ""
 exit 0
-
