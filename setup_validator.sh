@@ -11,22 +11,20 @@ LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 
 echo "Setting up Lighthouse-Validator now"
 echo ""
-
-read -e -p "$(echo -e "${GREEN}Is this a first-time setup or are you adding to an existing setup? (1: first-time, 2: existing):${NC} ")" setup_choice
+    echo "Is this a first-time setup or are you adding to an existing setup?"
+    echo ""
+    echo "1. First-Time Validator Setup"
+    echo "2. Add or Import to an Existing setup"
+    echo "" 
+    read -p "Enter your choice (1 or 2): " setup_choice
+    
 
 if [[ "$setup_choice" == "2" ]]; then
-    echo -e "${RED}! To add a key, stop any running validator first!"
-    echo -e "1. List validator: 'sudo docker ps'"
-    echo -e "2. Stop instance: 'sudo docker stop VALIDATOR_NAME'"
-    echo -e "After you have successfully imported your validator key please restart your validator by running ./start_validator.sh."${NC}
+    echo -e "${RED}! To add a key, we have to stop running lighthouse images"
+    sudo docker stop validator beacon
+    sudo docker rm validator beacon
+    sudo docker container prune -f
 
-    read -e -p "$(echo -e "${GREEN}Have you stopped all running instances of the validator? (y/N):${NC} ")" stopped_instances
-    if [[ "$stopped_instances" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-        echo "Proceeding with adding the key..."
-    else
-        echo "Please stop all running instances before continuing."
-        exit 1
-    fi
 else
     echo ""
     echo "Proceeding with first-time setup..."
@@ -91,6 +89,7 @@ if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
   bind '"\t":menu-complete'
 fi
 
+
 # Define the custom path for the validator directory
 read -e -p "$(echo -e "${GREEN}Enter the path to store validator data (default: /blockchain):${NC} ")" custompath
 
@@ -128,42 +127,28 @@ sudo pip3 install -r requirements.txt
 # Install the package
 sudo python3 setup.py install
 
+clear
+
 # Run the helper script for installation
 #./deposit.sh install
 echo ""
 
-# Detect and shutdown current Network device that is connected to the internet
-interface=$(ip route get 8.8.8.8 | awk '{print $5}')
-
-
-echo ""
-echo -e "Generating your validator keys offline is a good security practice. "
-echo ""
-echo -e "${RED}However, be aware that if you turn off your network interface, you will lose remote access to your machine. Make sure you are locally present on the machine before doing so.${NC}"
-echo ""
-read -e -p "Do you want to shutdown the network interface during the keygeneration process now? (y/n)" network_off
-
-    if [[ "$network_off" =~ ^[Yy]$ ]]; then
-        sudo ip link set $interface down
-    fi
-
-echo "Interface $interface has been shutdown and will be put back online after the Key-generating Process"
-echo ""
-
-echo ""
-
-# Functions for the two options
+# Functions for the two options ############################################################################
 import_validator_keys() {
     # Code for importing the existing validator_keys
     echo ""
     echo "Importing pre-existing validator_keys:"
     echo ""
+    echo "shutting down running validator docker-image"
+    sudo docker stop validator
+    sudo docker container prune -f
+    echo ""
     echo -e "Enter the path to the directory with your 'validator_keys' backup."
     echo -e "Make sure it's unzipped and available. You are able to use tab-autocomplete when entering the path."
     echo -e "This could be an external folder, e.g., /media/username/USB_drive_name"
     read -e -p "(default: /backupPath):" backup_path
-       
-    # Set the default value for backup path if the user enters nothing
+   
+# Set the default value for backup path if the user enters nothing
     if [ -z "$backup_path" ]; then
         backup_path="/backupPath"
     fi
@@ -173,7 +158,7 @@ import_validator_keys() {
         # Check if the source and destination paths are different
         if [ "${custompath}/validator_keys" != "${backup_path}/validator_keys" ]; then
             # Restore the validator_keys from the backup
-            sudo cp -R "${backup_path}/validator_keys" "${custompath}/validator_keys"
+            sudo cp -R "${backup_path}/validator_keys" "${custompath}"
         else
             echo "Source and destination paths match. Skipping restore-copy; keys seem already in place."
             echo "Key import will still proceed..."
@@ -182,15 +167,67 @@ import_validator_keys() {
         echo "Source directory does not exist. Please check the provided path and try again. Now exiting"
         exit 1
     fi
+    
+    echo "Importing keys via Lighthouse-Clinet now"
+
+#   ## Run the Lighthouse Pulse docker container as the validator user
+    sudo docker run -it \
+    --name validator_import \
+    --network=host \
+    -v ${custompath}:/blockchain \
+    registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \
+    lighthouse \
+    --network=${LIGHTHOUSE_NETWORK_FLAG} \
+    account validator import \
+    --directory=${custompath}\
+    --datadir=${custompath}
+    
+
+sudo docker stop -t 10 validator_import
+
+sudo docker container prune -f
+echo "restarting validator docker-image"
+echo ""
+sudo ${custompath}/start_validator.sh
+echo ""
+echo "done."
+exit 0
 }
 
 generate_new_validator_key() {
     # Code for generating a new validator key
+    # Detect and shutdown current Network device that is connected to the internet
+    interface=$(ip route get 8.8.8.8 | awk '{print $5}')
+
+    echo ""
+    echo -e "Generating your validator keys offline is a good security practice. "
+    echo ""
+    echo -e "${RED}However, be aware that if you turn off your network interface, you will lose remote access to your machine. Make sure you are locally present on the machine before doing so.${NC}"
+    echo ""
+    read -e -p "Do you want to shutdown the network interface during the keygeneration process now? (y/n)" network_off
+
+    if [[ "$network_off" =~ ^[Yy]$ ]]; then
+        sudo ip link set $interface down
+        echo "Interface $interface has been shutdown and will be put back online after the Key-generating Process"
+    fi
 
     echo ""
     echo "Now generating the validator keys - please follow the instructions and make sure to READ! everything"
     sleep 3
-    sudo ./deposit.sh new-mnemonic --mnemonic_language=english --chain=${DEPOSIT_CLI_NETWORK} --folder="${custompath}"
+    while true; do 
+    echo ""
+    read -e -p "$(echo -e " ${GREEN}Please enter your ETH-Withdrawal-Wallet Adress:${NC}")" withdraw_wallet
+    echo ""    
+    echo -e "${RED}Make sure you have full access to this Wallet!${NC}"
+    # Use a regex pattern to validate the input wallet address
+    if [[ -z "${withdraw_wallet}" ]] || ! [[ "${withdraw_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
+    echo "Please enter a valid withdrawal Wallet..."
+    else
+    break
+    fi
+    done
+   
+    sudo ./deposit.sh new-mnemonic --mnemonic_language=english --chain=${DEPOSIT_CLI_NETWORK} --folder="${custompath}" --eth1_withdrawal_address=${withdraw_wallet}
     cd "${custompath}"
     
     echo ""
@@ -198,22 +235,23 @@ generate_new_validator_key() {
     echo ""
     echo -e "${RED}For security reasons, it's recommended to store the validator_keys file in a safe, offline location after importing it.${NC}"
     echo -e "${RED}Consider removing the validator_keys folder from your local machine and storing it in a secure location, such as an offline backup or a hardware wallet.${NC}"
+    echo ""
     sleep 5
     echo ""
 }
 
 # Selection menu
 PS3="Choose an option (1-2): "
-options=("Import existing validator_keys" "Generate new validator_key")
+options=("Generate new validator_key" "Import existing validator_keys")
 select opt in "${options[@]}"
 do
     case $REPLY in
         1)
-            import_validator_keys
+            generate_new_validator_key
             break
             ;;
         2)
-            generate_new_validator_key
+            import_validator_keys
             break
             ;;
         *)
@@ -223,7 +261,11 @@ do
 done
 
 
-# Ask the user to enter the fee-receiption address
+# Ask the user to enter the fee-receiption address for a fresh install, skip for existing installation
+if [[ "$setup_choice" == "1" ]]; then
+
+clear
+echo "Now continuing the First-Time Setup"
 echo ""
 read -e -p "$(echo -e " ${GREEN}Enter fee-receipt address (leave blank for my address; change later in start_validator.sh):${NC}")" fee_wallet
 echo ""
@@ -256,6 +298,8 @@ echo "Importing validator_keys using the lighthouse-client"
 echo ""
 
 ## Run the Lighthouse Pulse docker container as the validator user
+
+
 sudo docker run -it \
     --name validator_import \
     --network=host \
@@ -271,6 +315,7 @@ sudo docker stop -t 10 validator_import
 
 sudo docker container prune -f
 
+if [[ "$setup_choice" == "1" ]]; then
 VALIDATOR_LH="sudo -u validator docker run -dt --network=host --restart=always \\
     -v "${custompath}":/blockchain \\
     --name validator \\
@@ -293,6 +338,7 @@ if [[ "$network_off" =~ ^[Yy]$ ]]; then
     sudo ip link set $interface up
 fi
 echo "Network interface put back online"
+   
 #write start_validator.sh
 sudo chmod 777 ${custompath}
 
@@ -386,6 +432,18 @@ echo "Brought to you by:
   ██___██_██_██___________██_██______██___██____██____██______██___██_
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 echo -e "${GREEN}For Donations use ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
+echo ""
+exit 0
+fi
+# continuing from the existing setup
+echo ""
+echo "import done... restarting beacon and validator"
+sudo ${custompath}/start_validator.sh
+sleep 1
+sudo ${custompath}/start_beacon.sh
+sleep 1
+echo ""
+echo "done"
 echo ""
 exit 0
 
