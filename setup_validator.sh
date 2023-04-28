@@ -191,7 +191,7 @@ echo
 sudo ${custompath}/start_validator.sh
 echo ""
 echo "done."
-exit 0
+
 }
 
 generate_new_validator_key() {
