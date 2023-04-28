@@ -234,77 +234,77 @@ echo ""
 echo ""
 sudo chmod -R 755 "${config_location}/Dashboards"
 
-echo -e "${GREEN}Do you want to add the required flags to the start_xyz.sh scripts and restart Docker containers? (y/n)${NC}"
-echo ""
-echo -e "${RED}NOTE: This step is only necessary if you used my setup-script before April 26, 2023. From that date onwards, the required flags are already included in the start_ scripts during the initial setup.${NC}"
-read answer
+#echo -e "${GREEN}Do you want to add the required flags to the start_xyz.sh scripts and restart Docker containers? (y/n)${NC}"
+#echo ""
+#echo -e "${RED}NOTE: This step is only necessary if you used my setup-script before April 26, 2023. From that date onwards, the required flags are already included in the start_ scripts during the initial setup.${NC}"
+#read answer
 
-if [[ $answer == "y" ]]; then
+#if [[ $answer == "y" ]]; then
+#
+#  # Update start_execution.sh script
+#  if [ -f "${config_location}/start_execution.sh" ]; then
+#    sudo sed -i '14s:^:--metrics \\\n:' "${config_location}/start_execution.sh"
+#    sudo sed -i '15s:^:--pprof \\\n:' "${config_location}/start_execution.sh"
+#    echo -e "Updated start_execution.sh with --metrics and --pprof flags."
+#  else
+#    echo -e "start_execution.sh not found. Skipping."
+# fi
 
-  # Update start_execution.sh script
-  if [ -f "${config_location}/start_execution.sh" ]; then
-    sudo sed -i '14s:^:--metrics \\\n:' "${config_location}/start_execution.sh"
-    sudo sed -i '15s:^:--pprof \\\n:' "${config_location}/start_execution.sh"
-    echo -e "Updated start_execution.sh with --metrics and --pprof flags."
-  else
-    echo -e "start_execution.sh not found. Skipping."
-  fi
-
-  # Update start_consensus.sh script
-  if [ -f "${config_location}/start_consensus.sh" ]; then
-    sudo sed -i '14s:^:--metrics \\\n:' "${config_location}/start_consensus.sh"
-    sudo sed -i '15s:^:--staking \\\n:' "${config_location}/start_consensus.sh"
-    sudo sed -i '16s:^:--validator-monitor-auto \\\n:' "${config_location}/start_consensus.sh"
-    echo -e "Updated start_consensus.sh with --metrics, --staking, and --validator-monitor-auto flags."
-  else
-    echo -e "start_consensus.sh not found. Skipping."
-  fi
+#  # Update start_consensus.sh script
+#  if [ -f "${config_location}/start_consensus.sh" ]; then
+#    sudo sed -i '14s:^:--metrics \\\n:' "${config_location}/start_consensus.sh"
+#    sudo sed -i '15s:^:--staking \\\n:' "${config_location}/start_consensus.sh"
+#    sudo sed -i '16s:^:--validator-monitor-auto \\\n:' "${config_location}/start_consensus.sh"
+#    echo -e "Updated start_consensus.sh with --metrics, --staking, and --validator-monitor-auto flags."
+#  else
+#    echo -e "start_consensus.sh not found. Skipping."
+#  fi
 
   # Update start_validator.sh script
-  if [ -f "${config_location}/start_validator.sh" ]; then
-    sudo sed -i '7s:^:--metrics \\\n:' "${config_location}/start_validator.sh"
-    echo -e "Updated start_validator.sh with --metrics flag."
-  else
-    echo -e "start_validator.sh not found. Skipping."
-  fi
+#  if [ -f "${config_location}/start_validator.sh" ]; then
+#    sudo sed -i '7s:^:--metrics \\\n:' "${config_location}/start_validator.sh"
+#    echo -e "Updated start_validator.sh with --metrics flag."
+#  else
+#    echo -e "start_validator.sh not found. Skipping."
+#  fi
 
-  echo -e "${GREEN}Script finished. Check your files for updates.${NC}"
-  echo ""
-  echo "Docker Images needs to be restarted, please press Enter to continue..."
-  read -p ""
-  clear
-  echo -e "${GREEN}Restarting Docker containers...${NC}"
-  echo ""
+#  echo -e "${GREEN}Script finished. Check your files for updates.${NC}"
+#  echo ""
+#  echo "Docker Images needs to be restarted, please press Enter to continue..."
+#  read -p ""
+#  clear
+#  echo -e "${GREEN}Restarting Docker containers...${NC}"
+#  echo ""
  
-  sudo docker stop execution
-  sudo docker stop beacon
-  sudo docker stop validator
+#  sudo docker stop execution
+#  sudo docker stop beacon
+#  sudo docker stop validator
   
-  sudo docker rm execution
-  sudo docker rm beacon
-  sudo docker rm validator
+#  sudo docker rm execution
+#  sudo docker rm beacon
+#  sudo docker rm validator
   
-  sudo docker container prune -f
+#  sudo docker container prune -f
   
-  $config_location/start_execution.sh
-  sleep 1
-  $config_location/start_consensus.sh
-  sleep 1
-  $config_location/start_validator.sh
-  sleep 1
+#  $config_location/start_execution.sh
+#  sleep 1
+#  $config_location/start_consensus.sh
+#  sleep 1
+#  $config_location/start_validator.sh
+#  sleep 1
   
-  echo ""
-  echo "Docker containers restarted successfully."
-  echo ""
-else
-  clear
-  echo "Please ensure your clients contain the following required flags:"
-  echo " - geth/execution: --metrics --pprof"
-  echo " - ligthhouse/beacon: --staking --metrics --validator-monitor-auto"
-  echo " - ligthhouse/validator: --metrics"
-  echo ""
-  echo ""
-fi
+#  echo ""
+#  echo "Docker containers restarted successfully."
+#  echo ""
+#else
+#  clear
+#  echo "Please ensure your clients contain the following required flags:"
+#  echo " - geth/execution: --metrics --pprof"
+#  echo " - ligthhouse/beacon: --staking --metrics --validator-monitor-auto"
+#  echo " - ligthhouse/validator: --metrics"
+#  echo ""
+#  echo ""
+## fi
 echo ""
 echo "Please press Enter to continue..."
 read -p ""
