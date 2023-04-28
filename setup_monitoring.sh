@@ -314,11 +314,11 @@ echo ""
 echo -e "${GREEN}Congratulations, setup is now complete.${NC}"
 echo ""
 if [[ $local_network_choice == "y" ]]; then
-echo "Access Grafana: http://127.0.0.1:3000 or http://$local_ip:3000"
+echo "Access Grafana: http://127.0.0.1:3000 or http://${local_ip}:3000"
 echo "Username: admin"
 echo "Password: admin"
 echo ""
-echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import or http://$local_ip:3000/dashboard/import"
+echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import or http://${local_ip}:3000/dashboard/import"
 echo "Import JSONs from '${config_location}/Dashboards'"
 else
 echo "Access Grafana: http://127.0.0.1:3000"
