@@ -131,11 +131,30 @@ sudo python3 setup.py install
 # Run the helper script for installation
 #./deposit.sh install
 echo ""
-# Ask the user if they have previously created a validator_key
-read -e -i "n" -p "$(echo -e "${GREEN}Do you already have a validator key that you want to use instead of creating a new one? (y/n):${NC}")" has_previous_key
+
+# Detect and shutdown current Network device that is connected to the internet
+interface=$(ip route get 8.8.8.8 | awk '{print $5}')
+
+
+echo ""
+echo -e "Generating your validator keys offline is a good security practice. "
+echo ""
+echo -e "${RED}However, be aware that if you turn off your network interface, you will lose remote access to your machine. Make sure you are locally present on the machine before doing so.${NC}"
+echo ""
+read -e -p "Do you want to shutdown the network interface during the keygeneration process now? (y/n)" network_off
+
+    if [[ "$network_off" =~ ^[Yy]$ ]]; then
+        sudo ip link set $interface down
+    fi
+
+echo "Interface $interface has been shutdown and will be put back online after the Key-generating Process"
 echo ""
 
-if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
+echo ""
+
+# Functions for the two options
+import_validator_keys() {
+    # Code for importing the existing validator_keys
     echo ""
     echo "Importing pre-existing validator_keys:"
     echo ""
@@ -163,17 +182,11 @@ if [[ "$has_previous_key" =~ ^[Yy]$ ]]; then
         echo "Source directory does not exist. Please check the provided path and try again. Now exiting"
         exit 1
     fi
-fi
-    # Ask the user if they want to generate a new key after importing
-echo ""
-read -e -p "$(echo -e "${GREEN}Do you want to generate a new validator_key? (y/n):${NC} ")" generate_new_key
-# Set the default value for generating a new key if the user enters nothing
-if [ -z "$generate_new_key" ]; then
-  generate_new_key="y"
-fi
-    
-if [[ "$generate_new_key" =~ ^[Yy]$ ]]; then
-    # Run the deposit.sh script to generate a new mnemonic and keys
+}
+
+generate_new_validator_key() {
+    # Code for generating a new validator key
+
     echo ""
     echo "Now generating the validator keys - please follow the instructions and make sure to READ! everything"
     sleep 3
@@ -187,9 +200,27 @@ if [[ "$generate_new_key" =~ ^[Yy]$ ]]; then
     echo -e "${RED}Consider removing the validator_keys folder from your local machine and storing it in a secure location, such as an offline backup or a hardware wallet.${NC}"
     sleep 5
     echo ""
-else
-    echo " - Using existing key"
-fi
+}
+
+# Selection menu
+PS3="Choose an option (1-2): "
+options=("Import existing validator_keys" "Generate new validator_key")
+select opt in "${options[@]}"
+do
+    case $REPLY in
+        1)
+            import_validator_keys
+            break
+            ;;
+        2)
+            generate_new_validator_key
+            break
+            ;;
+        *)
+            echo "Invalid option. Please choose 1 or 2."
+            ;;
+    esac
+done
 
 
 # Ask the user to enter the fee-receiption address
@@ -210,11 +241,11 @@ random_number=$(shuf -i 1000-9999 -n 1)
 
 # Ask the user to enter their desired graffiti
 echo ""
-read -e -p "$(echo -e "${GREEN} Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: HexForLife_${random_number}):${NC}")" user_graffiti
+read -e -p "$(echo -e "${GREEN} Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: DipSlayer_${random_number}):${NC}")" user_graffiti
 
 # Set the default value for graffiti if the user enters nothing
 if [ -z "$user_graffiti" ]; then
-    user_graffiti="HexForLife_${random_number}"
+    user_graffiti="DipSlayer_${random_number}"
 fi
 
 echo ""
@@ -240,8 +271,6 @@ sudo docker stop -t 10 validator_import
 
 sudo docker container prune -f
 
-sudo docker container prune -f
-
 VALIDATOR_LH="sudo -u validator docker run -dt --network=host --restart=always \\
     -v "${custompath}":/blockchain \\
     --name validator \\
@@ -258,15 +287,22 @@ echo ""
 echo "debug info:"
 echo -e "Creating the start_validator.sh script with the following contents:\n${VALIDATOR_LH}"
 echo ""
+echo "Restarting Network-Interface..."
 
+if [[ "$network_off" =~ ^[Yy]$ ]]; then
+    sudo ip link set $interface up
+fi
+echo "Network interface put back online"
 #write start_validator.sh
+sudo chmod 777 ${custompath}
 
 cat > start_validator.sh << EOL
 ${VALIDATOR_LH}
 EOL
 
 sudo chmod +x "start_validator.sh"
-sudo cp start_validator.sh "$custompath"
+#sudo cp start_validator.sh "$custompath"
+
 
 # Change the ownership of the custompath/validator directory to validator user and group
 sudo chown -R validator:docker "$custompath"
@@ -292,13 +328,13 @@ if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
   
   
   # Run the commands
-  #echo "Running command: $command1"
+  echo "Running command: $command1"
   eval $command1
   sleep 1
-  #echo "Running command: $command2"
+  echo "Running command: $command2"
   eval $command2
   sleep 1
-  #echo "Running command: $command3"
+  echo "Running command: $command3"
   eval $command3
   sleep 1
 fi
@@ -316,6 +352,7 @@ else
   echo "Skipping Prometheus/Grafana Monitoring Setup."
 fi
 
+echo ""
 read -e -p "$(echo -e "${GREEN}Would you like to start the logviewer to monitor the client logs? [y/n]:${NC}")" log_it
 
 if [[ "$log_it" =~ ^[Yy]$ ]]; then
@@ -336,7 +373,7 @@ if [[ "$log_it" =~ ^[Yy]$ ]]; then
             echo "Invalid choice. Exiting."
             ;;
     esac
-else
+fi
 echo -e " ${RED}Note: Sync the chain fully before submitting your deposit_keys to prevent slashing; avoid using the same keys on multiple machines.${NC}"
 echo ""
 echo -e "Find more information in the repository's README."
@@ -349,6 +386,5 @@ echo "Brought to you by:
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 echo -e "${GREEN}For Donations use ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
 echo ""
-fi
 exit 0
 
