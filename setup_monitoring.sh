@@ -344,6 +344,29 @@ echo "Brought to you by:
   ██████__██_██______███████_███████_██___██____██____███████_██___██_"
 echo -e "${GREEN}For Donations use ERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
 sleep 1
+echo ""
 echo "Press enter to continue..."
 read -p ""
+echo ""
+read -e -p "$(echo -e "${GREEN}Would you like to start the logviewer to monitor the client logs? [y/n]:${NC}")" log_it
+
+if [[ "$log_it" =~ ^[Yy]$ ]]; then
+    echo "Choose a log viewer:"
+    echo "1. GUI/TAB Based Logviewer (serperate tabs; easy)"
+    echo "2. TMUX Logviewer (AIO logs; advanced)"
+    
+    read -p "Enter your choice (1 or 2): " choice
+    
+    case $choice in
+        1)
+            ${config_location}/log_viewer.sh
+            ;;
+        2)
+            ${config_location}/tmux_logviewer.sh
+            ;;
+        *)
+            echo "Invalid choice. Exiting."
+            ;;
+    esac
+fi
 exit 0
