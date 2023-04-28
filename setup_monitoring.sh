@@ -99,9 +99,16 @@ function get_ip_range() {
   echo $ip_range
 }
 
-echo ""
+#debug
+local_ip_debug=$(hostname -I | awk '{print $1}')
 ip_range=$(get_ip_range)
-read -p "Do you want to allow access to the Grafana Dashboard within your local network ($ip_range)? (y/n): " local_network_choice
+
+echo ""
+echo "Your Current IP is: $local_ip_debug"
+echo ""
+read -p "Do you want to allow access to the Grafana Dashboard from within your local network ($ip_range)? (y/n): " local_network_choice
+echo ""
+
 
 if [[ $local_network_choice == "y" ]]; then
     echo ""
@@ -314,11 +321,11 @@ echo ""
 echo -e "${GREEN}Congratulations, setup is now complete.${NC}"
 echo ""
 if [[ $local_network_choice == "y" ]]; then
-echo "Access Grafana: http://127.0.0.1:3000 or http://${local_ip}:3000"
+echo "Access Grafana: http://127.0.0.1:3000 or http://${local_ip_debug}:3000"
 echo "Username: admin"
 echo "Password: admin"
 echo ""
-echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import or http://${local_ip}:3000/dashboard/import"
+echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import or http://${local_ip_debug}:3000/dashboard/import"
 echo "Import JSONs from '${config_location}/Dashboards'"
 else
 echo "Access Grafana: http://127.0.0.1:3000"
