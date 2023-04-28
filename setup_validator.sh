@@ -20,7 +20,7 @@ echo ""
     
 
 if [[ "$setup_choice" == "2" ]]; then
-    echo -e "${RED}! To add a key, we have to stop running lighthouse images"
+    echo -e "${RED}To add a key, we have to stop running lighthouse images, stoping docker images now${NC}"
     sudo docker stop validator beacon
     sudo docker rm validator beacon
     sudo docker container prune -f
@@ -368,9 +368,9 @@ read -e -p "$(echo -e "${GREEN}Would you like to start the execution, consensus 
 if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 
   # Generate the command to start the scripts
-  command1="sudo ${custompath}/./start_execution.sh > /dev/null 2>&1 &" 
-  command2="sudo ${custompath}/./start_consensus.sh > /dev/null 2>&1 &"
-  command3="sudo ${custompath}/./start_validator.sh > /dev/null 2>&1 &"
+  command1="sudo ${custompath}/start_execution.sh > /dev/null 2>&1 &" 
+  command2="sudo ${custompath}/start_consensus.sh > /dev/null 2>&1 &"
+  command3="sudo ${custompath}/start_validator.sh > /dev/null 2>&1 &"
   
   
   # Run the commands
@@ -387,8 +387,8 @@ fi
 
 clear
 # Reset the terminal
+#sudo rm -R ${custompath}/staking-deposit-cli
 
-echo ""
 read -e -p "$(echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitoring Setup now (y/n):${NC}")" answer
 
 if [[ $answer == "y" ]] || [[ $answer == "Y" ]]; then
