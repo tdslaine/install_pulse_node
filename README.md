@@ -281,7 +281,7 @@ sudo docker restart execution
 
 ## |#| Updating the Nodes Docker-Images
 
-To update your Docker containers/images you can use the provided the update_docker.sh script which can be found inside the folder you chose in the setup (default: /blockchain):
+To update your Docker containers/images you can use the provided the `update_docker.sh` or simply `restart_docker.sh` script which can be found inside the folder you chose in the setup (default: /blockchain):
 
 The script should already be executable, if not make the script executable via::
 
