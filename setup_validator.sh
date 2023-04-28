@@ -348,6 +348,7 @@ read -e -p "$(echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitor
 if [[ $answer == "y" ]] || [[ $answer == "Y" ]]; then
   sudo chmod +x $start_dir/setup_monitoring.sh
   $start_dir/setup_monitoring.sh
+  exit 0
 else
   echo "Skipping Prometheus/Grafana Monitoring Setup."
 fi
