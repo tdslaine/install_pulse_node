@@ -245,7 +245,12 @@ echo -e "${GREEN}Starting and enabling docker service${NC}"
 sudo systemctl start docker
 sudo systemctl enable docker
 
-sudo chmod 666 /var/run/docker.sock
+# Adding Main user to the Docker group
+
+DEFAULT_USER=$(getent passwd 1000 | cut -d: -f1)
+usermod -aG docker $DEFAULT_USER
+
+#sudo chmod 666 /var/run/docker.sock
 
 echo -e "${GREEN}Creating ${CUSTOM_PATH} Main-Folder${NC}"
 sudo mkdir "${CUSTOM_PATH}"
