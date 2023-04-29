@@ -11,10 +11,6 @@ LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 
 echo "Setting up Lighthouse-Validator now"
 echo ""
-echo "pulling lighthouee docker image in case its not present"
-echo "done..."
-
-sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
 
     echo "Is this a first-time setup or are you adding to an existing setup?"
     echo ""
@@ -134,6 +130,10 @@ sudo pip3 install -r requirements.txt
 
 # Install the package
 sudo python3 setup.py install
+
+echo "pulling lighthouee docker image in case its not present"
+sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
+echo "done..."
 
 clear
 
