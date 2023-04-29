@@ -231,6 +231,14 @@ Restore_from_MN() {
     sudo ./deposit.sh existing-mnemonic --chain=${DEPOSIT_CLI_NETWORK} --folder="${custompath}" 
     cd "${custompath}"
 
+  
+ if [[ "$network_off" =~ ^[Yy]$ ]]; then 
+echo "Restarting Network-Interface..." 
+     sudo ip link set $interface up 
+ echo "Network interface put back online"
+ fi 
+
+
     if [[ "$setup_choice" == "2" ]]; then
 #   ## Run the Lighthouse Pulse docker container as the validator user
     sudo docker run -it \
