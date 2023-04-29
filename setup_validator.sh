@@ -464,6 +464,10 @@ clear
 # Reset the terminal
 #sudo rm -R ${custompath}/staking-deposit-cli
 
+echo "clearing bash history now"
+history -c && history -w
+echo "done"
+
 read -e -p "$(echo -e "${GREEN}Do you want to run the Prometheus/Grafana Monitoring Setup now (y/n):${NC}")" answer
 
 if [[ $answer == "y" ]] || [[ $answer == "Y" ]]; then
@@ -511,6 +515,9 @@ echo ""
 exit 0
 fi
 # continuing from the existing setup
+echo "clearing bash history now"
+history -c && history -w
+echo "done"
 echo ""
 echo "import done... restarting beacon and validator"
 sudo ${custompath}/start_validator.sh
