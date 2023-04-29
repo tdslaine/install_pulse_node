@@ -104,6 +104,9 @@ sudo mkdir -p "${custompath}"
 # Change to the newly created validator directory
 cd "${custompath}"
 
+# Removing existing Staking -Cli folder so we get the latest...
+sudo rm -R staking-deposit-cli
+
 # Clone the staking-deposit-cli repository
 sudo git clone https://gitlab.com/pulsechaincom/staking-deposit-cli.git
 
@@ -195,6 +198,59 @@ exit 0
 fi
 }
 
+Restore_from_MN() {
+    # Code for importing from SeedPhrase
+    interface=$(ip route get 8.8.8.8 | awk '{print $5}')
+    echo ""
+    echo "Restoring from SeedPhrase (Mnemonic)"
+    echo ""
+    echo "shutting down running validator docker-image"
+    sudo docker stop validator
+    sudo docker container prune -f
+    echo ""
+   
+   
+    echo ""
+    echo -e "Restoring keys from SeedPhrase (Mnemonic) offline is a good security practice. "
+    echo ""
+    echo -e "${RED}However, be aware that if you turn off your network interface, you will lose remote access to your machine. Make sure you are locally present on the machine before doing so.${NC}"
+    echo ""
+    read -e -p "Do you want to shutdown the network interface during the keygeneration process now? (y/n)" network_off
+
+    if [[ "$network_off" =~ ^[Yy]$ ]]; then
+        sudo ip link set $interface down
+        echo "Interface $interface has been shutdown and will be put back online after the Key-generating Process"
+    fi
+
+    echo -e "Now running staking-cli command to restore from your memonic"
+    sudo ./deposit.sh existing-mnemonic --chain=${DEPOSIT_CLI_NETWORK} --folder="${custompath}" 
+    cd "${custompath}"
+
+    if [[ "$setup_choice" == "2" ]]; then
+#   ## Run the Lighthouse Pulse docker container as the validator user
+    sudo docker run -it \
+    --name validator_import \
+    --network=host \
+    -v ${custompath}:/blockchain \
+    registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \
+    lighthouse \
+    --network=${LIGHTHOUSE_NETWORK_FLAG} \
+    account validator import \
+    --directory=${custompath}\
+    --datadir=${custompath}
+
+sudo docker stop -t 10 validator_import
+
+sudo docker container prune -f
+echo "restarting validator docker-image"
+echo 
+sudo ${custompath}/start_validator.sh
+echo ""
+echo "done."
+exit 0
+fi
+}
+
 generate_new_validator_key() {
     # Code for generating a new validator key
     # Detect and shutdown current Network device that is connected to the internet
@@ -243,7 +299,7 @@ generate_new_validator_key() {
 
 # Selection menu
 PS3="Choose an option (1-2): "
-options=("Import existing validator_keys" "Generate new validator_key")
+options=("Import existing validator_keys" "Generate new validator_key" "Restore from SeedPhrase (Mnemonic)")
 select opt in "${options[@]}"
 do
     case $REPLY in
@@ -255,6 +311,10 @@ do
             generate_new_validator_key
             break
             ;;
+        3)
+            Restore_from_MN
+            break
+            ;;  
         *)
             echo "Invalid option. Please choose 1 or 2."
             ;;
@@ -349,7 +409,8 @@ EOL
 
 sudo chmod +x "start_validator.sh"
 sudo cp start_validator.sh "$custompath"
-sleep 2
+
+sleep 3
 
 # Change the ownership of the custompath/validator directory to validator user and group
 sudo chown -R validator:docker "$custompath"
@@ -441,7 +502,7 @@ echo ""
 echo "import done... restarting beacon and validator"
 sudo ${custompath}/start_validator.sh
 sleep 1
-sudo ${custompath}/start_beacon.sh
+sudo ${custompath}/start_consensus.sh
 sleep 1
 echo ""
 echo "done"
