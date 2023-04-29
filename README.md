@@ -85,7 +85,6 @@ There will also be copys of a couple helper_scripts to ease up the task of viewi
 
 
 ## |#| Prometheus/Grafana Monitoring:
-###### Note: Only local access (same machine) is granted to the grafana dashboard. If you want to have access to from within your local network, you need to allow access via ufw (read on for howto)
 
 ### Setup
 
@@ -113,7 +112,7 @@ To add dashboards, navigate to:
 ```bash 
 http://127.0.0.1:3000/dashboard/import
 ```
-Import the JSON files from your local install_pulse_node directory (default: `/blockchain/Dashboards` - these were downloaded during the setup process).
+Import the JSON files from your setup target directory (default: `/blockchain/Dashboards` - these were downloaded during the setup process).
 
 That's it! Prometheus and Grafana should now be up and running on your machine, allowing you to import more dashboards tailored to your needs.
 
