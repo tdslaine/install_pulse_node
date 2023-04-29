@@ -348,8 +348,8 @@ ${VALIDATOR_LH}
 EOL
 
 sudo chmod +x "start_validator.sh"
-#sudo cp start_validator.sh "$custompath"
-
+sudo cp start_validator.sh "$custompath"
+sleep 2
 
 # Change the ownership of the custompath/validator directory to validator user and group
 sudo chown -R validator:docker "$custompath"
