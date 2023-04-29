@@ -141,7 +141,7 @@ clear
 #./deposit.sh install
 echo ""
 
-# Functions for the two options ############################################################################
+############# Functions for the three options ############################################################################
 import_validator_keys() {
     # Code for importing the existing validator_keys
     echo ""
@@ -178,7 +178,7 @@ import_validator_keys() {
     if [[ "$setup_choice" == "2" ]]; then
     echo "Importing keys via Lighthouse-Clinet now"
 
-#   ## Run the Lighthouse Pulse docker container as the validator user
+####### Run the Lighthouse Pulse docker container as the validator user
     sudo docker run -it \
     --name validator_import \
     --network=host \
@@ -203,8 +203,9 @@ exit 0
 fi
 }
 
+## Code for importing from SeedPhrase ####################################################################################  
 Restore_from_MN() {
-    # Code for importing from SeedPhrase
+    # Detect and optional shutdown current Network device that is connected to the internet
     interface=$(ip route get 8.8.8.8 | awk '{print $5}')
     echo ""
     echo "Restoring from SeedPhrase (Mnemonic)"
@@ -240,7 +241,7 @@ echo "Restarting Network-Interface..."
 
 
     if [[ "$setup_choice" == "2" ]]; then
-#   ## Run the Lighthouse Pulse docker container as the validator user
+### Run the Lighthouse Pulse docker container as the validator user
     sudo docker run -it \
     --name validator_import \
     --network=host \
@@ -263,10 +264,10 @@ echo "done."
 exit 0
 fi
 }
-
+    
+#### Code for generating a new validator key ###################################################################################################
 generate_new_validator_key() {
-    # Code for generating a new validator key
-    # Detect and shutdown current Network device that is connected to the internet
+    # Detect and optional shutdown current Network device that is connected to the internet
     interface=$(ip route get 8.8.8.8 | awk '{print $5}')
 
     echo ""
@@ -310,7 +311,7 @@ generate_new_validator_key() {
     echo ""
 }
 
-# Selection menu
+### Selection menu ################################################################################################
 PS3="Choose an option (1-2): "
 options=("Import existing validator_keys" "Generate new validator_key" "Restore from SeedPhrase (Mnemonic)")
 select opt in "${options[@]}"
@@ -335,7 +336,9 @@ do
 done
 
 
+# Code from here is for fresh-install only 
 # Ask the user to enter the fee-receiption address for a fresh install, skip for existing installation
+
 if [[ "$setup_choice" == "1" ]]; then
 
 clear
@@ -370,9 +373,9 @@ echo ""
 
 echo "Importing validator_keys using the lighthouse-client"
 echo ""
+fi
 
 ## Run the Lighthouse Pulse docker container as the validator user
-fi
 
 sudo docker run -it \
     --name validator_import \
@@ -388,6 +391,8 @@ sudo docker run -it \
 sudo docker stop -t 10 validator_import
 
 sudo docker container prune -f
+
+### Defining the start_validator.sh script, this is only done during "first-setup"
 
 if [[ "$setup_choice" == "1" ]]; then
 VALIDATOR_LH="sudo -u validator docker run -dt --network=host --restart=always \\
@@ -406,14 +411,17 @@ echo ""
 echo "debug info:"
 echo -e "Creating the start_validator.sh script with the following contents:\n${VALIDATOR_LH}"
 echo ""
-echo "Restarting Network-Interface..."
 
+
+# Restarting Network interface, if User chose to bring it down #####
 if [[ "$network_off" =~ ^[Yy]$ ]]; then
+    echo "Restarting Network-Interface..."
     sudo ip link set $interface up
+    echo "Network interface put back online"
 fi
-echo "Network interface put back online"
+
    
-#write start_validator.sh
+### Writing the start_validator.sh script, this is only done during "first-setup"
 sudo chmod 777 ${custompath}
 
 cat > start_validator.sh << EOL
@@ -429,8 +437,8 @@ sleep 3
 sudo chown -R validator:docker "$custompath"
 sudo chmod -R 777 "$custompath"
 
-# Change docker /var/run/docker.sock permission to be able to view logs withouth being in docker grp
-sudo chmod 666 /var/run/docker.sock
+# Change docker /var/run/docker.sock permission to be able to view logs withouth being in docker grp stll in testing
+# sudo chmod 666 /var/run/docker.sock
 
 #debug 
 #echo "${custompath}/start_validator.sh"
@@ -446,8 +454,7 @@ if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
   command1="sudo ${custompath}/start_execution.sh > /dev/null 2>&1 &" 
   command2="sudo ${custompath}/start_consensus.sh > /dev/null 2>&1 &"
   command3="sudo ${custompath}/start_validator.sh > /dev/null 2>&1 &"
-  
-  
+    
   # Run the commands
   echo "Running command: $command1"
   eval $command1
@@ -461,9 +468,8 @@ if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 fi
 
 clear
-# Reset the terminal
-#sudo rm -R ${custompath}/staking-deposit-cli
 
+# Clearing the Bash-Histroy
 echo "clearing bash history now"
 history -c && history -w
 echo "done"
