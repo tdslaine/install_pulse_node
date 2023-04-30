@@ -64,7 +64,7 @@ read -p ""
 clear                                                                                                                                                                                                                          
 echo -e "\033[1;33m"
 echo "┌─────────────────────────────────────────────────────────┐"
-echo "│ DICCLAIMER! Please read the following carefully!        │"
+echo "│ DISCLAIMER! Please read the following carefully!        │"
 echo "├─────────────────────────────────────────────────────────┤"
 echo "│ This script automates the installation and setup        │"
 echo "│ process for a PulseChain Node/Validator.                │"
