@@ -312,7 +312,7 @@ generate_new_validator_key() {
 }
 
 ### Selection menu ################################################################################################
-PS3="Choose an option (1-2): "
+PS3="Choose an option (1-3): "
 options=("Import existing validator_keys" "Generate new validator_key" "Restore from SeedPhrase (Mnemonic)")
 select opt in "${options[@]}"
 do
@@ -330,7 +330,7 @@ do
             break
             ;;  
         *)
-            echo "Invalid option. Please choose 1 or 2."
+            echo "Invalid option. Please choose 1,2 or 3."
             ;;
     esac
 done
