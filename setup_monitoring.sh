@@ -1,20 +1,37 @@
 
-# v.0.1 
-# Testing the monitoring add-on for my original install_pulse_node/validator script... this IS STILL in testing but should work
-# ONLY WORKS FOR LIGHTHOUSE and GETH !
-# these flags are req. in order for prometheus to receive data from your clients:
-# --pprof --metrics for start_execution.sh
-# --staking --metrics --validator-monitor-auto for start_consensus.sh 
-# --metrics for start_validator.sh
-# There is a part in this script that prompts, if you wanna add these flags, only confirm with y if you use my script to setup a node/validator prior to 26.April
-# docker container needs to be restartet in order to run with the flags
+# v.0.2
+
+# modified to add support prysm client too... dashboards are from eth - so they might not work
+
 
 start_dir=$(pwd)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+function tab_autocomplete(){
+    
+    # Enable tab autocompletion for the read command if line editing is enabled
+    if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
+        bind '"\t":menu-complete'
+    fi
+}
+
+
+function get_user_choices() {
+    echo "Choose your Client"
+    echo ""
+    echo "1. Lighthouse"
+    echo "2. Prysm"
+    echo ""
+    read -p "Enter your choice (1 or 2): " client_choice
+
+    echo "${client_choice}"
+}
+
+
 clear
+
 # Create users
 echo "Adding users for prometheus and grafana"
 sudo useradd -M -G docker prometheus
@@ -22,12 +39,14 @@ sudo useradd -M -G docker grafana
 
 
 # Prompt the user for the location to store prometheus.yml (default: /blockchain)
-read -p "Enter the location to store prometheus.yml (default: /blockchain): " config_location
+read -e -p "Enter the location to store prometheus.yml (default: /blockchain):" config_location
 
 # Set the default location to /blockchain if nothing is entered
 if [ -z "$config_location" ]; then
   config_location="/blockchain"
 fi
+
+get_user_choices
 
 # Create directories
 echo ""
@@ -35,11 +54,12 @@ echo "Creating directorys for the prometheus and grafana container"
 sudo mkdir -p "$config_location/prometheus"
 sudo mkdir -p "$config_location/grafana"
 
-# Define the yml content
-PROMETHEUS_YML="global:
+  if [[ "$client_choice" == "1" ]]; then
+  
+  # Define the yml content for use with lighthouse
+  PROMETHEUS_YML="global:
   scrape_interval: 15s
   evaluation_interval: 15s
-
 scrape_configs:
    - job_name: 'node_exporter'
      static_configs:
@@ -59,7 +79,33 @@ scrape_configs:
      scheme: http
      static_configs:
      - targets: ['localhost:6060']"
-	 
+
+	elif  [[ "$client_choice" == "2" ]]; then
+  PROMETHEUS_YML="global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'codelab-monitor'
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+   - job_name: 'node_exporter'
+     static_configs:
+       - targets: ['localhost:9100']
+   - job_name: 'validator'
+     static_configs:
+       - targets: ['localhost:8081']
+   - job_name: 'beacon node'
+     static_configs:
+       - targets: ['localhost:8080']
+   - job_name: 'slasher'
+     static_configs:
+       - targets: ['localhost:8082'] "
+  fi
+
 	 
 # Create prometheus.yml file
 echo ""
@@ -82,9 +128,16 @@ echo ""
 echo "Setting up firewall rules to allow local connection to metric ports"
 sudo ufw allow from 127.0.0.1 to any port 8545 proto tcp
 sudo ufw allow from 127.0.0.1 to any port 8546 proto tcp
-sudo ufw allow from 127.0.0.1 to any port 5052 proto tcp
-sudo ufw allow from 127.0.0.1 to any port 5064 proto tcp
 
+if [[ "$client_choice" == "1" ]]; then
+  sudo ufw allow from 127.0.0.1 to any port 5052 proto tcp
+  sudo ufw allow from 127.0.0.1 to any port 5064 proto tcp
+
+elif [[ "$client_choice" == "2" ]]; then
+  sudo ufw allow from 127.0.0.1 to any port 8081 proto tcp
+  sudo ufw allow from 127.0.0.1 to any port 8080 proto tcp
+  sudo ufw allow from 127.0.0.1 to any port 8082 proto tcp
+fi
 # Prompt to allow access to Grafana Dashboard in Local Network
 
 function get_local_ip() {
@@ -227,84 +280,23 @@ sudo mkdir -p "${config_location}/Dashboards"
 echo "Downloading dashboard JSON..."
 sudo wget -qO "${config_location}/Dashboards/02_Geth_dashboard.json" -P "${config_location}/Dashboards" https://gist.githubusercontent.com/karalabe/e7ca79abdec54755ceae09c08bd090cd/raw/dashboard.json > /dev/null
 sudo wget -qO "${config_location}/Dashboards/03_System_dashboard.json" -P "${config_location}/Dashboards" https://grafana.com/api/dashboards/11074/revisions/9/download > /dev/null
+
+if [[ "$client_choice" == "1" ]]; then
 sudo wget -qO "${config_location}/Dashboards/04_Lighthouse_beacon_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/Summary.json > /dev/null
 sudo wget -qO "${config_location}/Dashboards/05_Lighthouse_validator_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/ValidatorClient.json > /dev/null
 sudo wget -qO "${config_location}/Dashboards/01_Staking_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/raskitoma/pulse-staking-dashboard/main/Yoldark_ETH_staking_dashboard.json > /dev/null
+
+elif [[ "$client_choice" == "2" ]]; then
+sudo wget -qO "${config_location}/Dashboards/001_Prysm_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/GuillaumeMiralles/prysm-grafana-dashboard/master/less_10_validators.json > /dev/null
+sudo wget -qO "${config_location}/Dashboards/000_Prysm_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/metanull-operator/eth2-grafana/master/eth2-grafana-dashboard-single-source-beacon_node.json > /dev/null
+
+fi
+
 echo ""
 echo ""
 sudo chmod -R 755 "${config_location}/Dashboards"
 
-#echo -e "${GREEN}Do you want to add the required flags to the start_xyz.sh scripts and restart Docker containers? (y/n)${NC}"
-#echo ""
-#echo -e "${RED}NOTE: This step is only necessary if you used my setup-script before April 26, 2023. From that date onwards, the required flags are already included in the start_ scripts during the initial setup.${NC}"
-#read answer
 
-#if [[ $answer == "y" ]]; then
-#
-#  # Update start_execution.sh script
-#  if [ -f "${config_location}/start_execution.sh" ]; then
-#    sudo sed -i '14s:^:--metrics \\\n:' "${config_location}/start_execution.sh"
-#    sudo sed -i '15s:^:--pprof \\\n:' "${config_location}/start_execution.sh"
-#    echo -e "Updated start_execution.sh with --metrics and --pprof flags."
-#  else
-#    echo -e "start_execution.sh not found. Skipping."
-# fi
-
-#  # Update start_consensus.sh script
-#  if [ -f "${config_location}/start_consensus.sh" ]; then
-#    sudo sed -i '14s:^:--metrics \\\n:' "${config_location}/start_consensus.sh"
-#    sudo sed -i '15s:^:--staking \\\n:' "${config_location}/start_consensus.sh"
-#    sudo sed -i '16s:^:--validator-monitor-auto \\\n:' "${config_location}/start_consensus.sh"
-#    echo -e "Updated start_consensus.sh with --metrics, --staking, and --validator-monitor-auto flags."
-#  else
-#    echo -e "start_consensus.sh not found. Skipping."
-#  fi
-
-  # Update start_validator.sh script
-#  if [ -f "${config_location}/start_validator.sh" ]; then
-#    sudo sed -i '7s:^:--metrics \\\n:' "${config_location}/start_validator.sh"
-#    echo -e "Updated start_validator.sh with --metrics flag."
-#  else
-#    echo -e "start_validator.sh not found. Skipping."
-#  fi
-
-#  echo -e "${GREEN}Script finished. Check your files for updates.${NC}"
-#  echo ""
-#  echo "Docker Images needs to be restarted, please press Enter to continue..."
-#  read -p ""
-#  clear
-#  echo -e "${GREEN}Restarting Docker containers...${NC}"
-#  echo ""
- 
-#  sudo docker stop execution
-#  sudo docker stop beacon
-#  sudo docker stop validator
-  
-#  sudo docker rm execution
-#  sudo docker rm beacon
-#  sudo docker rm validator
-  
-#  sudo docker container prune -f
-  
-#  $config_location/start_execution.sh
-#  sleep 1
-#  $config_location/start_consensus.sh
-#  sleep 1
-#  $config_location/start_validator.sh
-#  sleep 1
-  
-#  echo ""
-#  echo "Docker containers restarted successfully."
-#  echo ""
-#else
-#  clear
-#  echo "Please ensure your clients contain the following required flags:"
-#  echo " - geth/execution: --metrics --pprof"
-#  echo " - ligthhouse/beacon: --staking --metrics --validator-monitor-auto"
-#  echo " - ligthhouse/validator: --metrics"
-#  echo ""
-#  echo ""
-## fi
 echo ""
 echo "Please press Enter to continue..."
 read -p ""
@@ -370,3 +362,4 @@ if [[ "$log_it" =~ ^[Yy]$ ]]; then
     esac
 fi
 exit 0
+fi
