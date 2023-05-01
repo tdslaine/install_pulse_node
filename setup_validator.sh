@@ -20,6 +20,12 @@ function_get_user_choices() {
     echo ""
     read -p "Enter your choice (1 or 2): " client_choice
 
+    # Validate user input for client choice
+    while [[ ! "$client_choice" =~ ^[1-2]$ ]]; do
+        echo "Invalid input. Please enter a valid choice (1 or 2): "
+        read -p "Enter your choice (1 or 2): " client_choice
+    done
+
     echo ""
     echo "Is this a first-time setup or are you adding to an existing setup?"
     echo ""
@@ -28,8 +34,15 @@ function_get_user_choices() {
     echo "" 
     read -p "Enter your choice (1 or 2): " setup_choice
 
+    # Validate user input for setup choice
+    while [[ ! "$setup_choice" =~ ^[1-2]$ ]]; do
+        echo "Invalid input. Please enter a valid choice (1 or 2): "
+        read -p "Enter your choice (1 or 2): " setup_choice
+    done
+
     echo "${client_choice} ${setup_choice}"
 }
+
 
 function press_enter_to_continue(){
     echo "Press Enter to continue"
@@ -301,12 +314,12 @@ function stop_and_prune_validator_import(){
 
 function stop_docker_image(){
     echo "To import the keys into an existing setup, we need to stop the running validator Docker image."
-    image =$1
+    image=$1
     sudo docker stop ${image} > /dev/null 2>&1
     sudo docker prune -f > /dev/null 2>&1
 }
 
-function start_script(){
+
     target=$1
     echo -e "Restarting ${target}"
     bash "${INSTALL_PATH}/start_${target}.sh"
@@ -366,21 +379,21 @@ function warn_network() {
     echo ""
     echo "For better security, it is highly recommended to generate new keys or restore them from a seed phrase (mnemonic) offline."
     echo ""
-    echo -e "${RED}WARNING: Disabling your network interface may result in loss of remote"
+    echo -e "${RED}WARNING:${NC} Disabling your network interface may result in loss of remote"
     echo -e "         access to your machine. Ensure you have an alternative way to"
     echo -e "         access your machine, such as a local connection or a remote"
     echo -e "         VPS terminal, before proceeding."
     echo -e ""
-    echo -e "IMPORTANT: Proceed with caution, as disabling the network interface"
+    echo -e "${RED}IMPORTANT:${NC} Proceed with caution, as disabling the network interface"
     echo -e "           without any other means of access may leave you unable to"
     echo -e "           access your machine remotely. Make sure you fully understand"
     echo -e "           the consequences and have a backup plan in place before taking"
-    echo -e "           this step.${NC}"
+    echo -e "           this step."
 
     echo ""
     echo -e "Would you like to disable the network interface during the key"
     echo -e "generation process? This increases security, but ${RED}may affect remote"
-    echo -e "access currently${NC}"
+    echo -e "access temporarily${NC}"
     echo ""
     read -e -p "Please enter 'y' to confirm or 'n' to decline (default: n): " network_off
     network_off=${network_off:-n}
@@ -497,8 +510,9 @@ import_restore_validator_keys() {
     done
     
         
-    
+    echo ""
     echo "Importing validator keys now"
+    echo ""
     
     if [[ "$client_choice" == "1" ]]; then
         import_lighthouse_validator
@@ -508,7 +522,9 @@ import_restore_validator_keys() {
     
     if [[ "$setup_choice" == "2" ]]; then          
     start_script validator
+    echo ""
     echo "Import into existing Setup done."
+    echo ""
     press_enter_to_continue
 
     exit 0
@@ -538,11 +554,12 @@ Restore_from_MN() {
         function_get_active_network_device
         function_network_interface_DOWN
     fi
-
+    
+    echo ""
     echo "Now running staking-cli command to restore from your SeedPhrase (Mnemonic)"
     echo ""
     #echo "debug The current directory is: $(pwd)"
-    cd "${INSTALL_PATH}/staking-deposit-cli"
+    #cd "${INSTALL_PATH}/staking-deposit-cli"
     #echo "debug The current directory is: $(pwd)"
     
     ./deposit.sh existing-mnemonic --chain=${DEPOSIT_CLI_NETWORK} --folder="${INSTALL_PATH}" 
