@@ -398,7 +398,7 @@ echo "Starting ${CONSENSUS_CLIENT}"
 EOL
 
 if [ "$CONSENSUS_CLIENT" = "prysm" ]; then
-sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse:latest
+sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest
   cat > start_consensus.sh << EOL
 ${PRYSM_CMD}
 
