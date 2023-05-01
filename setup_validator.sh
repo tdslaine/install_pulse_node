@@ -341,7 +341,7 @@ function import_prysm_validator() {
         -v $INSTALL_PATH/wallet:/wallet \
         registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest \
         accounts import \
-        --pulsechain-testnet-v4 \
+        --${PRYSM_NETWORK_FLAG} \
         --keys-dir=/keys \
         --wallet-dir=/wallet \
         --wallet-password-file=/wallet/pw.txt
