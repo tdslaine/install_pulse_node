@@ -13,8 +13,9 @@ PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
 
 function_get_user_choices() {
     echo "Choose your Validator Client"
+    echo "based on your consensus/beacon Client"
     echo ""
-    echo "1. Lighthouse"
+    echo "1. Lighthouse (Authors choice)"
     echo "2. Prysm"
     echo ""
     read -p "Enter your choice (1 or 2): " client_choice
