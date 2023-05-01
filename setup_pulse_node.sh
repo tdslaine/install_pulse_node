@@ -435,7 +435,7 @@ echo ""
 echo -e "${GREEN}Finished copying helper scripts${NC}"
 echo ""
 clear
-read -p "$(echo -e ${GREEN})Would you like to setup a Lighthouse validator? (y/n):$(echo -e ${NC}) " VALIDATOR_CHOICE
+read -p "$(echo -e ${GREEN})Would you like to setup a validator? (y/n):$(echo -e ${NC}) " VALIDATOR_CHOICE
 echo ""
 if [ "$VALIDATOR_CHOICE" = "y" ]; then
   echo ""
