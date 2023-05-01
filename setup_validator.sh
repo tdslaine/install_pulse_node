@@ -319,7 +319,7 @@ function stop_docker_image(){
     sudo docker prune -f > /dev/null 2>&1
 }
 
-
+function start_script(){
     target=$1
     echo -e "Restarting ${target}"
     bash "${INSTALL_PATH}/start_${target}.sh"
