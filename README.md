@@ -6,7 +6,7 @@
 ## AIO Interactive Setup
 Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace of Mind with this interactive setup script 
 
-## Installing and Running a Pulsechain Node with an optional Lighthouse Validator and Prometheus/Grafana Monitoring
+## Installing and Running a Pulsechain Node/Validator + Prometheus/Grafana Monitoring
 
 <small>This setup is split into three parts to provide greater flexibility for users based on their needs.
 
