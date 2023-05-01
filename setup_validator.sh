@@ -8,7 +8,7 @@ NC='\033[0m'
 LAUNCHPAD_URL="https://launchpad.v4.testnet.pulsechain.com"
 DEPOSIT_CLI_NETWORK="pulsechain-testnet-v4"
 LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
-PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
+PRYSM_NETWORK_FLAG="--pulsechain-testnet-v4"
 
 
 function_get_user_choices() {
@@ -720,7 +720,7 @@ sudo -u validator docker run -dt --network=host --restart=always \\
 -v "${INSTALL_PATH}"/wallet:/wallet \\
 -v "${INSTALL_PATH}"/validator_keys:/keys \\
 --name=validator \\
-registry.gitlab.com/pulsechaincom/prysm-pulse/validator --${PRYSM_NETWORK_FLAG} \\
+registry.gitlab.com/pulsechaincom/prysm-pulse/validator ${PRYSM_NETWORK_FLAG} \\
 --suggested-fee-recipient="${fee_wallet}" \\
 --wallet-dir=/wallet --wallet-password-file=/wallet/pw.txt \\
 --graffiti "${user_graffiti}" --rpc " 
