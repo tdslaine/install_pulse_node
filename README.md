@@ -228,7 +228,7 @@ or
 ./restart_docker.sh
 ```
 
-#### B) singel commands:
+#### B) single commands:
 
 ```bash
 sudo docker stop execution
