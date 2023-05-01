@@ -81,7 +81,8 @@ scrape_configs:
      - targets: ['localhost:6060']"
 
 	elif  [[ "$client_choice" == "2" ]]; then
-  PROMETHEUS_YML="global:
+  PROMETHEUS_YML="
+ global:
   scrape_interval:     15s # By default, scrape targets every 15 seconds.
 
   # Attach these labels to any time series or alerts when communicating with
@@ -103,7 +104,14 @@ scrape_configs:
        - targets: ['localhost:8080']
    - job_name: 'slasher'
      static_configs:
-       - targets: ['localhost:8082'] "
+       - targets: ['localhost:8082']
+   - job_name: 'geth'
+     scrape_interval: 15s
+     scrape_timeout: 10s
+     metrics_path: /debug/metrics/prometheus
+     scheme: http
+     static_configs:
+       - targets: ['localhost:6060']"
   fi
 
 	 
