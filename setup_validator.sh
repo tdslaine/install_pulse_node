@@ -308,7 +308,7 @@ function stop_docker_image(){
 function start_script(){
     target=$1
     echo -e "Restarting ${target}"
-    "${INSTALL_PATH}/start_${target}.sh"
+    bash "${INSTALL_PATH}/start_${target}.sh"
 }
 
 
