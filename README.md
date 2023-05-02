@@ -68,7 +68,7 @@ Give execution permissions to the `setup_pulse_node.sh` script:
 
 Finally, run the `setup_pulse_node.sh` script:
 ```bash
-  sudo ./setup_pulse_node.sh
+./setup_pulse_node.sh
 ```
 
 ### 6. After the setup is complete
@@ -194,9 +194,9 @@ cd /blockchain
 
 ### B) single commands:
 ```bash
-sudo docker logs -f execution
-sudo docker logs -f beacon
-sudo docker logs -f validator
+docker logs -f execution
+docker logs -f beacon
+docker logs -f validator
 ```
 
 ### Stopping/Restarting Containers:
