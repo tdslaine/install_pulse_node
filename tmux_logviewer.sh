@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Kill prev. sessions
+tmux kill-session -t logs
+
 # Create a new tmux session named 'logs'
 tmux new-session -d -s logs
 
