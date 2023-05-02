@@ -51,6 +51,49 @@ function add_user_to_docker_group() {
     fi
 }
 
+function create-desktop-shortcut() {
+  # Check if two arguments are provided
+  if [[ $# -ne 2 ]]; then
+      echo "Usage: create-desktop-shortcut <target-shell-script> <shortcut-name>"
+      return 1
+  fi
+
+  # get main user
+  main_user=$(logname || echo $SUDO_USER || echo $USER)
+
+  # check if desktop directory exists for main user
+  desktop_dir="/home/$main_user/Desktop"
+  if [ ! -d "$desktop_dir" ]; then
+    echo "Desktop directory not found for user $main_user"
+    return 1
+  fi
+
+  # check if script file exists
+  if [ ! -f "$1" ]; then
+    echo "Script file not found: $1"
+    return 1
+  fi
+
+  # set shortcut name
+  shortcut_name=${2:-$(basename "$1" ".sh")}
+
+  # create shortcut file
+  cat > "$desktop_dir/$shortcut_name.desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Name=$shortcut_name
+Exec=$1
+Terminal=true
+EOF
+
+  # make shortcut executable
+  chmod +x "$desktop_dir/$shortcut_name.desktop"
+
+  echo "Desktop shortcut created: $desktop_dir/$shortcut_name.desktop"
+}
+
+
+
 
 
 
@@ -464,6 +507,17 @@ sudo mv tmux_logviewer.sh "$CUSTOM_PATH"
 echo ""
 echo -e "${GREEN}Finished copying helper scripts${NC}"
 echo ""
+read -p "Do you want to add Desktop-Shortcuts for the logviewer stop-and restart helper? [Y/n] " log_choice
+echo "Note: You might have to right-click > allow launch each of these, once"
+
+if [[ "$log_choice" =~ ^[Yy]$ || "$log_choice" == "" ]]; then
+    create-desktop-shortcut ${CUSTOM_PATH}/tmux_logviewr.sh tmux_LOGS
+    create-desktop-shortcut ${CUSTOM_PATH}/log_viewer.sh ui_LOGS
+    create-desktop-shortcut ${CUSTOM_PATH}/restart_docker.sh Restart-clients
+    create-desktop-shortcut ${CUSTOM_PATH}/stop_docker.sh Stop-clients
+    create-desktop-shortcut ${CUSTOM_PATH}/update_docker.sh Update-clients
+fi   
+
 clear
 read -p "$(echo -e ${GREEN})Would you like to setup a validator? (y/n):$(echo -e ${NC}) " VALIDATOR_CHOICE
 echo ""
@@ -479,6 +533,7 @@ else
   echo "You can always create a validator later by running the ./setup_validator.sh script separately."
   echo ""
 fi
+
 
 read -p "Do you want to start the execution and consensus scripts now? [Y/n] " choice
 
