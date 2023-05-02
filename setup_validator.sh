@@ -32,6 +32,33 @@ function to_valid_erc20_address() {
     echo "$checksum_address"
 }
 
+function reboot_advice() {
+    echo "Initial setup completed. It is recommended to reboot your system."
+    read -p "Do you want to reboot now? [y/n]: " choice
+
+    if [ "$choice" == "y" ]; then
+        sudo reboot
+    elif [ "$choice" == "n" ]; then
+        echo "Please remember to reboot your system later."
+    else
+        echo "Invalid option. Please try again."
+        reboot_advice
+    fi
+}
+
+while getopts "rl" option; do
+    case "$option" in
+        r)
+            sudo reboot
+            ;;
+        l)
+            echo "Please remember to reboot your system later."
+            ;;
+        *)
+            reboot_advice
+            ;;
+    esac
+done
 
 function get_user_choices() {
     echo "Choose your Validator Client"
@@ -954,5 +981,8 @@ echo -e "Find more information in the repository's README."
 
 #credits
 display_credits
+sleep 1
+echo ""
+reboot_advice
 exit 0
 fi
