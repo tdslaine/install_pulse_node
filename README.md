@@ -68,7 +68,7 @@ Give execution permissions to the `setup_pulse_node.sh` script:
 
 Finally, run the `setup_pulse_node.sh` script:
 ```bash
-./setup_pulse_node.sh
+sudo ./setup_pulse_node.sh
 ```
 
 ### 6. After the setup is complete
