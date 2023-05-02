@@ -324,6 +324,8 @@ else
   echo ""
   echo "Add dashboards via: http://127.0.0.1:3000/dashboard/import"
   echo "Import JSONs from '${config_location}/Dashboards'"
+  echo ""
+  echo "It is adviced to reboot your system after the initial setup has taken place"
 fi
 echo ""
 echo "Brought to you by:
