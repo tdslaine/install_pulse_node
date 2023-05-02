@@ -15,6 +15,37 @@ function tab_autocomplete() {
   fi
 }
 
+#!/bin/bash
+
+function reboot_advice() {
+    echo "Initial setup completed. It is recommended to reboot your system."
+    read -p "Do you want to reboot now? [y/n]: " choice
+
+    if [ "$choice" == "y" ]; then
+        sudo reboot
+    elif [ "$choice" == "n" ]; then
+        echo "Please remember to reboot your system later."
+    else
+        echo "Invalid option. Please try again."
+        reboot_advice
+    fi
+}
+
+while getopts "rl" option; do
+    case "$option" in
+        r)
+            sudo reboot
+            ;;
+        l)
+            echo "Please remember to reboot your system later."
+            ;;
+        *)
+            reboot_advice
+            ;;
+    esac
+done
+
+
 function get_user_choices() {
   echo "Choose your Client"
   echo ""
@@ -361,4 +392,5 @@ if [[ "$log_it" =~ ^[Yy]$ ]]; then
     ;;
   esac
 fi
+reboot_advice
 exit 0
