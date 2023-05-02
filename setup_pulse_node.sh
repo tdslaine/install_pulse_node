@@ -22,6 +22,38 @@ PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
 # Lighthouse Network FLAG
 LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 
+function add_user_to_docker_group() {
+    # Check if the script is run as root
+    if [ "$EUID" -eq 0 ]; then
+        # Get the main non-root user
+        local main_user=$(logname)
+
+        # Check if the main user is already in the docker group
+        if id -nG "${main_user}" | grep -qw "docker"; then
+            echo "User ${main_user} is already a member of the docker group."
+        else
+            # Add the main user to the docker group
+            usermod -aG docker "${main_user}"
+            echo "User ${main_user} added to the docker group. Please log out and log back in for the changes to take effect."
+        fi
+    else
+        # Get the current user
+        local current_user=$(whoami)
+
+        # Check if the user is already in the docker group
+        if id -nG "${current_user}" | grep -qw "docker"; then
+            echo "User ${current_user} is already a member of the docker group."
+        else
+            # Add the user to the docker group
+            sudo usermod -aG docker "${current_user}"
+            echo "User ${current_user} added to the docker group. Please log out and log back in for the changes to take effect."
+        fi
+    fi
+}
+
+
+
+
 clear
 echo "     Pulse Node/Validator/Montitoring Setup by Dipslayer"
 echo "                                                                                                                                                    
@@ -224,6 +256,7 @@ sudo apt-get install -y \
     git \
     ufw \
     tmux \
+    rhash \
     openssl \
     lsb-release \
     dbus-x11 \
@@ -246,10 +279,7 @@ sudo systemctl start docker
 sudo systemctl enable docker
 
 # Adding Main user to the Docker group
-
-DEFAULT_USER=$(getent passwd 1000 | cut -d: -f1)
-usermod -aG docker $DEFAULT_USER
-
+add_user_to_docker_group
 #sudo chmod 666 /var/run/docker.sock
 
 echo -e "${GREEN}Creating ${CUSTOM_PATH} Main-Folder${NC}"
