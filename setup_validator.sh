@@ -11,7 +11,29 @@ LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
 
 
-function_get_user_choices() {
+function to_valid_erc20_address() {
+    local input_address="$1"
+    local input_address_lowercase="${input_address,,}"  # Convert to lowercase
+
+    # Calculate the Keccak-256 hash of the lowercase input address using openssl
+    local hash=$(echo -n "${input_address_lowercase}" | openssl dgst -sha3-256 -binary | xxd -p -c 32)
+
+    # Build the checksum address
+    local checksum_address="0x"
+    for ((i=0;i<${#input_address_lowercase};i++)); do
+        char="${input_address_lowercase:$i:1}"
+        if [ "${char}" != "${char^^}" ]; then
+            checksum_address+="${input_address:$i:1}"
+        else
+            checksum_address+="${hash:$((i/2)):1}"
+        fi
+    done
+
+    echo "$checksum_address"
+}
+
+
+function get_user_choices() {
     echo "Choose your Validator Client"
     echo "based on your consensus/beacon Client"
     echo ""
@@ -40,24 +62,36 @@ function_get_user_choices() {
         read -p "Enter your choice (1 or 2): " setup_choice
     done
 
-    echo "${client_choice} ${setup_choice}"
+    #echo "${client_choice} ${setup_choice}"
 }
 
 
 function press_enter_to_continue(){
+    echo ""
     echo "Press Enter to continue"
     read -p ""
+    echo ""
 }
 
-function_stop_validator(){
-    echo "Shutting down current Validator Processes to continue Setup"
-    function_press_enter_to_continue
-    sudo docker stop validator
-    sudo docker rm validator
-    sudo docker container prune -f
+function stop_docker_container() {
+    container_name_or_id="$1"
+    
+    container_status=$(docker inspect --format "{{.State.Status}}" "$container_name_or_id" 2>/dev/null)
+    
+    if [ "$container_status" == "running" ]; then
+        echo "Stopping container with name or ID: $container_name_or_id"
+        sudo docker stop "$container_name_or_id"
+        sudo docker container prune -f
+
+    elif [ -n "$container_status" ]; then
+        echo "Container $container_name_or_id is not running."
+    else
+        echo "No container found with name or ID: $container_name_or_id"
+    fi
 }
 
-function_display_credits() {
+
+function display_credits() {
     echo ""
     echo "Brought to you by:"
     echo "  ██████__██_██████__███████_██_______█████__██____██_███████_██████__"
@@ -69,7 +103,7 @@ function_display_credits() {
     echo ""
 }
 
-function_tab_autocomplete(){
+function tab_autocomplete(){
     
     # Enable tab autocompletion for the read command if line editing is enabled
     if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
@@ -77,16 +111,17 @@ function_tab_autocomplete(){
     fi
 }
 
-function_common_task_software_check(){
+function common_task_software_check(){
 
 
     # Check if req. software is installed
     python_check=$(python3.10 --version 2>/dev/null)
     docker_check=$(docker --version 2>/dev/null)
     docker_compose_check=$(docker-compose --version 2>/dev/null)
+    openssl_check=$(openssl version 2>/dev/null)
     
     # Install the req. software only if not already installed
-    if [[ -z "${python_check}" || -z "${docker_check}" || -z "${docker_compose_check}" ]]; then
+    if [[ -z "${python_check}" || -z "${docker_check}" || -z "${docker_compose_check}" || -z "${openssl_check}" ]]; then
         echo "Installing required packages..."
         sudo add-apt-repository ppa:deadsnakes/ppa -y
     
@@ -106,6 +141,7 @@ function_common_task_software_check(){
             curl \
             gnupg \
             git \
+            b2sum \
             ufw \
             openssl \
             lsb-release \
@@ -120,13 +156,12 @@ function_common_task_software_check(){
 }
 
 function graffiti_setup() {
-    random_number=$(shuf -i 1000-9999 -n 1)
     echo ""
-    read -e -p "$(echo -e "${GREEN}Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: DipSlayer_${random_number}):${NC}")" user_graffiti
+    read -e -p "$(echo -e "${GREEN}Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: DipSlayer):${NC}")" user_graffiti
 
     # Set the default value for graffiti if the user enters nothing
     if [ -z "$user_graffiti" ]; then
-        user_graffiti="DipSlayer_${random_number}"
+        user_graffiti="DipSlayer"
     fi
 
     echo ""
@@ -134,7 +169,8 @@ function graffiti_setup() {
     echo ""
 }
 
-function_set_install_path() {
+function set_install_path() {
+    echo ""
     read -e -p "$(echo -e "${GREEN}Please specify the directory for storing validator data (default: /blockchain):${NC} ")" INSTALL_PATH
     if [ -z "$INSTALL_PATH" ]; then
         INSTALL_PATH="/blockchain"
@@ -148,7 +184,7 @@ function_set_install_path() {
     fi
 }
 
-function_get_active_network_device() {
+function get_active_network_device() {
      interface=$(ip route get 8.8.8.8 | awk '{print $5}')
      echo "Your online network interface is: $interface"
 }
@@ -158,8 +194,8 @@ function cd_into_staking_cli() {
     sudo python3 setup.py install > /dev/null 2>&1
 }
 
-function_network_interface_DOWN() {
-    function_get_active_network_device
+function network_interface_DOWN() {
+    get_active_network_device
     echo "Shutting down Network-Device ${interface} ..."
     sudo ip link set $interface down
     echo "The network interface has been shutdown. It will be put back online after this process."
@@ -192,13 +228,13 @@ function clear_bash_history() {
     echo "Bash history cleared!"
 }
 
-function_network_interface_UP() {
+function network_interface_UP() {
     echo "Restarting Network-Interface ${interface} ..."
     sudo ip link set $interface up
     echo "Network interface put back online"
 }
 
-function_create_user() {
+function create_user() {
     target_user=$1
     if id "$target_user" >/dev/null 2>&1; then
         echo "User $target_user already exists."
@@ -215,9 +251,17 @@ function clone_staking_deposit_cli() {
     sudo rm -rf "${target_directory}/staking-deposit-cli"
 
     # Clone the staking-deposit-cli repository
-    sudo git clone https://gitlab.com/pulsechaincom/staking-deposit-cli.git "${target_directory}/staking-deposit-cli"
-    echo "Cloned staking-deposit-cli repository into ${target_directory}/staking-deposit-cli"
+    if sudo git clone https://gitlab.com/pulsechaincom/staking-deposit-cli.git "${target_directory}/staking-deposit-cli"; then
+        echo "Cloned staking-deposit-cli repository into ${target_directory}/staking-deposit-cli"
+    else
+        echo ""
+        echo "Failed to clone staking-deposit-cli repository. Please check your internet connection and try again."
+        echo ""
+        read -p "Press enter exit script now"
+        exit 1
+    fi
 }
+
 
 function Staking_Cli_launch_setup() {
     # Check Python version (>= Python3.8)
@@ -240,15 +284,38 @@ function Staking_Cli_launch_setup() {
 }
 
 
-function_create_subfolder() {
+function create_subfolder() {
     subdirectory=$1
     sudo mkdir -p "${INSTALL_PATH}/${subdirectory}"
     sudo chmod 777 "${INSTALL_PATH}/${subdirectory}"
     echo "Created directory: ${install_path}/${subdirectory}"
 }
 
+function confirm_prompt() {
+    message="$1"
+    while true; do
+        echo "$message"
+        read -p "Do you confirm? (y/n): " yn
+        case $yn in
+            [Yy]* )
+                # User confirmed, return success (0)
+                return 0
+                ;;
+            [Nn]* )
+                # User did not confirm, return failure (1)
+                return 1
+                ;;
+            * )
+                # Invalid input, ask again
+                echo "Please answer 'y' (yes) or 'n' (no)."
+                ;;
+        esac
+    done
+}
 
-function_create_prysm_wallet_password() {
+
+
+function create_prysm_wallet_password() {
     password_file="${INSTALL_PATH}/wallet/pw.txt"
 
     if [ -f "$password_file" ]; then
@@ -287,29 +354,34 @@ function check_and_pull_lighthouse() {
 
     # If the image does not exist, pull the image
     if [ -z "$lighthouse_image_exists" ]; then
+        echo ""
         echo "Lighthouse validator Docker image not found. Pulling the latest image..."
         sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
+        echo ""
     else
+        echo ""
         echo "Lighthouse validator Docker image is already present."
+        echo ""
     fi
 }
 
 function check_and_pull_prysm_validator() {
     # Check if the Prysm validator Docker image is present
     prysm_image_exists=$(sudo docker images registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest -q)
-
     # If the image does not exist, pull the image
     if [ -z "$prysm_image_exists" ]; then
+        echo ""
         echo "Prysm validator Docker image not found. Pulling the latest image..."
         sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest
+        echoe ""
     else
-        echo "Prysm validator Docker image is already present."
+        echo ""
     fi
 }
 
 function stop_and_prune_validator_import(){
     sudo docker stop validator_import > /dev/null 2>&1
-    sudo docker prune -f > /dev/null 2>&1
+    sudo docker container prune -f > /dev/null 2>&1
 }
 
 function stop_docker_image(){
@@ -321,14 +393,18 @@ function stop_docker_image(){
 
 function start_script(){
     target=$1
+    echo ""
     echo -e "Restarting ${target}"
     bash "${INSTALL_PATH}/start_${target}.sh"
+    echo "Validator Client restartet"
 }
 
 
 function import_lighthouse_validator() {
     stop_and_prune_validator_import
+    echo ""
     docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
+    echo ""
     sudo docker run -it \
         --name validator_import \
         --network=host \
@@ -345,7 +421,9 @@ function import_lighthouse_validator() {
 
 function import_prysm_validator() {
     stop_and_prune_validator_import
+    echo ""
     docker pull registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest
+    echo ""
     if [ -f "${INSTALL_PATH}/wallet/direct/accounts/all-accounts.keystore.json" ]; then
         sudo chmod -R 0600 "${INSTALL_PATH}/wallet/direct/accounts/all-accounts.keystore.json"
     fi
@@ -415,7 +493,7 @@ function get_fee_receipt_address() {
 
 
 
-
+# Main Setup Starts here ################################################################
 
 # Start Validator Setup
 clear
@@ -425,19 +503,19 @@ echo "Setting up the Validator now"
 press_enter_to_continue
 
 # User Menu to Choose Client and Setup-Type
-function_get_user_choices
+get_user_choices
 
 # Add Tab-Autocomplete
-function_tab_autocomplete
+tab_autocomplete
 
 # Checking for installed/Required software
-function_common_task_software_check
+common_task_software_check
 
 # Add "validator" user to system and docker-grp
-function_create_user "validator"
+create_user "validator"  >/dev/null 2>&1
 
 # Prompt User for Set up installation path
-function_set_install_path
+set_install_path
 
 
 # Cloning staking Client into installation path
@@ -450,8 +528,8 @@ clone_staking_deposit_cli "${INSTALL_PATH}"
     if [[ "$setup_choice" == "1" ]]; then
         if [[ "$client_choice" == "2" ]]; then
 
-            function_create_subfolder "wallet"
-            function_create_prysm_wallet_password
+            create_subfolder "wallet"
+            create_prysm_wallet_password
         fi
     fi 
 
@@ -464,7 +542,113 @@ clear
 
 echo ""
 
-# Functions for the three key options 
+# Generate Key functions 
+
+################################################### Generate New ##################################################
+generate_new_validator_key() {
+
+    if [[ "$client_choice" == "1" ]]; then
+        check_and_pull_lighthouse
+    elif [[ "$client_choice" == "2" ]]; then
+        check_and_pull_prysm_validator
+    fi
+
+    if [[ "$setup_choice" == "2" ]]; then
+    echo "Adding into an existing setup requires all running validator-clients to stop. This action will take place now."
+    press_enter_to_continue
+    stop_docker_container "validator" >/dev/null 2>&1
+    fi
+
+    clear
+
+    warn_network
+
+    clear
+
+
+    if [[ "$network_off" =~ ^[Yy]$ ]]; then
+        network_interface_DOWN
+    fi
+
+
+    echo ""
+    echo "Generating the validator keys via staking-cli"
+    echo ""
+    echo "Please follow the instructions and make sure to READ! and understand everything on screen"
+    echo ""
+    echo -e "${RED}Attention:${NC}"
+    echo ""
+    echo "The next step requires you to enter the wallet address that you would like to use for receiving"
+    echo "validator rewards while validating and withdrawing your funds when you exit the validator pool."
+    echo -e "This it the ${GREEN}Withdrawal- or Execution-Wallet (they are the same)${NC}"
+    echo ""
+    echo -e "Make sure ${RED}you have full access${NC} to this Wallet. ${RED}Once set, it cannot be changed${NC}"
+    echo ""
+    echo -e "You need to provide this Wallet-Adress in the ${GREEN}propper format (checksum)${NC}."
+    echo -e "One way to achive this, is to copy your adress from the Blockexplorer"
+    echo ""
+    if confirm_prompt "I have read this information and confirm that I understand the importance of using the right Withdrawal-Wallet Address."; then
+        echo ""
+        echo "proceeding..."
+        sleep 2
+    else
+        echo "Exiting script now."
+        network_interface_UP
+        exit 1
+    fi
+
+
+    echo ""
+
+# Check if the address is a valid address, loop until it is...
+while true; do
+    read -e -p "Please enter your Withdrawal-Wallet address: " withdrawal_wallet
+    if [[ "${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
+        break
+    else
+        echo "Invalid address format. Please enter a valid PRC20 address."
+    fi
+done
+
+    
+    # Running staking-cli to Generate the new validator_keys
+    echo ""
+    echo "Starting staking-cli to Generate the new validator_keys"
+    echo ""
+
+    ${INSTALL_PATH}/staking-deposit-cli/deposit.sh new-mnemonic \
+    --mnemonic_language=english \
+    --chain=${DEPOSIT_CLI_NETWORK} \
+    --folder="${INSTALL_PATH}" \
+    --eth1_withdrawal_address="${withdrawal_wallet}"
+
+
+    #echo "debug The current directory is: $(pwd)"
+    cd "${INSTALL_PATH}"
+    sudo chmod -R 755 validator_keys
+    #echo "debug The current directory is: $(pwd)"
+
+    if [[ "$network_off" =~ ^[Yy]$ ]]; then
+        network_interface_UP
+    fi
+
+    if [[ "$client_choice" == "1" ]]; then
+        import_lighthouse_validator
+    elif [[ "$client_choice" == "2" ]]; then
+        import_prysm_validator
+    fi
+
+
+    if [[ "$setup_choice" == "2" ]]; then        
+        start_script validator
+        echo "Import into existing Setup done."
+        press_enter_to_continue
+        exit 0
+    fi
+    
+}
+
+################################################### Import ##################################################
 import_restore_validator_keys() {
 
     if [[ "$client_choice" == "1" ]]; then
@@ -474,7 +658,9 @@ import_restore_validator_keys() {
     fi
 
     if [[ "$setup_choice" == "2" ]]; then
-    function_stop_validator
+    echo "Importing into an existing setup requires all running validator-clients to stop. This action will take place now."
+    press_enter_to_continue
+    stop_docker_container "validator" >/dev/null 2>&1
     fi
 
 
@@ -532,7 +718,7 @@ import_restore_validator_keys() {
             
 }
 
-
+################################################### Restore ##################################################
 # Function to restore from SeedPhrase 
 Restore_from_MN() {
 
@@ -545,123 +731,44 @@ Restore_from_MN() {
     fi
 
     if [[ "$setup_choice" == "2" ]]; then
-       function_stop_validator
+    echo "Importing into an existing setup requires all running validator-clients to stop. This action will take place now."
+    press_enter_to_continue
+    stop_docker_container "validator" >/dev/null 2>&1
     fi
     
-    warn_network                                    # Print Warning Message for Network 
+    clear
 
-    if [[ "$network_off" =~ ^[Yy]$ ]]; then         # Stop Network Interface
-        function_get_active_network_device
-        function_network_interface_DOWN
+    warn_network
+
+    clear
+
+
+    if [[ "$network_off" =~ ^[Yy]$ ]]; then
+        network_interface_DOWN
     fi
     
     echo ""
     echo "Now running staking-cli command to restore from your SeedPhrase (Mnemonic)"
     echo ""
+    
     #echo "debug The current directory is: $(pwd)"
     #cd "${INSTALL_PATH}/staking-deposit-cli"
     #echo "debug The current directory is: $(pwd)"
     
-    ./deposit.sh existing-mnemonic --chain=${DEPOSIT_CLI_NETWORK} --folder="${INSTALL_PATH}" 
-    #echo "debug The current directory is: $(pwd)"
-    cd "${INSTALL_PATH}"
+    ${INSTALL_PATH}/staking-deposit-cli/deposit.sh existing-mnemonic \
+    --chain=${DEPOSIT_CLI_NETWORK} \
+    --folder="${INSTALL_PATH}" 
+    
+    #cd "${INSTALL_PATH}"
 
   
-    if [[ "$network_off" =~ ^[Yy]$ ]]; then         # Restart Network Inteface
-       function_network_interface_UP
-    fi 
-
-    if [[ "$client_choice" == "1" ]]; then      # User choose Lighthouse
-    import_lighthouse_validator                 # import using Lighthouse
-    elif [[ "$client_choice" == "2" ]]; then    # User choose Prysm
-    import_prysm_validator                      # import using prysm
-    fi
-    
-    if [[ "$setup_choice" == "2" ]]; then          
-    start_script validator
-    echo "Import into existing Setup done."
-    press_enter_to_continue
-    exit 0
-    fi
-}
-    
-# Function to generate a new validator key 
-generate_new_validator_key() {
-
-    if [[ "$client_choice" == "1" ]]; then
-        check_and_pull_lighthouse
-    elif [[ "$client_choice" == "2" ]]; then
-        check_and_pull_prysm_validator
-    fi
-
-    if [[ "$setup_choice" == "2" ]]; then
-    function_stop_validator
-    fi
-
-    warn_network
-
-    if [[ "$network_off" =~ ^[Yy]$ ]]; then
-        function_network_interface_DOWN
-    fi
-
-
-    echo ""
-    echo "Generating the validator keys via staking-cli now..."
-    echo ""
-    echo "Please follow the instructions and make sure to READ! and understand everything on screen"
-    echo ""
-
-    echo ""
-    echo "Please enter the wallet address that you would like to use for receiving"
-    echo "validator rewards while validating and withdrawing your funds when you exit the validator pool."
-    echo ""
-    echo "Please note that this address must be a valid PRC20 address."
-    echo ""
-    echo -e "${RED}Once set, it cannot be changed, so please double-check that you have entered the correct address.${NC}"
-    echo ""
-    echo "I have read this information and confirm that I understand the importance of"
-    echo "using the right Withdrawal-Wallet Address. Press Enter to continue."
-    read -e -p "" confirm
-
-    if [[ -z "$confirm" ]]; then
-        echo "Thank you for confirming."
-    else
-            echo "Please read the information carefully and confirm by pressing Enter. Exiting script."
-        exit 1
-    fi
-
-
-    echo -e "${RED}Also make sure you have full access to this Wallet! Again, once set it cannot be changed${NC}"
-    echo ""
-
-    # Check if the Adress is a valid Adress, loop until it is.
-    while true; do
-    read -e -p "Please enter your Withdrawal-Wallet adress: " withdrawal_wallet
-    if [[ "${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-        break
-    else
-        echo "Invalid address format. Please enter a valid PRC20 address."
-    fi
-    done
-
-    # Running staking-cli to Generate the new validator_keys
-    echo ""
-    echo "Now running staking-cli to Generate the new validator_keys"
-    echo ""
-
-    sudo ${INSTALL_PATH}/staking-deposit-cli/deposit.sh new-mnemonic \
-    --mnemonic_language=english \
-    --chain=${DEPOSIT_CLI_NETWORK} \
-    --folder="${INSTALL_PATH}" \
-    --eth1_withdrawal_address=${withdrawal_wallet}
-
     #echo "debug The current directory is: $(pwd)"
     cd "${INSTALL_PATH}"
-    sudo chmod -R 777 validator_keys
+    sudo chmod -R 755 validator_keys
     #echo "debug The current directory is: $(pwd)"
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
-        function_network_interface_UP
+        network_interface_UP
     fi
 
     if [[ "$client_choice" == "1" ]]; then
@@ -677,12 +784,14 @@ generate_new_validator_key() {
         press_enter_to_continue
         exit 0
     fi
-    
 }
+    
 
-# Selection menu for validator_keys
-PS3="Choose an option (1-3): "
+
+# Selection menu
+PS3=$'\nChoose an option (1-3): '
 options=("Generate new validator_keys" "Import/Restore validator_keys from a backup-folder" "Restore validator_keys from SeedPhrase (Mnemonic)")
+COLUMNS=1
 select opt in "${options[@]}"
 
 do
@@ -756,7 +865,7 @@ echo -e "Creating the start_validator.sh script with the following contents:\n${
 echo ""
 
 if [[ "$network_off" =~ ^[Yy]$ ]]; then         # Restarting Network interface should it still be down for some reason
-    function_network_interface_UP
+    network_interface_UP
 fi
 
 sudo chmod -R 777 ${INSTALL_PATH}
@@ -764,11 +873,11 @@ sudo chmod -R 777 ${INSTALL_PATH}
 #echo "Current directory is $(pwd)"
 
 # Writing the start_validator.sh script, this is only done during "first-setup"
-cat > "${INSTALL_PATH}/start_validator.sh" << EOL
+cat > "${INSTALL_PATH}/start_validator.sh" << EOF
 #!/bin/bash
 
 ${VALIDATOR}
-EOL
+EOF
 
 sudo chmod +x "${INSTALL_PATH}/start_validator.sh"
 
@@ -844,6 +953,6 @@ echo ""
 echo -e "Find more information in the repository's README."
 
 #credits
-function_display_credits
+display_credits
 exit 0
 fi
