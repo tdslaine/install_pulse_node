@@ -1,61 +1,46 @@
-# v.0.2
+#!/bin/bash
 
-# modified to add support prysm client too... dashboards are from eth - so they might not work
+# v0.5
+
+#Icosa, Hex, Hedron,
+#Three shapes in symmetry dance,
+#Nature's art is shown.
+
+# By tdslaine aka Peter L Dipslayer  TG: @dipslayer369  Twitter: @dipslayer
+
+script_dir=$(dirname "$0")
+source "$script_dir/functions.sh"
 
 start_dir=$(pwd)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-function tab_autocomplete() {
+function get_user_choices_monitor() {
+  local client_choice
 
-  # Enable tab autocompletion for the read command if line editing is enabled
-  if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
-    bind '"\t":menu-complete'
-  fi
-}
+  while true; do
+    echo "Choose your Client"
+    echo ""
+    echo "1. Lighthouse"
+    echo "2. Prysm"
+    echo ""
+    read -p "Enter your choice (1 or 2): " client_choice
 
-#!/bin/bash
-
-function reboot_advice() {
-    echo "Initial setup completed. It is recommended to reboot your system."
-    read -p "Do you want to reboot now? [y/n]: " choice
-
-    if [ "$choice" == "y" ]; then
-        sudo reboot
-    elif [ "$choice" == "n" ]; then
-        echo "Please remember to reboot your system later."
-    else
-        echo "Invalid option. Please try again."
-        reboot_advice
-    fi
-}
-
-while getopts "rl" option; do
-    case "$option" in
-        r)
-            sudo reboot
-            ;;
-        l)
-            echo "Please remember to reboot your system later."
-            ;;
-        *)
-            reboot_advice
-            ;;
+    case $client_choice in
+      1|2)
+        break
+        ;;
+      *)
+        echo "Invalid choice. Please enter 1 or 2."
+        ;;
     esac
-done
+  done
 
-
-function get_user_choices() {
-  echo "Choose your Client"
-  echo ""
-  echo "1. Lighthouse"
-  echo "2. Prysm"
-  echo ""
-  read -p "Enter your choice (1 or 2): " client_choice
-
-  echo "${client_choice}"
+  #echo "${client_choice}"
 }
+
+source "./functions.sh"
 
 clear
 
@@ -73,7 +58,9 @@ if [ -z "$config_location" ]; then
   config_location="/blockchain"
 fi
 
-get_user_choices
+get_user_choices_monitor
+
+#get_user_choices_monitor
 
 # Create directories
 echo ""
