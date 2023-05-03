@@ -1,17 +1,23 @@
 #!/bin/bash
 
+# v.1
 
 #Icosa, Hex, Hedron,
 #Three shapes in symmetry dance,
 #Nature's art is shown.
 
-# v. 0.991
-# By tdslaine aka Peter L Dipslayer 
-#
-# Set color variables
+# By tdslaine aka Peter L Dipslayer  TG: @dipslayer369  Twitter: @dipslayer
+
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
+
+start_dir=$(pwd)
+script_dir=$(dirname "$0")
+
+source "$script_dir/functions.sh"
+
 
 # Checkpoint sync url
 CHECKPOINT="https://checkpoint.v4.testnet.pulsechain.com"
@@ -21,80 +27,6 @@ EXECUTION_NETWORK_FLAG="pulsechain-testnet-v4"
 PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
 # Lighthouse Network FLAG
 LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
-
-function add_user_to_docker_group() {
-    # Check if the script is run as root
-    if [ "$EUID" -eq 0 ]; then
-        # Get the main non-root user
-        local main_user=$(logname)
-
-        # Check if the main user is already in the docker group
-        if id -nG "${main_user}" | grep -qw "docker"; then
-            echo "User ${main_user} is already a member of the docker group."
-        else
-            # Add the main user to the docker group
-            usermod -aG docker "${main_user}"
-            echo "User ${main_user} added to the docker group. Please log out and log back in for the changes to take effect."
-        fi
-    else
-        # Get the current user
-        local current_user=$(whoami)
-
-        # Check if the user is already in the docker group
-        if id -nG "${current_user}" | grep -qw "docker"; then
-            echo "User ${current_user} is already a member of the docker group."
-        else
-            # Add the user to the docker group
-            sudo usermod -aG docker "${current_user}"
-            echo "User ${current_user} added to the docker group. Please log out and log back in for the changes to take effect."
-        fi
-    fi
-}
-
-function create-desktop-shortcut() {
-  # Check if two arguments are provided
-  if [[ $# -ne 2 ]]; then
-      echo "Usage: create-desktop-shortcut <target-shell-script> <shortcut-name>"
-      return 1
-  fi
-
-  # get main user
-  main_user=$(logname || echo $SUDO_USER || echo $USER)
-
-  # check if desktop directory exists for main user
-  desktop_dir="/home/$main_user/Desktop"
-  if [ ! -d "$desktop_dir" ]; then
-    echo "Desktop directory not found for user $main_user"
-    return 1
-  fi
-
-  # check if script file exists
-  if [ ! -f "$1" ]; then
-    echo "Script file not found: $1"
-    return 1
-  fi
-
-  # set shortcut name
-  shortcut_name=${2:-$(basename "$1" ".sh")}
-
-  # create shortcut file
-  cat > "$desktop_dir/$shortcut_name.desktop" <<EOF
-[Desktop Entry]
-Type=Application
-Name=$shortcut_name
-Exec=$1
-Terminal=true
-EOF
-
-  # make shortcut executable
-  chmod +x "$desktop_dir/$shortcut_name.desktop"
-
-  echo "Desktop shortcut created: $desktop_dir/$shortcut_name.desktop"
-}
-
-
-
-
 
 
 clear
@@ -124,7 +56,7 @@ echo "
                  ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         
                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                                                                                                   
                                                                              "
-echo "
+echo "                                                          
        _       _            _              _             ___ 
       | |     | |          | |            | |           /   |
  _ __ | |___  | |_ ___  ___| |_ _ __   ___| |_  __   __/ /| |
@@ -132,7 +64,8 @@ echo "
 | |_) | \__ \ | ||  __/\__ \ |_| | | |  __/ |_   \ V /\___  |
 | .__/|_|___/  \__\___||___/\__|_| |_|\___|\__|   \_/     |_/
 | |                                                          
-|_|                    
+|_| donations: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA                        
+
 "
 echo "Please press Enter to continue..."
 read -p ""
@@ -299,6 +232,7 @@ sudo apt-get install -y \
     git \
     ufw \
     tmux \
+    dialog \
     rhash \
     openssl \
     lsb-release \
@@ -346,19 +280,7 @@ echo ""
 
 # Firewall Setup
 
-#Function to get the IP-Adress Range from the local, private network
 
-function get_local_ip() {
-  local_ip=$(hostname -I | awk '{print $1}')
-  echo $local_ip
-}
-
-function get_ip_range() {
-  local_ip=$(get_local_ip)
-  ip_parts=(${local_ip//./ })
-  ip_range="${ip_parts[0]}.${ip_parts[1]}.${ip_parts[2]}.0/24"
-  echo $ip_range
-}
 
 # Prompt for the Rules to add
 
@@ -472,6 +394,7 @@ EOL
 
 if [ "$CONSENSUS_CLIENT" = "prysm" ]; then
 sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest
+sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse/prysmctl:latest
   cat > start_consensus.sh << EOL
 ${PRYSM_CMD}
 
@@ -487,53 +410,84 @@ fi
 chmod +x start_consensus.sh
 sudo mv start_consensus.sh "$CUSTOM_PATH"
 
+
+
 echo ""
 echo -e "${GREEN}start_execution.sh and start_consensus.sh created successfully!${NC}"
 echo ""
 echo ""
+# Create the helper directory if it doesn't exist
+sudo mkdir -p "${CUSTOM_PATH}/helper"
+
 echo ""
 echo -e "${GREEN}copying over helper scripts${NC}"
-chmod +x log_viewer.sh
-sudo mv log_viewer.sh "$CUSTOM_PATH"
-chmod +x update_docker.sh
-sudo mv update_docker.sh "$CUSTOM_PATH"
-chmod +x stop_docker.sh
-sudo mv stop_docker.sh "$CUSTOM_PATH"
-chmod +x restart_docker.sh
-sudo mv restart_docker.sh "$CUSTOM_PATH"
-chmod +x tmux_logviewer.sh
-sudo mv tmux_logviewer.sh "$CUSTOM_PATH"
+
+sudo cp log_viewer.sh "$CUSTOM_PATH/helper"
+sudo cp update_docker.sh "$CUSTOM_PATH/helper"
+sudo cp stop_docker.sh "$CUSTOM_PATH/helper"
+sudo cp restart_docker.sh "$CUSTOM_PATH/helper"
+sudo cp tmux_logviewer.sh "$CUSTOM_PATH/helper"
+sudo cp setup_validator.sh "$CUSTOM_PATH/helper"
+sudo cp setup_monitoring.sh "$CUSTOM_PATH/helper"
+sudo cp functions.sh "$CUSTOM_PATH/helper"
+
+sudo chmod -R +x $CUSTOM_PATH/helper/
+sudo chmod -R 750 $CUSTOM_PATH/helper/
+sudo chown -R :docker $CUSTOM_PATH/helper
 
 echo ""
 echo -e "${GREEN}Finished copying helper scripts${NC}"
 echo ""
-read -p "Do you want to add Desktop-Shortcuts for the logviewer stop-and restart helper? [Y/n] " log_choice
-echo "Note: You might have to right-click > allow launch each of these, once"
+
+echo ""
+echo "Creating a small menu for general housekeeping"
+echo ""
+menu_script="$(script_launch_template)"
+menu_script+="$(printf '\nhelper_scripts_path="%s/helper"\n' "${CUSTOM_PATH}")"
+menu_script+="$(menu_script_template)"
+
+# Write the menu script to the helper directory
+echo "${menu_script}" | sudo tee "${CUSTOM_PATH}/menu.sh" > /dev/null 2>&1
+sudo chmod +x "${CUSTOM_PATH}/menu.sh"
+sudo cp "${CUSTOM_PATH}/menu.sh" /usr/local/bin/plsmenu > /dev/null 2>&1
+
+echo "Menu script has been generated and written to ${CUSTOM_PATH}/menu.sh"
+
+read -p "Do you want to add Desktop-Shortcuts to a menu for general logging and node/validator settings (adviced)? [Y/n] " log_choice
+echo "Note: You might have to right-click > allow launching on these"
 
 if [[ "$log_choice" =~ ^[Yy]$ || "$log_choice" == "" ]]; then
-    create-desktop-shortcut ${CUSTOM_PATH}/tmux_logviewr.sh tmux_LOGS
-    create-desktop-shortcut ${CUSTOM_PATH}/log_viewer.sh ui_LOGS
-    create-desktop-shortcut ${CUSTOM_PATH}/restart_docker.sh Restart-clients
-    create-desktop-shortcut ${CUSTOM_PATH}/stop_docker.sh Stop-clients
-    create-desktop-shortcut ${CUSTOM_PATH}/update_docker.sh Update-clients
+    create-desktop-shortcut ${CUSTOM_PATH}/helper/tmux_logviewer.sh tmux_LOGS
+    create-desktop-shortcut ${CUSTOM_PATH}/helper/log_viewer.sh ui_LOGS
+    #create-desktop-shortcut ${CUSTOM_PATH}/helper/restart_docker.sh Restart-clients
+    #create-desktop-shortcut ${CUSTOM_PATH}/helper/stop_docker.sh Stop-clients
+    #create-desktop-shortcut ${CUSTOM_PATH}/helper/update_docker.sh Update-clients
+    create-desktop-shortcut ${CUSTOM_PATH}/menu.sh Validator-Menu
 fi   
 
+echo "Menu generated and copied over to /usr/local/bin/plsmenu - you can call it anytime via plsmenu from the terminal"
+echo ""
+press_enter_to_continue
+
+
 clear
-read -p "$(echo -e ${GREEN})Would you like to setup a validator? (y/n):$(echo -e ${NC}) " VALIDATOR_CHOICE
+read -p "$(echo -e ${GREEN})Would you like to setup a validator? (y/n):$(echo -e ${NC}))" VALIDATOR_CHOICE
 echo ""
 if [ "$VALIDATOR_CHOICE" = "y" ]; then
   echo ""
-  echo "Running validator_test.sh script"
+  echo "Starting setup_validator.sh script"
   echo ""
-  chmod +x setup_validator.sh
+  cd ${start_dir}
+  #echo "debug"
+  sudo chmod +x setup_validator.sh
   sudo ./setup_validator.sh
-exit 0
+  exit 0
+
 else
   echo "Skipping creation of validator."
   echo "You can always create a validator later by running the ./setup_validator.sh script separately."
   echo ""
 fi
-
 
 read -p "Do you want to start the execution and consensus scripts now? [Y/n] " choice
 
@@ -541,28 +495,26 @@ read -p "Do you want to start the execution and consensus scripts now? [Y/n] " c
 if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
 
   # Generate the command to start the scripts
-  command="${CUSTOM_PATH}/./start_execution.sh > /dev/null 2>&1 & ${CUSTOM_PATH}/./start_consensus.sh > /dev/null 2>&1 &"
+  command1="${CUSTOM_PATH}/start_execution.sh > /dev/null 2>&1 &"
+  command2="${CUSTOM_PATH}/start_consensus.sh > /dev/null 2>&1 &"
 
   # Print the command to the terminal
-  echo "Running command: $command"
+  echo "Running command: $command1"
+  echo "Running command: $command2"
 
   # Run the command
-  eval $command
-  sleep 2
+  eval $command1
+  sleep 1
+  eval $command2
+  sleep 1
 fi  
+
   clear
   echo ""
   echo -e "${GREEN}Congratulations, node installation/setup is now complete.${NC}"
-  echo ""
-  echo -e "${GREEN} If you found this script helpful and would like to show your appreciation,${NC}"
-  echo -e "${GREEN} donations are accepted via ERC20 at the following address: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
-  echo ""
-  echo "Brought to you by:
-  ██████__██_██████__███████_██_______█████__██____██_███████_██████__
-  ██___██_██_██___██_██______██______██___██__██__██__██______██___██_
-  ██___██_██_██████__███████_██______███████___████___█████___██████__
-  ██___██_██_██___________██_██______██___██____██____██______██___██_
-  ██████__██_██______███████_███████_██___██____██____███████_██___██_"
+  echo ""  
+  display_credits
+
   sleep 1
   echo "Please press Enter to exit"
   read -p ""
