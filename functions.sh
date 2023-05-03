@@ -820,11 +820,11 @@ execution_submenu() {
                     sudo docker container prune -f
                     ${CUSTOM_PATH}/start_execution.sh
                     ;;
-                "show_logs")
-                    sudo docker logs -f execution
-                    ;;
-                "Edit_Execution_Config")
+                 "Edit_Execution_Config")
                     sudo nano "${CUSTOM_PATH}/start_execution.sh"
+                    ;;
+                 "show_logs")
+                    sudo docker logs -f execution
                     ;;
                 "back")
                     break
@@ -845,6 +845,7 @@ beacon_submenu() {
                         "stop_beacon" "Stop Beacon" \
                         "restart_beacon" "Restart Beacon" \
                         "Edit_Beacon_Config" "Edit Beacon config" \
+                        "show_logs" "show logs" \
                         "back" "Back to Client Actions Menu")
 
         case $? in
@@ -867,6 +868,9 @@ beacon_submenu() {
                  "Edit_Beacon_Config")
                     sudo nano "${CUSTOM_PATH}/start_consensus.sh"
                     ;;
+                 "show_logs")
+                    sudo docker logs -f beacon
+                    ;;
                 "back")
                     break
                     ;;
@@ -886,6 +890,7 @@ validator_submenu() {
                         "stop_validator" "Stop Validator" \
                         "restart_validator" "Restart Validator" \
                         "Edit_Validator_Config" "Edit Validator config" \
+                        "show_logs" "show logs" \
                         "back" "Back to Client Actions Menu")
 
         case $? in
@@ -907,6 +912,9 @@ validator_submenu() {
                     ;;
                 "Edit_Validator_Config")
                     sudo nano "${CUSTOM_PATH}/start_validator.sh"
+                    ;;
+                "show_logs")
+                    sudo docker logs -f validator
                     ;;
                 "back")
                     break
