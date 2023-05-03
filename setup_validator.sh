@@ -1,6 +1,15 @@
 #!/bin/bash
 
+# v.1
+
+#Icosa, Hex, Hedron,
+#Three shapes in symmetry dance,
+#Nature's art is shown.
+
+# By tdslaine aka Peter L Dipslayer  TG: @dipslayer369  Twitter: @dipslayer
+
 start_dir=$(pwd)
+script_dir=$(dirname "$0")
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
@@ -10,515 +19,58 @@ DEPOSIT_CLI_NETWORK="pulsechain-testnet-v4"
 LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
 
-
-function to_valid_erc20_address() {
-    local input_address="$1"
-    local input_address_lowercase="${input_address,,}"  # Convert to lowercase
-
-    # Calculate the Keccak-256 hash of the lowercase input address using openssl
-    local hash=$(echo -n "${input_address_lowercase}" | openssl dgst -sha3-256 -binary | xxd -p -c 32)
-
-    # Build the checksum address
-    local checksum_address="0x"
-    for ((i=0;i<${#input_address_lowercase};i++)); do
-        char="${input_address_lowercase:$i:1}"
-        if [ "${char}" != "${char^^}" ]; then
-            checksum_address+="${input_address:$i:1}"
-        else
-            checksum_address+="${hash:$((i/2)):1}"
-        fi
-    done
-
-    echo "$checksum_address"
-}
-
-function reboot_advice() {
-    echo "Initial setup completed. It is recommended to reboot your system."
-    read -p "Do you want to reboot now? [y/n]: " choice
-
-    if [ "$choice" == "y" ]; then
-        sudo reboot
-    elif [ "$choice" == "n" ]; then
-        echo "Please remember to reboot your system later."
-    else
-        echo "Invalid option. Please try again."
-        reboot_advice
-    fi
-}
-
-while getopts "rl" option; do
-    case "$option" in
-        r)
-            sudo reboot
-            ;;
-        l)
-            echo "Please remember to reboot your system later."
-            ;;
-        *)
-            reboot_advice
-            ;;
-    esac
-done
+source "$script_dir/functions.sh"
 
 function get_user_choices() {
-    echo "Choose your Validator Client"
-    echo "based on your consensus/beacon Client"
+    echo "-----------------------------------------"
+    echo "       Choose your Validator Client      "
+    echo "-----------------------------------------"
+    echo "(based on your consensus/beacon Client)"
     echo ""
     echo "1. Lighthouse (Authors choice)"
     echo "2. Prysm"
     echo ""
-    read -p "Enter your choice (1 or 2): " client_choice
+    echo "0. Return or Exit"
+    echo ""
+    read -p "Enter your choice (1, 2 or 3): " client_choice
 
     # Validate user input for client choice
-    while [[ ! "$client_choice" =~ ^[1-2]$ ]]; do
-        echo "Invalid input. Please enter a valid choice (1 or 2): "
-        read -p "Enter your choice (1 or 2): " client_choice
+    while [[ ! "$client_choice" =~ ^[0-2]$ ]]; do
+        echo "Invalid input. Please enter a valid choice (1, 2 or 0): "
+        read -p "Enter your choice (1, 2 or 0): " client_choice
     done
 
-    echo ""
-    echo "Is this a first-time setup or are you adding to an existing setup?"
-    echo ""
-    echo "1. First-Time Validator Setup"
-    echo "2. Add or Import to an Existing setup"
-    echo "" 
-    read -p "Enter your choice (1 or 2): " setup_choice
+    if [[ "$client_choice" == "0" ]]; then
+        echo "Exiting..."
+        exit 0
+    fi
 
+    echo ""
+    echo "-----------------------------------------"
+    echo "             Choose a Mode               "
+    echo "-----------------------------------------"
+    echo ""
+    echo "1. Initial Validator Setup"
+    echo "2. Adding, Importing, or Restoring to an Existing Setup"
+    echo "3. Exit an Validator"
+    echo ""
+    echo "0. Return or Exit"
+    echo ""
+    read -p "Enter your choice (1, 2, 3 or 0): " setup_choice
+    
     # Validate user input for setup choice
-    while [[ ! "$setup_choice" =~ ^[1-2]$ ]]; do
-        echo "Invalid input. Please enter a valid choice (1 or 2): "
-        read -p "Enter your choice (1 or 2): " setup_choice
+    while [[ ! "$setup_choice" =~ ^[0-3]$ ]]; do
+        echo "Invalid input. Please enter a valid choice (1, 2, 3 or 0): "
+        read -p "Enter your choice (1, 2, 3 or 0): " setup_choice
     done
-
-    #echo "${client_choice} ${setup_choice}"
-}
-
-
-function press_enter_to_continue(){
-    echo ""
-    echo "Press Enter to continue"
-    read -p ""
-    echo ""
-}
-
-function stop_docker_container() {
-    container_name_or_id="$1"
     
-    container_status=$(docker inspect --format "{{.State.Status}}" "$container_name_or_id" 2>/dev/null)
-    
-    if [ "$container_status" == "running" ]; then
-        echo "Stopping container with name or ID: $container_name_or_id"
-        sudo docker stop "$container_name_or_id"
-        sudo docker container prune -f
-
-    elif [ -n "$container_status" ]; then
-        echo "Container $container_name_or_id is not running."
-    else
-        echo "No container found with name or ID: $container_name_or_id"
-    fi
-}
-
-
-function display_credits() {
-    echo ""
-    echo "Brought to you by:"
-    echo "  ██████__██_██████__███████_██_______█████__██____██_███████_██████__"
-    echo "  ██___██_██_██___██_██______██______██___██__██__██__██______██___██_"
-    echo "  ██___██_██_██████__███████_██______███████___████___█████___██████__"
-    echo "  ██___██_██_██___________██_██______██___██____██____██______██___██_"
-    echo "  ██████__██_██______███████_███████_██___██____██____███████_██___██_"
-    echo -e "${GREEN}For Donations use \nERC20: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA${NC}"
-    echo ""
-}
-
-function tab_autocomplete(){
-    
-    # Enable tab autocompletion for the read command if line editing is enabled
-    if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
-        bind '"\t":menu-complete'
-    fi
-}
-
-function common_task_software_check(){
-
-
-    # Check if req. software is installed
-    python_check=$(python3.10 --version 2>/dev/null)
-    docker_check=$(docker --version 2>/dev/null)
-    docker_compose_check=$(docker-compose --version 2>/dev/null)
-    openssl_check=$(openssl version 2>/dev/null)
-    
-    # Install the req. software only if not already installed
-    if [[ -z "${python_check}" || -z "${docker_check}" || -z "${docker_compose_check}" || -z "${openssl_check}" ]]; then
-        echo "Installing required packages..."
-        sudo add-apt-repository ppa:deadsnakes/ppa -y
-    
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-        echo \
-        "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    
-        sudo apt-get update -y
-        sudo apt-get upgrade -y
-        sudo apt-get dist-upgrade -y
-        sudo apt autoremove -y
-    
-        sudo apt-get install -y \
-            apt-transport-https \
-            ca-certificates \
-            curl \
-            gnupg \
-            git \
-            b2sum \
-            ufw \
-            openssl \
-            lsb-release \
-            python3.10 python3.10-venv python3.10-dev python3-pip \
-            docker-ce docker-ce-cli containerd.io docker-compose
-    
-    else
-        echo ""
-        echo "Required packages are already installed."
-        echo ""
-    fi
-}
-
-function graffiti_setup() {
-    echo ""
-    read -e -p "$(echo -e "${GREEN}Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: DipSlayer):${NC}")" user_graffiti
-
-    # Set the default value for graffiti if the user enters nothing
-    if [ -z "$user_graffiti" ]; then
-        user_graffiti="DipSlayer"
+    if [[ "$setup_choice" == "0" ]]; then
+        echo "Exiting..."
+        exit 0
     fi
 
-    echo ""
-    echo " - Using graffiti: ${user_graffiti}"
-    echo ""
+    echo "${client_choice} ${setup_choice}"
 }
-
-function set_install_path() {
-    echo ""
-    read -e -p "$(echo -e "${GREEN}Please specify the directory for storing validator data (default: /blockchain):${NC} ")" INSTALL_PATH
-    if [ -z "$INSTALL_PATH" ]; then
-        INSTALL_PATH="/blockchain"
-    fi
-
-    if [ ! -d "$INSTALL_PATH" ]; then
-        sudo mkdir -p "$INSTALL_PATH"
-        echo "Created the directory: $INSTALL_PATH"
-    else
-        echo "The directory already exists: $INSTALL_PATH"
-    fi
-}
-
-function get_active_network_device() {
-     interface=$(ip route get 8.8.8.8 | awk '{print $5}')
-     echo "Your online network interface is: $interface"
-}
-
-function cd_into_staking_cli() {
-    cd ${INSTALL_PATH}/staking-deposit-cli
-    sudo python3 setup.py install > /dev/null 2>&1
-}
-
-function network_interface_DOWN() {
-    get_active_network_device
-    echo "Shutting down Network-Device ${interface} ..."
-    sudo ip link set $interface down
-    echo "The network interface has been shutdown. It will be put back online after this process."
-
-}
-
-function start_scripts_first_time() {
-    # Check if the user wants to run the scripts
-    read -e -p "Do you want to run the scripts to start execution, consensus, and validator? (y/n) " choice
-    if [[ "$choice" =~ ^[Yy]$ || "$choice" == "" ]]; then
-        # Generate the commands to start the scripts
-        commands=(
-            "sudo ${INSTALL_PATH}/start_execution.sh > /dev/null 2>&1 &"
-            "sudo ${INSTALL_PATH}/start_consensus.sh > /dev/null 2>&1 &"
-            "sudo ${INSTALL_PATH}/start_validator.sh > /dev/null 2>&1 &"
-        )
-
-        # Run the commands
-        for cmd in "${commands[@]}"; do
-            echo "Running command: $cmd"
-            eval "$cmd"
-            sleep 1
-        done
-    fi
-}
-
-function clear_bash_history() {
-    echo "Clearing bash history now..."
-    history -c && history -w
-    echo "Bash history cleared!"
-}
-
-function network_interface_UP() {
-    echo "Restarting Network-Interface ${interface} ..."
-    sudo ip link set $interface up
-    echo "Network interface put back online"
-}
-
-function create_user() {
-    target_user=$1
-    if id "$target_user" >/dev/null 2>&1; then
-        echo "User $target_user already exists."
-    else
-        sudo useradd -MG docker "$target_user"
-        echo "User $target_user has been created and added to the docker group."
-    fi
-}
-
-function clone_staking_deposit_cli() {
-    target_directory=$1
-
-    # Removing existing Staking -Cli folder so we get the latest...
-    sudo rm -rf "${target_directory}/staking-deposit-cli"
-
-    # Clone the staking-deposit-cli repository
-    if sudo git clone https://gitlab.com/pulsechaincom/staking-deposit-cli.git "${target_directory}/staking-deposit-cli"; then
-        echo "Cloned staking-deposit-cli repository into ${target_directory}/staking-deposit-cli"
-    else
-        echo ""
-        echo "Failed to clone staking-deposit-cli repository. Please check your internet connection and try again."
-        echo ""
-        read -p "Press enter exit script now"
-        exit 1
-    fi
-}
-
-
-function Staking_Cli_launch_setup() {
-    # Check Python version (>= Python3.8)
-    echo "running staking-cli Checkup"
-    cd "${INSTALL_PATH}/staking-deposit-cli"
-    python3_version=$(python3 -V 2>&1 | awk '{print $2}')
-    required_version="3.8"
-
-    if [ "$(printf '%s\n' "$required_version" "$python3_version" | sort -V | head -n1)" = "$required_version" ]; then
-        echo "Python version is greater or equal to 3.8"
-    else
-        echo "Error: Python version must be 3.8 or higher"
-        exit 1
-    fi
-
-    sudo pip3 install -r "${INSTALL_PATH}/staking-deposit-cli/requirements.txt" > /dev/null 2>&1
-    #read -p "debug 1" 
-    sudo python3 "${INSTALL_PATH}/staking-deposit-cli/setup.py" install > /dev/null 2>&1
-    #read -p "debug 2"
-}
-
-
-function create_subfolder() {
-    subdirectory=$1
-    sudo mkdir -p "${INSTALL_PATH}/${subdirectory}"
-    sudo chmod 777 "${INSTALL_PATH}/${subdirectory}"
-    echo "Created directory: ${install_path}/${subdirectory}"
-}
-
-function confirm_prompt() {
-    message="$1"
-    while true; do
-        echo "$message"
-        read -p "Do you confirm? (y/n): " yn
-        case $yn in
-            [Yy]* )
-                # User confirmed, return success (0)
-                return 0
-                ;;
-            [Nn]* )
-                # User did not confirm, return failure (1)
-                return 1
-                ;;
-            * )
-                # Invalid input, ask again
-                echo "Please answer 'y' (yes) or 'n' (no)."
-                ;;
-        esac
-    done
-}
-
-
-
-function create_prysm_wallet_password() {
-    password_file="${INSTALL_PATH}/wallet/pw.txt"
-
-    if [ -f "$password_file" ]; then
-        echo ""
-        echo -e "${RED}Warning: A password file already exists at ${password_file}${NC}"
-        echo ""
-        read -n 1 -p "Do you want to continue and overwrite the existing password file? (y/n) [n]: " confirm
-        if [ "$confirm" != "y" ]; then
-            echo "Cancelled password creation."
-            return
-        fi
-    fi
-
-    echo "" 
-    echo ""
-    echo -e "Please create your Prysm Wallet password now."
-    echo ""
-    echo "This has nothing to do with the 24-word SeedPhrase that Staking-Cli will output."
-    echo "Unlocking your wallet is necessary for the Prysm Validator Client. In the next step, we will point the keys created with staking-cli to the unlocked wallet."
-    echo ""
-    while true; do
-        echo "Please enter a password (must be at least 8 characters):"
-        read -s password
-        if [[ ${#password} -ge 8 ]]; then
-            break
-        else
-            echo "Error: Password must be at least 8 characters long."
-        fi
-    done
-    echo "$password" > "$password_file"
-}
-
-function check_and_pull_lighthouse() {
-    # Check if the Lighthouse validator Docker image is present
-    lighthouse_image_exists=$(sudo docker images registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest -q)
-
-    # If the image does not exist, pull the image
-    if [ -z "$lighthouse_image_exists" ]; then
-        echo ""
-        echo "Lighthouse validator Docker image not found. Pulling the latest image..."
-        sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
-        echo ""
-    else
-        echo ""
-        echo "Lighthouse validator Docker image is already present."
-        echo ""
-    fi
-}
-
-function check_and_pull_prysm_validator() {
-    # Check if the Prysm validator Docker image is present
-    prysm_image_exists=$(sudo docker images registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest -q)
-    # If the image does not exist, pull the image
-    if [ -z "$prysm_image_exists" ]; then
-        echo ""
-        echo "Prysm validator Docker image not found. Pulling the latest image..."
-        sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest
-        echoe ""
-    else
-        echo ""
-    fi
-}
-
-function stop_and_prune_validator_import(){
-    sudo docker stop validator_import > /dev/null 2>&1
-    sudo docker container prune -f > /dev/null 2>&1
-}
-
-function stop_docker_image(){
-    echo "To import the keys into an existing setup, we need to stop the running validator Docker image."
-    image=$1
-    sudo docker stop ${image} > /dev/null 2>&1
-    sudo docker prune -f > /dev/null 2>&1
-}
-
-function start_script(){
-    target=$1
-    echo ""
-    echo -e "Restarting ${target}"
-    bash "${INSTALL_PATH}/start_${target}.sh"
-    echo "Validator Client restartet"
-}
-
-
-function import_lighthouse_validator() {
-    stop_and_prune_validator_import
-    echo ""
-    docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
-    echo ""
-    sudo docker run -it \
-        --name validator_import \
-        --network=host \
-        -v ${INSTALL_PATH}:/blockchain \
-        -v ${INSTALL_PATH}/validator_keys:/keys \
-        registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \
-        lighthouse \
-        --network=${LIGHTHOUSE_NETWORK_FLAG} \
-        account validator import \
-        --directory=/keys \
-        --datadir=/blockchain
-    stop_and_prune_validator_import
-}
-
-function import_prysm_validator() {
-    stop_and_prune_validator_import
-    echo ""
-    docker pull registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest
-    echo ""
-    if [ -f "${INSTALL_PATH}/wallet/direct/accounts/all-accounts.keystore.json" ]; then
-        sudo chmod -R 0600 "${INSTALL_PATH}/wallet/direct/accounts/all-accounts.keystore.json"
-    fi
-    docker run --rm -it \
-        --name validator_import \
-        -v $INSTALL_PATH/validator_keys:/keys \
-        -v $INSTALL_PATH/wallet:/wallet \
-        registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest \
-        accounts import \
-        --${PRYSM_NETWORK_FLAG} \
-        --keys-dir=/keys \
-        --wallet-dir=/wallet \
-        --wallet-password-file=/wallet/pw.txt
-    stop_and_prune_validator_import
-}
-
-
-
-function deposit_upload_info() {
-
-    echo ""
-    echo -e "Upload your 'deposit_data-xxxyyyzzzz.json' to ${LAUNCHPAD_URL} after the full chain sync. ${RED}Uploading before completion may result in slashing.${NC}"
-    echo ""
-    echo -e "${RED}For security reasons, it's recommended to store the validator_keys in a safe, offline location after importing it.${NC}"
-    echo ""
-    press_enter_to_continue
-}
-
-function warn_network() {
-
-    echo ""
-    echo "For better security, it is highly recommended to generate new keys or restore them from a seed phrase (mnemonic) offline."
-    echo ""
-    echo -e "${RED}WARNING:${NC} Disabling your network interface may result in loss of remote"
-    echo -e "         access to your machine. Ensure you have an alternative way to"
-    echo -e "         access your machine, such as a local connection or a remote"
-    echo -e "         VPS terminal, before proceeding."
-    echo -e ""
-    echo -e "${RED}IMPORTANT:${NC} Proceed with caution, as disabling the network interface"
-    echo -e "           without any other means of access may leave you unable to"
-    echo -e "           access your machine remotely. Make sure you fully understand"
-    echo -e "           the consequences and have a backup plan in place before taking"
-    echo -e "           this step."
-
-    echo ""
-    echo -e "Would you like to disable the network interface during the key"
-    echo -e "generation process? This increases security, but ${RED}may affect remote"
-    echo -e "access temporarily${NC}"
-    echo ""
-    read -e -p "Please enter 'y' to confirm or 'n' to decline (default: n): " network_off
-    network_off=${network_off:-n}
-
-}
-
-
-function get_fee_receipt_address() {
-    read -e -p "$(echo -e "${GREEN}Enter fee-receipt address (leave blank for default address; change later in start_validator.sh):${NC}")" fee_wallet
-    echo ""
-    # Use a regex pattern to validate the input wallet address
-    if [[ -z "${fee_wallet}" ]] || ! [[ "${fee_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-        fee_wallet="0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA"
-        echo " - Using default fee-receiption address: ${fee_wallet}"
-    else
-        echo " - Using provided fee-receiption address: ${fee_wallet}"
-    fi
-}
-
-
 
 # Main Setup Starts here ################################################################
 
@@ -529,8 +81,13 @@ echo "Setting up the Validator now"
 
 press_enter_to_continue
 
-# User Menu to Choose Client and Setup-Type
 get_user_choices
+
+
+# User Menu to Choose Client and Setup-Type
+#read -r client_choice setup_choice <<< "$(get_user_choices)"
+#get_user_choices
+
 
 # Add Tab-Autocomplete
 tab_autocomplete
@@ -538,11 +95,39 @@ tab_autocomplete
 # Checking for installed/Required software
 common_task_software_check
 
+if [[ "$setup_choice" == "3" ]]; then       # exit validator
+    if [[ "$client_choice" == "1" ]]; then  # lighthouse
+                get_install_path
+                start_script "../start_validator" > /dev/null 2>&1
+                exit_validator_LH
+            echo "debug: exit validator done"
+            exit 0
+    elif [[ "$client_choice" == "2" ]]; then  # PRYSM
+                get_install_path
+                start_script "../start_validator" > /dev/null 2>&1
+                exit_validator_PR
+                echo "exiting validator done"
+                stop_docker_container "exit_validator" > /dev/null 2>&1
+                sudo docker container prune -f > /dev/null 2>&1
+            exit 0
+        fi
+
+fi
+
 # Add "validator" user to system and docker-grp
 create_user "validator"  >/dev/null 2>&1
 
+
+
 # Prompt User for Set up installation path
-set_install_path
+
+if [[ "$setup_choice" == "1" ]]; then      # initial
+        set_install_path
+    elif [[ "$setup_choice" == "2" ]]; then # add to
+        get_install_path
+    
+fi
+
 
 
 # Cloning staking Client into installation path
@@ -554,7 +139,6 @@ clone_staking_deposit_cli "${INSTALL_PATH}"
 
     if [[ "$setup_choice" == "1" ]]; then
         if [[ "$client_choice" == "2" ]]; then
-
             create_subfolder "wallet"
             create_prysm_wallet_password
         fi
@@ -566,6 +150,10 @@ Staking_Cli_launch_setup                       # Checking requirements and setti
 sudo chmod -R 777 "${INSTALL_PATH}"
 
 clear
+
+
+
+
 
 echo ""
 
@@ -666,11 +254,13 @@ done
     fi
 
 
-    if [[ "$setup_choice" == "2" ]]; then        
-        start_script validator
-        echo "Import into existing Setup done."
-        press_enter_to_continue
-        exit 0
+    if [[ "$setup_choice" == "2" ]]; then          
+    start_script start_validator
+    
+    echo ""
+    echo "Import into existing Setup done."
+    restart_tmux_logs_session
+    exit 0
     fi
     
 }
@@ -692,11 +282,12 @@ import_restore_validator_keys() {
 
 
     while true; do
-    
+        clear
         # Prompt the user to enter the path to the root directory containing the 'validator_keys' backup-folder
         echo -e "Enter the path to the root directory which contains the 'validator_keys' backup-folder."
         echo -e "For example, if your 'validator_keys' folder is located in '/home/user/my_backup/validator_keys',"
         echo -e "then provide the path '/home/user/my_backup'. You can use tab-autocomplete when entering the path."
+        echo ""
         read -e -p "Path to backup: " backup_path
     
         # Check if the source directory exists
@@ -734,12 +325,11 @@ import_restore_validator_keys() {
     fi
     
     if [[ "$setup_choice" == "2" ]]; then          
-    start_script validator
+    start_script start_validator
+    
     echo ""
     echo "Import into existing Setup done."
-    echo ""
-    press_enter_to_continue
-
+    restart_tmux_logs_session
     exit 0
     fi
             
@@ -805,19 +395,25 @@ Restore_from_MN() {
     fi
 
 
-    if [[ "$setup_choice" == "2" ]]; then        
-        start_script validator
-        echo "Import into existing Setup done."
-        press_enter_to_continue
-        exit 0
+    if [[ "$setup_choice" == "2" ]]; then          
+    start_script start_validator
+    
+    echo ""
+    echo "Import into existing Setup done."
+    restart_tmux_logs_session
+    exit 0
     fi
 }
     
 
 
 # Selection menu
+echo "-----------------------------------------"
+echo "|           Validator Key Setup         |"
+echo "-----------------------------------------"
+echo ""
 PS3=$'\nChoose an option (1-3): '
-options=("Generate new validator_keys" "Import/Restore validator_keys from a backup-folder" "Restore validator_keys from SeedPhrase (Mnemonic)")
+options=("Generate new validator_keys (fresh)" "Import/Restore validator_keys from a Folder (from Offline generation or Backup)" "Restore or add from a Seed Phrase (Mnemonic) to current or initial setup")
 COLUMNS=1
 select opt in "${options[@]}"
 
@@ -910,9 +506,13 @@ sudo chmod +x "${INSTALL_PATH}/start_validator.sh"
 
 sleep 3
 
-# Change the ownership of the INSTALL_PATH/validator directory to validator user and group
-sudo chown -R validator:docker "$INSTALL_PATH"
-sudo chmod -R 777 "$INSTALL_PATH"
+# Change the ownership of the INSTALL_PATH/ directory to user and group
+#sudo chown -R validator:docker "$INSTALL_PATH/validators"
+#sudo chown -R validator:docker "$INSTALL_PATH/validator_keys"
+#sudo chown -R geth:docker "$INSTALL_PATH/execution"
+#sudo chown -R lighthouse:docker "$INSTALL_PATH/consensus"
+#sudo chown -R prysm:docker "$INSTALL_PATH/consensus"
+sudo chmod -R 755 "$INSTALL_PATH"
 
 
 # Prompt the user if they want to run the scripts
@@ -952,37 +552,18 @@ fi
 
 echo ""
 
-read -e -p "$(echo -e "${GREEN}Do you want to start the logviewer to monitor the client logs? [y/n]:${NC}")" log_it
-
-if [[ "$log_it" =~ ^[Yy]$ ]]; then
-    cd "${INSTALL_PATH}"
-    echo "Choose a log viewer:"
-    echo "1. GUI/TAB Based Logviewer (serperate tabs; easy)"
-    echo "2. TMUX Logviewer (AIO logs; advanced)"
-    
-    read -p "Enter your choice (1 or 2): " choice
-    
-    case $choice in
-        1)
-            "${INSTALL_PATH}/log_viewer.sh"
-            ;;
-        2)
-            "${INSTALL_PATH}/tmux_logviewer.sh"
-            ;;
-        *)
-            echo "Invalid choice. Exiting."
-            ;;
-    esac
-fi
-
 echo -e " ${RED}Note: Sync the chain fully before submitting your deposit_keys to prevent slashing; avoid using the same keys on multiple machines.${NC}"
 echo ""
 echo -e "Find more information in the repository's README."
 
-#credits
 display_credits
 sleep 1
+
+logviewer_prompt
+
 echo ""
+
 reboot_advice
+
 exit 0
 fi
