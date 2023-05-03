@@ -923,10 +923,9 @@ validator_submenu() {
 
 validator_setup_submenu() {
     while true; do
-vs_opt=$(dialog --stdout --title "Node/Validator Setup Menu" --menu "Choose an option:" 0 0 0 \
-                        "Launch_Validator_Setup" "Validator Setup; Generate/Add/Import/Restore/EXIT" \
-                        "back" "Back to main menu; Return to the main menu.")
-
+     options=("Launch_Validator_Setup" "Validator Setup; Generate/Add/Import/Restore/EXIT" \
+              "back" "Back to main menu; Return to the main menu.")
+     vs_opt=$(dialog --stdout --title "Node/Validator Setup Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
 
         case $? in
           0)
