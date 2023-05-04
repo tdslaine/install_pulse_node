@@ -147,7 +147,7 @@ clone_staking_deposit_cli "${INSTALL_PATH}"
 
 Staking_Cli_launch_setup                       # Checking requirements and setting up StakingCli
 
-sudo chmod -R 777 "${INSTALL_PATH}"
+#sudo chmod -R 777 "${INSTALL_PATH}"
 
 clear
 
@@ -238,10 +238,8 @@ done
     --eth1_withdrawal_address="${withdrawal_wallet}"
 
 
-    #echo "debug The current directory is: $(pwd)"
     cd "${INSTALL_PATH}"
-    sudo chmod -R 755 validator_keys
-    #echo "debug The current directory is: $(pwd)"
+    sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
@@ -253,11 +251,14 @@ done
         import_prysm_validator
     fi
 
+    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chmod 440 {} \;
+    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 
-    if [[ "$setup_choice" == "2" ]]; then          
+    if [[ "$setup_choice" == "2" ]]; then
     start_script ../start_validator
     
     echo ""
+    sudo chmod -R 440 "${INSTALL_PATH}/validator_keys"
     echo "Import into existing Setup done."
     restart_tmux_logs_session
     exit 0
@@ -317,17 +318,22 @@ import_restore_validator_keys() {
     echo ""
     echo "Importing validator keys now"
     echo ""
-    
+
+    sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
     if [[ "$client_choice" == "1" ]]; then
         import_lighthouse_validator
         elif [[ "$client_choice" == "2" ]]; then
         import_prysm_validator
     fi
-    
+
+    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chmod 440 {} \;
+    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
+
     if [[ "$setup_choice" == "2" ]]; then          
     start_script ../start_validator
     
     echo ""
+    sudo chmod -R 440 "${INSTALL_PATH}/validator_keys"
     echo "Import into existing Setup done."
     restart_tmux_logs_session
     exit 0
@@ -368,21 +374,13 @@ Restore_from_MN() {
     echo "Now running staking-cli command to restore from your SeedPhrase (Mnemonic)"
     echo ""
     
-    #echo "debug The current directory is: $(pwd)"
-    #cd "${INSTALL_PATH}/staking-deposit-cli"
-    #echo "debug The current directory is: $(pwd)"
     
     ${INSTALL_PATH}/staking-deposit-cli/deposit.sh existing-mnemonic \
     --chain=${DEPOSIT_CLI_NETWORK} \
     --folder="${INSTALL_PATH}" 
     
-    #cd "${INSTALL_PATH}"
-
-  
-    #echo "debug The current directory is: $(pwd)"
     cd "${INSTALL_PATH}"
-    sudo chmod -R 755 validator_keys
-    #echo "debug The current directory is: $(pwd)"
+    sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
@@ -392,14 +390,18 @@ Restore_from_MN() {
         import_lighthouse_validator
     elif [[ "$client_choice" == "2" ]]; then
         import_prysm_validator
+
     fi
 
+    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chmod 440 {} \;
+    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 
     if [[ "$setup_choice" == "2" ]]; then          
     start_script ../start_validator
     
     echo ""
     echo "Import into existing Setup done."
+    sudo chmod -R 440 "${INSTALL_PATH}/validator_keys"
     restart_tmux_logs_session
     exit 0
     fi
@@ -491,7 +493,8 @@ if [[ "$network_off" =~ ^[Yy]$ ]]; then         # Restarting Network interface s
     network_interface_UP
 fi
 
-sudo chmod -R 777 ${INSTALL_PATH}
+sudo chown :docker ${INSTALL_PATH}
+sudo chmod -R 770 ${INSTALL_PATH}
 
 #echo "Current directory is $(pwd)"
 
@@ -502,18 +505,37 @@ cat > "${INSTALL_PATH}/start_validator.sh" << EOF
 ${VALIDATOR}
 EOF
 
+get_main_user
+
+echo ""
+echo $main_user
+echo ""
+
 sudo chmod +x "${INSTALL_PATH}/start_validator.sh"
+sudo chown -R $main_user:docker ${INSTALL_PATH}/*.sh
 
-sleep 3
+sleep 1
 
-# Change the ownership of the INSTALL_PATH/ directory to user and group
-#sudo chown -R validator:docker "$INSTALL_PATH/validators"
-#sudo chown -R validator:docker "$INSTALL_PATH/validator_keys"
-#sudo chown -R geth:docker "$INSTALL_PATH/execution"
-#sudo chown -R lighthouse:docker "$INSTALL_PATH/consensus"
-#sudo chown -R prysm:docker "$INSTALL_PATH/consensus"
-sudo chmod -R 755 "$INSTALL_PATH"
+# Setup ownership and file permissions
 
+                                                         # get main user via logname
+sudo groupadd pls-validator
+sleep 1
+# add pls-validator groupS
+sudo usermod -aG pls-validator $main_user                               # main user to pls-validator to access folders
+sudo usermod -aG pls-validator validator
+
+sudo chown -R validator:pls-validator "$INSTALL_PATH/validators" > /dev/null 2>&1       # set ownership to validator and pls-validator-group
+sudo chown -R validator:pls-validator "$INSTALL_PATH/wallet"     > /dev/null 2>&1       # ""
+sudo chown -R validator:pls-validator "$INSTALL_PATH/validator_keys" > /dev/null 2>&1   # ""
+
+sudo chmod -R 660 "$INSTALL_PATH/validator_keys"
+sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chmod 440 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
+sudo chmod -R 660 "$INSTALL_PATH/wallet" > /dev/null 2>&1
+sudo chmod -R 660 "$INSTALL_PATH/validators" > /dev/null 2>&1
+
+#exec su -l $($main_user)
 
 # Prompt the user if they want to run the scripts
 start_scripts_first_time
@@ -556,14 +578,15 @@ echo -e " ${RED}Note: Sync the chain fully before submitting your deposit_keys t
 echo ""
 echo -e "Find more information in the repository's README."
 
+
 display_credits
 sleep 1
+echo ""
+echo "Due to changes in file-Permission it is highly recommended to reboot the system now"
+reboot_advice
 
 logviewer_prompt
 
 echo ""
-
-reboot_advice
-
 exit 0
 fi
