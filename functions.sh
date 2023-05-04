@@ -316,20 +316,36 @@ function create_user() {
 function clone_staking_deposit_cli() {
     target_directory=$1
 
-    # Removing existing Staking -Cli folder so we get the latest...
-    sudo rm -rf "${target_directory}/staking-deposit-cli"
-
-    # Clone the staking-deposit-cli repository
-    if sudo git clone https://gitlab.com/pulsechaincom/staking-deposit-cli.git "${target_directory}/staking-deposit-cli"; then
-        echo "Cloned staking-deposit-cli repository into ${target_directory}/staking-deposit-cli"
-    else
-        echo ""
-        echo "Failed to clone staking-deposit-cli repository. Please check your internet connection and try again."
-        echo ""
-        read -p "Press enter exit script now"
-        exit 1
+    # Check if the staking-deposit-cli folder already exists
+    if [ -d "${target_directory}/staking-deposit-cli" ]; then
+        read -p "The staking-deposit-cli folder already exists. Do you want to delete it and clone the latest version? (y/n): " confirm_delete
+        if [ "$confirm_delete" == "y" ] || [ "$confirm_delete" == "Y" ]; then
+            sudo rm -rf "${target_directory}/staking-deposit-cli"
+        else
+            echo "Skipping the cloning process as the user chose not to delete the existing folder."
+            return
+        fi
     fi
+
+    while true; do
+        # Clone the staking-deposit-cli repository
+        if sudo git clone https://gitlab.com/pulsechaincom/staking-deposit-cli.git "${target_directory}/staking-deposit-cli"; then
+            echo "Cloned staking-deposit-cli repository into ${target_directory}/staking-deposit-cli"
+            break
+        else
+            echo ""
+            echo "Failed to clone staking-deposit-cli repository. Please check your internet connection and try again."
+            echo ""
+            echo "You can relaunch the script at any time with ./setup_validator.sh from the install folder."
+            echo ""
+            read -p "Press 'r' to retry, any other key to exit: " choice
+            if [ "$choice" != "r" ]; then
+                exit 1
+            fi
+        fi
+    done
 }
+
 
 
 function Staking_Cli_launch_setup() {
