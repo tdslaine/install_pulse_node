@@ -218,6 +218,7 @@ $PROMETHEUS_NODE_CMD
 $GRAFANA_CMD
 EOF"
 
+get_main_user
 # Make start_monitoring.sh executable
 sudo chmod +x $config_location/start_monitoring.sh
 sudo chmod 770 $config_location/start_monitoring.sh
