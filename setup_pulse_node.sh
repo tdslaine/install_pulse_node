@@ -430,9 +430,10 @@ sudo cp tmux_logviewer.sh "$CUSTOM_PATH/helper"
 sudo cp setup_validator.sh "$CUSTOM_PATH/helper"
 sudo cp setup_monitoring.sh "$CUSTOM_PATH/helper"
 sudo cp functions.sh "$CUSTOM_PATH/helper"
+sudo cp helper/LogoVector.svg "$CUSTOM_PATH/helper"
 
 sudo chmod -R +x $CUSTOM_PATH/helper/
-sudo chmod -R 750 $CUSTOM_PATH/helper/
+sudo chmod -R 775 $CUSTOM_PATH/helper/
 sudo chown -R :docker $CUSTOM_PATH/helper
 
 echo ""
@@ -462,7 +463,7 @@ if [[ "$log_choice" =~ ^[Yy]$ || "$log_choice" == "" ]]; then
     #create-desktop-shortcut ${CUSTOM_PATH}/helper/restart_docker.sh Restart-clients
     #create-desktop-shortcut ${CUSTOM_PATH}/helper/stop_docker.sh Stop-clients
     #create-desktop-shortcut ${CUSTOM_PATH}/helper/update_docker.sh Update-clients
-    create-desktop-shortcut ${CUSTOM_PATH}/menu.sh Validator-Menu
+    create-desktop-shortcut ${CUSTOM_PATH}/menu.sh Validator-Menu ${CUSTOM_PATH}/helper/LogoVector.svg 
 fi   
 
 echo "Menu generated and copied over to /usr/local/bin/plsmenu - you can call it anytime via plsmenu from the terminal"
