@@ -16,30 +16,6 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-function get_user_choices_monitor() {
-  local client_choice
-
-  while true; do
-    echo "Choose your Client"
-    echo ""
-    echo "1. Lighthouse"
-    echo "2. Prysm"
-    echo ""
-    read -p "Enter your choice (1 or 2): " client_choice
-
-    case $client_choice in
-      1|2)
-        break
-        ;;
-      *)
-        echo "Invalid choice. Please enter 1 or 2."
-        ;;
-    esac
-  done
-
-  #echo "${client_choice}"
-}
-
 source "./functions.sh"
 
 clear
@@ -58,9 +34,26 @@ if [ -z "$config_location" ]; then
   config_location="/blockchain"
 fi
 
-get_user_choices_monitor
+while true; do
+    echo "Choose your Client"
+    echo ""
+    echo "1. Lighthouse"
+    echo "2. Prysm"
+    echo ""
+    read -p "Enter your choice (1 or 2): " client_choice
 
-#get_user_choices_monitor
+    case $client_choice in
+      1|2)
+        break
+        ;;
+      *)
+        echo "Invalid choice. Please enter 1 or 2."
+        ;;
+    esac
+  done
+
+echo $client_choice
+
 
 # Create directories
 echo ""
@@ -227,6 +220,8 @@ EOF"
 
 # Make start_monitoring.sh executable
 sudo chmod +x $config_location/start_monitoring.sh
+sudo chmod 775 $config_location/start_monitoring.sh
+sudo chown :docker $config_location/start_monitoring.sh
 
 echo ""
 echo "Created Monitoring-Scripts and Set Firewall rules"
@@ -299,9 +294,9 @@ sudo wget -qO "${config_location}/Dashboards/002_Geth_dashboard.json" -P "${conf
 sudo wget -qO "${config_location}/Dashboards/003_System_dashboard.json" -P "${config_location}/Dashboards" https://grafana.com/api/dashboards/11074/revisions/9/download >/dev/null
 
 if [[ "$client_choice" == "1" ]]; then
-  sudo wget -qO "${config_location}/Dashboards/004_Lighthouse_beacon_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/Summary.json >/dev/null
-  sudo wget -qO "${config_location}/Dashboards/005_Lighthouse_validator_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/ValidatorClient.json >/dev/null
-  sudo wget -qO "${config_location}/Dashboards/001_Staking_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/raskitoma/pulse-staking-dashboard/main/Yoldark_ETH_staking_dashboard.json >/dev/null
+  sudo wget -O "${config_location}/Dashboards/004_Lighthouse_beacon_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/Summary.json >/dev/null
+  sudo wget -O "${config_location}/Dashboards/005_Lighthouse_validator_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/ValidatorClient.json
+  sudo wget -O "${config_location}/Dashboards/001_Staking_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/raskitoma/pulse-staking-dashboard/main/Yoldark_ETH_staking_dashboard.json
 
 elif [[ "$client_choice" == "2" ]]; then
   sudo wget -qO "${config_location}/Dashboards/001_Prysm_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/GuillaumeMiralles/prysm-grafana-dashboard/master/less_10_validators.json >/dev/null
@@ -311,7 +306,8 @@ fi
 
 echo ""
 echo ""
-sudo chmod -R 755 "${config_location}/Dashboards"
+sudo chown -R :docker "${config_location}/Dashboards"
+sudo chmod -R 777 "${config_location}/Dashboards"
 
 echo ""
 echo "Please press Enter to continue..."
