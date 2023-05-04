@@ -615,9 +615,9 @@ function add_user_to_docker_group() {
 }
 
 function create-desktop-shortcut() {
-  # Check if two arguments are provided
-  if [[ $# -ne 2 ]]; then
-      echo "Usage: create-desktop-shortcut <target-shell-script> <shortcut-name>"
+  # Check if at least two arguments are provided
+  if [[ $# -lt 2 ]]; then
+      echo "Usage: create-desktop-shortcut <target-shell-script> <shortcut-name> [icon-path]"
       return 1
   fi
 
@@ -640,12 +640,15 @@ function create-desktop-shortcut() {
   # set shortcut name
   shortcut_name=${2:-$(basename "$1" ".sh")}
 
+  # set terminal emulator command
+  terminal_emulator="gnome-terminal -- bash -c"
+
   # create shortcut file
   cat > "$desktop_dir/$shortcut_name.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Name=$shortcut_name
-Exec=$1
+Exec=$terminal_emulator '$1; exec bash'
 Terminal=true
 EOF
 
@@ -654,6 +657,7 @@ EOF
 
   echo "Desktop shortcut created: $desktop_dir/$shortcut_name.desktop"
 }
+
 
 
 
