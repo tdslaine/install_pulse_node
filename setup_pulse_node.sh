@@ -257,7 +257,7 @@ sudo systemctl enable docker
 
 # Adding Main user to the Docker group
 add_user_to_docker_group
-#sudo chmod 666 /var/run/docker.sock
+
 
 echo -e "${GREEN}Creating ${CUSTOM_PATH} Main-Folder${NC}"
 sudo mkdir "${CUSTOM_PATH}"
@@ -270,12 +270,45 @@ sudo mkdir -p "${CUSTOM_PATH}/execution/$ETH_CLIENT"
 sudo mkdir -p "${CUSTOM_PATH}/consensus/$CONSENSUS_CLIENT"
 echo ""
 
+get_main_user
+
 echo -e "${GREEN}Creating the users ${ETH_CLIENT} and ${CONSENSUS_CLIENT} and setting permissions to the folders${NC}"
+
 sudo useradd -M -G docker $ETH_CLIENT
 sudo useradd -M -G docker $CONSENSUS_CLIENT
-sudo chown -R ${ETH_CLIENT}: "${CUSTOM_PATH}/execution/$ETH_CLIENT"
-sudo chown -R ${CONSENSUS_CLIENT}: "${CUSTOM_PATH}/consensus/$CONSENSUS_CLIENT"
-clear
+
+sudo chown -R ${ETH_CLIENT}:docker "${CUSTOM_PATH}/execution"
+sudo chmod -R 750 "${CUSTOM_PATH}/execution"
+
+sudo chown -R ${CONSENSUS_CLIENT}:docker "${CUSTOM_PATH}/consensus/"
+sudo chmod -R 750 "${CUSTOM_PATH}/consensus"
+
+press_enter_to_continue
+
+
+echo "Creating shared group to acces jwt.hex file"
+
+# Permission Madness
+# defining group for jwt.hex file
+sudo groupadd pls-shared
+sudo usermod -aG pls-shared ${ETH_CLIENT}
+sudo usermod -aG pls-shared ${CONSENSUS_CLIENT}
+
+# defining file permissions for jwt.hexSS
+echo "ETH_CLIENT: ${ETH_CLIENT}"
+echo "CUSTOM_PATH: ${CUSTOM_PATH}"
+echo "File path: ${CUSTOM_PATH}/jwt.hex"
+ls -l "${CUSTOM_PATH}/jwt.hex"
+
+sleep 1
+sudo chown ${ETH_CLIENT}:pls-shared ${CUSTOM_PATH}/jwt.hex
+sleep 1
+sudo chmod 640 ${CUSTOM_PATH}/jwt.hex
+sleep 1
+
+ls -l "${CUSTOM_PATH}/jwt.hex"
+press_enter_to_continue
+#clear
 echo ""
 
 # Firewall Setup
@@ -349,7 +382,7 @@ sudo ufw enable
 sleep 1
 clear
 echo ""
-echo "The Execution and Consensus/Beacon clients will be started separately using two different scripts."
+echo "The Ethereum and Consensus clients will be started separately using two different scripts."
 echo "The start_execution.sh script will start the execution client."
 echo "The start_consensus.sh script will start the consensus (beacon) client."
 echo "The scripts will be generated in the directory \"$CUSTOM_PATH\"."
@@ -382,6 +415,7 @@ fi
 
 chmod +x start_execution.sh
 sudo mv start_execution.sh "$CUSTOM_PATH"
+sudo chown $main_user:docker "$CUSTOM_PATH/start_execution.sh"
 
 echo ""
 echo -e "${GREEN}Generating start_consensus.sh script${NC}"
@@ -409,8 +443,7 @@ fi
 
 chmod +x start_consensus.sh
 sudo mv start_consensus.sh "$CUSTOM_PATH"
-
-
+sudo chown $main_user:docker "$CUSTOM_PATH/start_consensus.sh"
 
 echo ""
 echo -e "${GREEN}start_execution.sh and start_consensus.sh created successfully!${NC}"
@@ -432,9 +465,12 @@ sudo cp setup_monitoring.sh "$CUSTOM_PATH/helper"
 sudo cp functions.sh "$CUSTOM_PATH/helper"
 sudo cp helper/LogoVector.svg "$CUSTOM_PATH/helper"
 
+
+# Permissions to folders
 sudo chmod -R +x $CUSTOM_PATH/helper/
-sudo chmod -R 775 $CUSTOM_PATH/helper/
-sudo chown -R :docker $CUSTOM_PATH/helper
+sudo chmod -R 755 $CUSTOM_PATH/helper/
+sudo chown -R $main_user:docker $CUSTOM_PATH/helper
+
 
 echo ""
 echo -e "${GREEN}Finished copying helper scripts${NC}"
@@ -451,6 +487,7 @@ menu_script+="$(menu_script_template)"
 echo "${menu_script}" | sudo tee "${CUSTOM_PATH}/menu.sh" > /dev/null 2>&1
 sudo chmod +x "${CUSTOM_PATH}/menu.sh"
 sudo cp "${CUSTOM_PATH}/menu.sh" /usr/local/bin/plsmenu > /dev/null 2>&1
+sudo chown -R $main_user:docker $CUSTOM_PATH/menu.sh
 
 echo "Menu script has been generated and written to ${CUSTOM_PATH}/menu.sh"
 
@@ -463,8 +500,8 @@ if [[ "$log_choice" =~ ^[Yy]$ || "$log_choice" == "" ]]; then
     #create-desktop-shortcut ${CUSTOM_PATH}/helper/restart_docker.sh Restart-clients
     #create-desktop-shortcut ${CUSTOM_PATH}/helper/stop_docker.sh Stop-clients
     #create-desktop-shortcut ${CUSTOM_PATH}/helper/update_docker.sh Update-clients
-    create-desktop-shortcut ${CUSTOM_PATH}/menu.sh Validator-Menu ${CUSTOM_PATH}/helper/LogoVector.svg 
-fi   
+    create-desktop-shortcut ${CUSTOM_PATH}/menu.sh Validator-Menu ${CUSTOM_PATH}/helper/LogoVector.svg
+fi
 
 echo "Menu generated and copied over to /usr/local/bin/plsmenu - you can call it anytime via plsmenu from the terminal"
 echo ""
