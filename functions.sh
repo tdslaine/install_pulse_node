@@ -66,7 +66,7 @@ function restart_tmux_logs_session() {
 
 
 function reboot_advice() {
-    echo "Initial setup completed. It is recommended to reboot your system."
+    echo "Initial setup completed. To get all permissions right, tt is recommended to reboot your system now ."
     read -p "Do you want to reboot now? [y/n]: " choice
 
     if [ "$choice" == "y" ]; then
@@ -335,6 +335,7 @@ function clone_staking_deposit_cli() {
 function Staking_Cli_launch_setup() {
     # Check Python version (>= Python3.8)
     echo "running staking-cli Checkup"
+    sudo chmod -R 777 "${INSTALL_PATH}/staking-deposit-cli"
     cd "${INSTALL_PATH}/staking-deposit-cli"
     python3_version=$(python3 -V 2>&1 | awk '{print $2}')
     required_version="3.8"
@@ -643,6 +644,12 @@ function create-desktop-shortcut() {
   # set terminal emulator command
   terminal_emulator="gnome-terminal -- bash -c"
 
+  # set icon path if provided and file exists
+  icon_path=""
+  if [[ -n "$3" ]] && [[ -f "$3" ]]; then
+    icon_path="Icon=$3"
+  fi
+
   # create shortcut file
   cat > "$desktop_dir/$shortcut_name.desktop" <<EOF
 [Desktop Entry]
@@ -650,6 +657,7 @@ Type=Application
 Name=$shortcut_name
 Exec=$terminal_emulator '$1; exec bash'
 Terminal=true
+$icon_path
 EOF
 
   # make shortcut executable
@@ -657,6 +665,7 @@ EOF
 
   echo "Desktop shortcut created: $desktop_dir/$shortcut_name.desktop"
 }
+
 
 
 
@@ -1045,4 +1054,44 @@ function exit_validator_PR(){
     --beacon-rpc-provider=http://127.0.0.1:4000 
     #echo "Executing: $cmd"
     #eval "$cmd"
+}
+
+
+
+function set_directory_permissions() {
+  local user1=$1
+  local user2=$2
+  local directory=$3
+  local group=$4
+  local permissions=$5
+
+  # Check if the user1 exists
+  user1_id=$(id -u $user1 2>/dev/null)
+  user1_exists=$?
+
+  # Check if the user2 exists
+  user2_id=$(id -u $user2 2>/dev/null)
+  user2_exists=$?
+
+  # Determine which user is being used and set the owner
+  if [ $user1_exists -eq 0 ]; then
+    owner=$user1
+  elif [ $user2_exists -eq 0 ]; then
+    owner=$user2
+  else
+    echo "Neither '$user1' nor '$user2' users found."
+    return 1
+  fi
+
+  echo "Using the user: $owner"
+
+  # Set the ownership and permissions for the specified directory
+  chown -R $owner:$group $directory
+  chmod -R $permissions $directory
+}
+#set_directory_permissions "geth" "erigon" "execution" "docker" "750
+
+function get_main_user() {
+  main_user=$(logname || echo $SUDO_USER || echo $USER)
+  echo "Main user: $main_user"
 }
