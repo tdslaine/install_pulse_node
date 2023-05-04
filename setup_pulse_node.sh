@@ -349,7 +349,7 @@ sudo ufw enable
 sleep 1
 clear
 echo ""
-echo "The Ethereum and Consensus clients will be started separately using two different scripts."
+echo "The Execution and Consensus/Beacon clients will be started separately using two different scripts."
 echo "The start_execution.sh script will start the execution client."
 echo "The start_consensus.sh script will start the consensus (beacon) client."
 echo "The scripts will be generated in the directory \"$CUSTOM_PATH\"."
