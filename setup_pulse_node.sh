@@ -295,10 +295,10 @@ sudo usermod -aG pls-shared ${ETH_CLIENT}
 sudo usermod -aG pls-shared ${CONSENSUS_CLIENT}
 
 # defining file permissions for jwt.hexSS
-echo "ETH_CLIENT: ${ETH_CLIENT}"
-echo "CUSTOM_PATH: ${CUSTOM_PATH}"
-echo "File path: ${CUSTOM_PATH}/jwt.hex"
-ls -l "${CUSTOM_PATH}/jwt.hex"
+#echo "ETH_CLIENT: ${ETH_CLIENT}"
+#echo "CUSTOM_PATH: ${CUSTOM_PATH}"
+#echo "File path: ${CUSTOM_PATH}/jwt.hex"
+#ls -l "${CUSTOM_PATH}/jwt.hex"
 
 sleep 1
 sudo chown ${ETH_CLIENT}:pls-shared ${CUSTOM_PATH}/jwt.hex
@@ -306,7 +306,7 @@ sleep 1
 sudo chmod 640 ${CUSTOM_PATH}/jwt.hex
 sleep 1
 
-ls -l "${CUSTOM_PATH}/jwt.hex"
+#ls -l "${CUSTOM_PATH}/jwt.hex"
 press_enter_to_continue
 #clear
 echo ""
