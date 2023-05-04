@@ -255,7 +255,7 @@ done
 
 
     if [[ "$setup_choice" == "2" ]]; then          
-    start_script start_validator
+    start_script ../start_validator
     
     echo ""
     echo "Import into existing Setup done."
@@ -325,7 +325,7 @@ import_restore_validator_keys() {
     fi
     
     if [[ "$setup_choice" == "2" ]]; then          
-    start_script start_validator
+    start_script ../start_validator
     
     echo ""
     echo "Import into existing Setup done."
@@ -396,7 +396,7 @@ Restore_from_MN() {
 
 
     if [[ "$setup_choice" == "2" ]]; then          
-    start_script start_validator
+    start_script ../start_validator
     
     echo ""
     echo "Import into existing Setup done."
