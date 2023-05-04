@@ -220,8 +220,8 @@ EOF"
 
 # Make start_monitoring.sh executable
 sudo chmod +x $config_location/start_monitoring.sh
-sudo chmod 775 $config_location/start_monitoring.sh
-sudo chown :docker $config_location/start_monitoring.sh
+sudo chmod 770 $config_location/start_monitoring.sh
+sudo chown $main_user:docker $config_location/start_monitoring.sh
 
 echo ""
 echo "Created Monitoring-Scripts and Set Firewall rules"
@@ -306,8 +306,9 @@ fi
 
 echo ""
 echo ""
-sudo chown -R :docker "${config_location}/Dashboards"
-sudo chmod -R 777 "${config_location}/Dashboards"
+get_main_user
+sudo chown -R $main_user:docker "${config_location}/Dashboards"
+sudo chmod -R 660 "${config_location}/Dashboards"
 
 echo ""
 echo "Please press Enter to continue..."
