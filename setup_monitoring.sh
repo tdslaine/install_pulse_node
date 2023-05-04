@@ -303,7 +303,7 @@ elif [[ "$client_choice" == "2" ]]; then
   sudo wget -qO "${config_location}/Dashboards/000_Prysm_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/metanull-operator/eth2-grafana/master/eth2-grafana-dashboard-single-source-beacon_node.json >/dev/null
 
 fi
-
+get_main_user
 echo ""
 echo ""
 get_main_user
