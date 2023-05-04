@@ -309,7 +309,7 @@ echo ""
 echo ""
 get_main_user
 sudo chown -R $main_user:docker "${config_location}/Dashboards"
-sudo chmod -R 660 "${config_location}/Dashboards"
+sudo chmod -R 777 "${config_location}/Dashboards"
 
 echo ""
 echo "Please press Enter to continue..."
