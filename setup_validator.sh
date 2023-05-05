@@ -27,12 +27,12 @@ function get_user_choices() {
     echo "-----------------------------------------"
     echo "(based on your consensus/beacon Client)"
     echo ""
-    echo "1. Lighthouse (Authors choice)"
+    echo "1. Lighthouse"
     echo "2. Prysm"
     echo ""
     echo "0. Return or Exit"
     echo ""
-    read -p "Enter your choice (1, 2 or 3): " client_choice
+    read -p "Enter your choice (1, 2 or 0): " client_choice
 
     # Validate user input for client choice
     while [[ ! "$client_choice" =~ ^[0-2]$ ]]; do
@@ -50,7 +50,7 @@ function get_user_choices() {
     echo "             Choose a Mode               "
     echo "-----------------------------------------"
     echo ""
-    echo "1. Initial Validator Setup"
+    echo "1. Initial Validator Setup - only for first time setup"
     echo "2. Adding, Importing, or Restoring to an Existing Setup"
     echo "3. Exit an Validator"
     echo ""
