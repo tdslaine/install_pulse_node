@@ -108,10 +108,9 @@ if [[ "$setup_choice" == "3" ]]; then       # exit validator
         read -p "Would you like to exit another Validator? (y/n): " user_input
         if [[ "${user_input,,}" == "n" ]]; then
             break
-            exit 0
-        fi
-    done
-            
+                   fi
+       done
+       exit 0 
     elif [[ "$client_choice" == "2" ]]; then  # PRYSM
                 get_install_path
                 start_script "../start_validator" > /dev/null 2>&1
