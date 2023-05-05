@@ -30,7 +30,7 @@ LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 
 
 clear
-echo "     Pulse Node/Validator/Montitoring Setup by Dipslayer"
+echo "     Pulse Node/Validator/Monitoring Setup by Dipslayer"
 echo "                                                                                                                                                    
                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                          
                  ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         
