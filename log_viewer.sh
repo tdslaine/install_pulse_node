@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Close any existing terminal windows with the specified titles
+wmctrl -l | grep -w "Execution Logs\|Beacon Logs\|Validator Logs\|HTOP\|DiskUsage" | awk '{print $1}' | xargs -r wmctrl -ic
+
+# Wait for a moment to ensure the previous terminal windows are closed
+sleep 2
+
 # Open three new terminal windows and execute the specified commands in each
 
 # Open the first terminal window and execute the first command
