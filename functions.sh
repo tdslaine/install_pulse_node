@@ -66,7 +66,7 @@ function restart_tmux_logs_session() {
 
 
 function reboot_advice() {
-    echo "Initial setup completed. To get all permissions right, tt is recommended to reboot your system now ."
+    echo "Initial setup completed. To get all permissions right, it is recommended to reboot your system now ."
     read -p "Do you want to reboot now? [y/n]: " choice
 
     if [ "$choice" == "y" ]; then
@@ -231,7 +231,7 @@ function graffiti_setup() {
 
 function set_install_path() {
     echo ""
-    read -e -p "$(echo -e "${GREEN}Please specify the directory for storing validator data (default: /blockchain):${NC} ")" INSTALL_PATH
+    read -e -p "$(echo -e "${GREEN}Please specify the directory for storing the validator data. Press Enter to use the default (/blockchain):${NC} ")" INSTALL_PATH
     if [ -z "$INSTALL_PATH" ]; then
         INSTALL_PATH="/blockchain"
     fi
@@ -246,11 +246,12 @@ function set_install_path() {
 
 function get_install_path() {
     echo ""
-    read -e -p "$(echo -e "${GREEN}Please specify the directory where your blockchain data root folder is located (default: /blockchain): ${NC} ")" INSTALL_PATH
+    read -e -p "$(echo -e "${GREEN}Please specify the directory where your blockchain data root folder is located. Press Enter to use the default (/blockchain): ${NC} ")" INSTALL_PATH
     if [ -z "$INSTALL_PATH" ]; then
         INSTALL_PATH="/blockchain"
     fi
 }
+
 
 
 function get_active_network_device() {
@@ -417,10 +418,10 @@ function create_prysm_wallet_password() {
 
     echo "" 
     echo ""
-    echo -e "Please create your Prysm Wallet password now."
+    echo -e "Please enter your Prysm Wallet password now."
     echo ""
-    echo "This has nothing to do with the 24-word SeedPhrase that Staking-Cli will output."
-    echo "Unlocking your wallet is necessary for the Prysm Validator Client. In the next step, we will point the keys created with staking-cli to the unlocked wallet."
+    echo "This has nothing to do with the 24-word SeedPhrase that Staking-Cli will output during key-generation."
+    echo "Unlocking your wallet is necessary for the Prysm Validator Client to function."
     echo ""
     while true; do
         echo "Please enter a password (must be at least 8 characters):"
@@ -471,7 +472,7 @@ function stop_and_prune_validator_import(){
 }
 
 function stop_docker_image(){
-    echo "To import the keys into an existing setup, we need to stop the running validator Docker image."
+    echo "To import the keys into an existing setup, we need to stop the running validator container first."
     image=$1
     sudo docker stop ${image} > /dev/null 2>&1
     sudo docker prune -f > /dev/null 2>&1
@@ -482,7 +483,7 @@ function start_script(){
     echo ""
     echo -e "Restarting ${target}"
     bash "${INSTALL_PATH}/helper/${target}.sh"
-    echo "Validator Client restartet"
+    echo "${target} container restartet"
 }
 
 
@@ -542,7 +543,7 @@ function deposit_upload_info() {
 function warn_network() {
 
     echo ""
-    echo "For better security, it is highly recommended to generate new keys or restore them from a seed phrase (mnemonic) offline."
+    echo "Enhance security by generating new keys or restoring them from a seed phrase (mnemonic) offline."
     echo ""
     echo -e "${RED}WARNING:${NC} Disabling your network interface may result in loss of remote"
     echo -e "         access to your machine. Ensure you have an alternative way to"
@@ -567,7 +568,7 @@ function warn_network() {
 
 
 function get_fee_receipt_address() {
-    read -e -p "$(echo -e "${GREEN}Enter fee-receipt address (leave blank for default address; change later in start_validator.sh):${NC}")" fee_wallet
+    read -e -p "$(echo -e "${GREEN}Enter fee-receipt address (leave blank for my donation address; can be changed later in start_validator.sh):${NC}")" fee_wallet
     echo ""
     # Use a regex pattern to validate the input wallet address
     if [[ -z "${fee_wallet}" ]] || ! [[ "${fee_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
