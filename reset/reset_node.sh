@@ -48,10 +48,16 @@ sudo docker rmi registry.gitlab.com/pulsechaincom/go-pulse:latest
 sudo docker rmi registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
 sudo docker rmi registry.gitlab.com/pulsechaincom/erigon-pulse:latest
 sudo docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse:latest
+sudo docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/prysmctl       
+sudo docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/validator      
+sudo docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain   
+sudo docker rmi registry.gitlab.com/pulsechaincom/go-pulse 
 
 sudo userdel validator
 sudo userdel geth
 sudo userdel lighthouse
+sudo userdel prysm
+sudo userdel erigon
 
 sudo rm -R /blockchain
 
