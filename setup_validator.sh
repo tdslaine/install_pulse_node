@@ -98,13 +98,20 @@ common_task_software_check
 if [[ "$setup_choice" == "3" ]]; then       # exit validator
     if [[ "$client_choice" == "1" ]]; then  # lighthouse
                 get_install_path
+        while true; do
                 start_script "../start_validator" > /dev/null 2>&1
                 exit_validator_LH
                 echo "debug: exit validator done"
                 stop_docker_container "exit_validator" > /dev/null 2>&1
                 sudo docker container prune -f > /dev/null 2>&1
             press_enter_to_continue
+        read -p "Would you like to exit another Validator? (y/n): " user_input
+        if [[ "${user_input,,}" == "n" ]]; then
+            break
             exit 0
+        fi
+    done
+            
     elif [[ "$client_choice" == "2" ]]; then  # PRYSM
                 get_install_path
                 start_script "../start_validator" > /dev/null 2>&1
