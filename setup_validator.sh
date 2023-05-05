@@ -148,6 +148,7 @@ clone_staking_deposit_cli "${INSTALL_PATH}"
         fi
     fi 
 
+sudo groupadd pls-validator
 
 Staking_Cli_launch_setup                       # Checking requirements and setting up StakingCli
 
