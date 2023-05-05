@@ -1048,13 +1048,20 @@ function get_ip_range() {
 
 function exit_validator_LH() {
     # Get the keystore file path from the user with tab-autocomplete
-    read -e -p "Please enter the path to your keystore file: " keystore_path
-
+    echo "Please enter the full path to your keystore file, including the filename and extension:"
+    echo ""
+    echo "Note: Your local installation folder is always mounted as /blockchain within the Docker container."
+    echo "This means that if your local installation folder is /home/username/blockchain, it will be mounted as /blockchain without /home/username."
+    echo "Therefore, when entering the path to your keystore file, please only include the /blockchain prefix, such as /blockchain/validator_keys/keys_###.json."
+    echo ""
+    read -e -p "Enter path now: " keystore_path
+    #echo "${keystore_path}"
+    echo ""
     # Run the Docker command with the provided keystore path and the network variable
     sudo -u lighthouse docker exec -it validator lighthouse \
     --network "${LIGHTHOUSE_NETWORK_FLAG}" \
     account validator exit \
-    --keystore "${keystore_path}" \
+    --keystore="${keystore_path}" \
     --beacon-node http://127.0.0.1:5052 \
     --datadir "${INSTALL_PATH}"
 }
