@@ -100,7 +100,10 @@ if [[ "$setup_choice" == "3" ]]; then       # exit validator
                 get_install_path
                 start_script "../start_validator" > /dev/null 2>&1
                 exit_validator_LH
-            echo "debug: exit validator done"
+                echo "debug: exit validator done"
+                stop_docker_container "exit_validator" > /dev/null 2>&1
+                sudo docker container prune -f > /dev/null 2>&1
+            press_enter_to_continue
             exit 0
     elif [[ "$client_choice" == "2" ]]; then  # PRYSM
                 get_install_path
@@ -109,6 +112,7 @@ if [[ "$setup_choice" == "3" ]]; then       # exit validator
                 echo "exiting validator done"
                 stop_docker_container "exit_validator" > /dev/null 2>&1
                 sudo docker container prune -f > /dev/null 2>&1
+                press_enter_to_continue
             exit 0
         fi
 
