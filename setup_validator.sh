@@ -262,8 +262,10 @@ done
         import_prysm_validator
     fi
 
-    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chmod 440 {} \;
-    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
+
 
     if [[ "$setup_choice" == "2" ]]; then
     start_script ../start_validator
@@ -337,8 +339,10 @@ import_restore_validator_keys() {
         import_prysm_validator
     fi
 
-    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chmod 440 {} \;
-    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
+
 
     if [[ "$setup_choice" == "2" ]]; then          
     start_script ../start_validator
@@ -404,8 +408,10 @@ Restore_from_MN() {
 
     fi
 
-    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chmod 440 {} \;
-    sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
+
 
     if [[ "$setup_choice" == "2" ]]; then          
     start_script ../start_validator
