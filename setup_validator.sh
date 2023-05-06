@@ -251,6 +251,7 @@ done
 
     cd "${INSTALL_PATH}"
     sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
+    sudo chmod g+x "$INSTALL_PATH/validator_keys"
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
@@ -333,6 +334,7 @@ import_restore_validator_keys() {
     echo ""
 
     sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
+    sudo chmod g+x "$INSTALL_PATH/validator_keys"
     if [[ "$client_choice" == "1" ]]; then
         import_lighthouse_validator
         elif [[ "$client_choice" == "2" ]]; then
@@ -396,6 +398,7 @@ Restore_from_MN() {
     
     cd "${INSTALL_PATH}"
     sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
+    sudo chmod g+x "$INSTALL_PATH/validator_keys"
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
