@@ -88,7 +88,7 @@ get_user_choices
 #read -r client_choice setup_choice <<< "$(get_user_choices)"
 #get_user_choices
 
-
+get_main_user
 # Add Tab-Autocomplete
 tab_autocomplete
 
