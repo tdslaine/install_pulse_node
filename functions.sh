@@ -215,19 +215,19 @@ function common_task_software_check(){
     fi
 }
 
-function graffiti_setup() {
-    echo ""
-    read -e -p "$(echo -e "${GREEN}Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: DipSlayer):${NC}")" user_graffiti
+function graffiti_setup() { 
+    echo "" 
+    read -e -p "$(echo -e "${GREEN}Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: DipSlayer):${NC}")" user_graffiti 
 
-    # Set the default value for graffiti if the user enters nothing
-    if [ -z "$user_graffiti" ]; then
-        user_graffiti="DipSlayer"
+    # Set the default value for graffiti if the user enters nothing 
+    if [ -z "$user_graffiti" ]; then 
+        user_graffiti="DipSlayer" 
     fi
 
-    echo ""
-    echo " - Using graffiti: ${user_graffiti}"
-    echo ""
+    # Enclose the user_graffiti in double quotes
+    user_graffiti="\"${user_graffiti}\""
 }
+ 
 
 function set_install_path() {
     echo ""
