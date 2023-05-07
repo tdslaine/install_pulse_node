@@ -398,16 +398,21 @@ Restore_from_MN() {
     echo "Now running staking-cli command to restore from your SeedPhrase (Mnemonic)"
     echo ""
     
-    
+ cd "${INSTALL_PATH}"
+    sudo chmod -R 777 "${INSTALL_PATH}/validator_keys"
+    sudo chmod g+x "$INSTALL_PATH/validator_keys"
+    sudo chmod -R 777 "${INSTALL_PATH}/wallet"
+    sudo chmod g+x "$INSTALL_PATH/wallet"    
+ 
     ${INSTALL_PATH}/staking-deposit-cli/deposit.sh existing-mnemonic \
     --chain=${DEPOSIT_CLI_NETWORK} \
     --folder="${INSTALL_PATH}" 
     
-    cd "${INSTALL_PATH}"
-    sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
-    sudo chmod g+x "$INSTALL_PATH/validator_keys"
-    sudo chmod -R 660 "${INSTALL_PATH}/wallet"
-    sudo chmod g+x "$INSTALL_PATH/wallet" 
+#    cd "${INSTALL_PATH}"
+#    sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
+#    sudo chmod g+x "$INSTALL_PATH/validator_keys"
+#    sudo chmod -R 660 "${INSTALL_PATH}/wallet"
+#    sudo chmod g+x "$INSTALL_PATH/wallet" 
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
