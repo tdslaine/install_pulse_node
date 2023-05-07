@@ -112,9 +112,16 @@ echo "timezone set"
 sleep 1
 echo ""
 clear
-echo "Choose your Execution client:"
-echo "1) Geth (full node, authors choice)"
-echo "2) Erigon (archive node)"
+echo "Please choose a node option:"
+echo ""
+echo "1) Geth (full node, faster sync time.)"
+echo "   Recommended for normal usage, stores all transactions and the most recent states"
+echo ""
+echo "2) Erigon (archive node, longer sync time.)"
+echo "   Recommended for developers and advanced users,"
+echo "   stores the entire history of the Ethereum blockchain, including all historical states"
+echo ""
+echo ""
 read -p "Enter the number (1 or 2): " ETH_CLIENT_CHOICE
 
 case $ETH_CLIENT_CHOICE in
@@ -125,7 +132,7 @@ esac
 echo ""
 
 echo "Choose your Consensus client:"
-echo "1) Lighthouse (authors choice)"
+echo "1) Lighthouse"
 echo "2) Prysm"
 read -p "Enter the number (1 or 2): " CONSENSUS_CLIENT_CHOICE
 
