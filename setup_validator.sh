@@ -563,6 +563,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chmod 440 {} \;
 sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 sudo chmod -R 660 "$INSTALL_PATH/wallet" > /dev/null 2>&1
 sudo chmod -R 660 "$INSTALL_PATH/validators" > /dev/null 2>&1
+sudo chmod g+x "$INSTALL_PATH/validators" > /dev/null 2>&1
 
 #exec su -l $($main_user)
 
