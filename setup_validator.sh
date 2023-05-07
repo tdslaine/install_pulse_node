@@ -151,6 +151,9 @@ clone_staking_deposit_cli "${INSTALL_PATH}"
         if [[ "$client_choice" == "2" ]]; then
             create_subfolder "wallet"
             create_prysm_wallet_password
+            sudo chmod -R 777 "${INSTALL_PATH}/wallet"
+            sudo chmod -R g+x "$INSTALL_PATH/wallet"
+            sudo chown $main_user: "$INSTALL_PATH/wallet"
         fi
     fi 
 
@@ -252,6 +255,8 @@ done
     cd "${INSTALL_PATH}"
     sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
     sudo chmod g+x "$INSTALL_PATH/validator_keys"
+    sudo chmod -R 666 "${INSTALL_PATH}/wallet"
+    sudo chmod -R g+x "$INSTALL_PATH/wallet"
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
@@ -335,6 +340,8 @@ import_restore_validator_keys() {
 
     sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
     sudo chmod g+x "$INSTALL_PATH/validator_keys"
+    sudo chmod -R 666 "${INSTALL_PATH}/wallet"
+    sudo chmod -R g+x "$INSTALL_PATH/wallet"
     if [[ "$client_choice" == "1" ]]; then
         import_lighthouse_validator
         elif [[ "$client_choice" == "2" ]]; then
@@ -548,6 +555,7 @@ sudo usermod -aG pls-validator validator
 sudo chown -R validator:pls-validator "$INSTALL_PATH/validators" > /dev/null 2>&1       # set ownership to validator and pls-validator-group
 sudo chown -R validator:pls-validator "$INSTALL_PATH/wallet"     > /dev/null 2>&1       # ""
 sudo chown -R validator:pls-validator "$INSTALL_PATH/validator_keys" > /dev/null 2>&1   # ""
+sudo chown -R validator:pls-validator "$INSTALL_PATH/wallet" > /dev/null 2>&1   # ""
 
 sudo chmod -R 660 "$INSTALL_PATH/validator_keys"
 sudo chmod g+x "$INSTALL_PATH/validator_keys"
