@@ -215,18 +215,28 @@ function common_task_software_check(){
     fi
 }
 
+
 function graffiti_setup() { 
     echo "" 
-    read -e -p "$(echo -e "${GREEN}Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: DipSlayer):${NC}")" user_graffiti 
+    while true; do
+        read -e -p "$(echo -e "${GREEN}Please enter your desired graffiti. Ensure that it does not exceed 32 characters (default: DipSlayer):${NC}")" user_graffiti 
 
-    # Set the default value for graffiti if the user enters nothing 
-    if [ -z "$user_graffiti" ]; then 
-        user_graffiti="DipSlayer" 
-    fi
+        # Set the default value for graffiti if the user enters nothing 
+        if [ -z "$user_graffiti" ]; then 
+            user_graffiti="DipSlayer" 
+            break
+        # Check if the input length is within the 32 character limit
+        elif [ ${#user_graffiti} -le 32 ]; then
+            break
+        else
+            echo -e "${RED}The graffiti you entered is too long. Please ensure it does not exceed 32 characters.${NC}"
+        fi
+    done
 
     # Enclose the user_graffiti in double quotes
     user_graffiti="\"${user_graffiti}\""
 }
+ 
  
 
 function set_install_path() {
