@@ -101,7 +101,7 @@ if [[ "$setup_choice" == "3" ]]; then       # exit validator
         while true; do
                 start_script "../start_validator" > /dev/null 2>&1
                 exit_validator_LH
-                echo "debug: exit validator done"
+                #echo "debug: exit validator done"
                 stop_docker_container "exit_validator" > /dev/null 2>&1
                 sudo docker container prune -f > /dev/null 2>&1
             press_enter_to_continue
@@ -115,7 +115,7 @@ if [[ "$setup_choice" == "3" ]]; then       # exit validator
                 get_install_path
                 start_script "../start_validator" > /dev/null 2>&1
                 exit_validator_PR
-                echo "exiting validator done"
+                #echo "exiting validator done"
                 stop_docker_container "exit_validator" > /dev/null 2>&1
                 sudo docker container prune -f > /dev/null 2>&1
                 press_enter_to_continue
