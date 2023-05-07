@@ -406,6 +406,8 @@ Restore_from_MN() {
     cd "${INSTALL_PATH}"
     sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
     sudo chmod g+x "$INSTALL_PATH/validator_keys"
+    sudo chmod -R 660 "${INSTALL_PATH}/wallet"
+    sudo chmod g+x "$INSTALL_PATH/wallet" 
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
