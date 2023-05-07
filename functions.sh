@@ -1069,10 +1069,10 @@ function exit_validator_LH() {
 
 
 function exit_validator_PR(){
-    read -e -p "Enter the path to your wallet dir now (default /blockchain): " wallet_path
-    wallet_path=${wallet_path:-/blockchain}
+    #read -e -p "Enter the path to your wallet dir now (default /blockchain): " wallet_path
+    #wallet_path=${wallet_path:-/blockchain}
     sudo -u prysm docker run -it --network="host" --name="exit_validator" \
-    -v "${wallet_path}/wallet/":/wallet \
+    -v "${INSTALL_PATH}/wallet/":/wallet \
     registry.gitlab.com/pulsechaincom/prysm-pulse/prysmctl:latest \
     validator exit \
     --wallet-dir=/wallet --wallet-password-file=/wallet/pw.txt \
