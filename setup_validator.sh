@@ -206,11 +206,11 @@ generate_new_validator_key() {
     echo ""
     echo "The next step requires you to enter the wallet address that you would like to use for receiving"
     echo "validator rewards while validating and withdrawing your funds when you exit the validator pool."
-    echo -e "This it the ${GREEN}Withdrawal- or Execution-Wallet (they are the same)${NC}"
+    echo -e "This is the ${GREEN}Withdrawal- or Execution-Wallet (they are the same)${NC}"
     echo ""
     echo -e "Make sure ${RED}you have full access${NC} to this Wallet. ${RED}Once set, it cannot be changed${NC}"
     echo ""
-    echo -e "You need to provide this Wallet-Adress in the ${GREEN}propper format (checksum)${NC}."
+    echo -e "You need to provide this Wallet-Adresss in the ${GREEN}proper format (checksum)${NC}."
     echo -e "One way to achive this, is to copy your adress from the Blockexplorer"
     echo ""
     if confirm_prompt "I have read this information and confirm that I understand the importance of using the right Withdrawal-Wallet Address."; then
