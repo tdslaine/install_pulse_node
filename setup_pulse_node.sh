@@ -287,7 +287,7 @@ sudo chmod -R 750 "${CUSTOM_PATH}/consensus"
 press_enter_to_continue
 
 
-echo "Creating shared group to acces jwt.hex file"
+echo "Creating shared group to access jwt.hex file"
 
 # Permission Madness
 # defining group for jwt.hex file
@@ -492,9 +492,10 @@ sudo chown -R $main_user:docker $CUSTOM_PATH/menu.sh
 
 echo "Menu script has been generated and written to ${CUSTOM_PATH}/menu.sh"
 
-read -p "Do you want to add Desktop-Shortcuts to a menu for general logging and node/validator settings (adviced)? [Y/n] " log_choice
-echo "Note: You might have to right-click > allow launching on these"
-
+read -p "Do you want to add Desktop-Shortcuts to a menu for general logging and node/validator settings (Recommended)? [Y/n] " log_choice
+echo ""
+echo -e "${RED}Note: You might have to right-click > allow launching on these${NC}"
+echo ""
 if [[ "$log_choice" =~ ^[Yy]$ || "$log_choice" == "" ]]; then
     create-desktop-shortcut ${CUSTOM_PATH}/helper/tmux_logviewer.sh tmux_LOGS
     create-desktop-shortcut ${CUSTOM_PATH}/helper/log_viewer.sh ui_LOGS
@@ -504,7 +505,7 @@ if [[ "$log_choice" =~ ^[Yy]$ || "$log_choice" == "" ]]; then
     create-desktop-shortcut ${CUSTOM_PATH}/menu.sh Validator-Menu ${CUSTOM_PATH}/helper/LogoVector.svg
 fi
 
-echo "Menu generated and copied over to /usr/local/bin/plsmenu - you can call it anytime via plsmenu from the terminal"
+echo "Menu generated and copied over to /usr/local/bin/plsmenu - you can open this helper menu by running plsmenu in the terminal"
 echo ""
 press_enter_to_continue
 
