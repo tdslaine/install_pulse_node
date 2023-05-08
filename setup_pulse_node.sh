@@ -109,7 +109,7 @@ echo -e "| Gratitude to the Pulse-dev Telegram for    |"
 echo -e "| their valuable info & collective wisdom.   |"
 echo -e "|                                            |"
 echo -e "| Big thanks to all who contributed with     |"
-echo -e "| constructive feedback to improve our work! |"
+echo -e "| constructive feedback to improve my work!  |"
 echo -e "+--------------------------------------------+"
 
 press_enter_to_continue
