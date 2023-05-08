@@ -1131,3 +1131,19 @@ function get_main_user() {
   main_user=$(logname || echo $SUDO_USER || echo $USER)
   echo "Main user: $main_user"
 }
+
+function reboot_prompt() {
+    zenity --question \
+           --title="Reboot Required" \
+           --text="A reboot is required in order for the Setup to function properly. Do you want to restart now?" \
+           --ok-label="Restart Now" \
+           --cancel-label="Cancel"
+
+    if [ $? -eq 0 ]; then
+        # User clicked "Restart Now"
+        sudo reboot
+    else
+        # User clicked "Cancel" or closed the dialog
+        echo "Reboot later"
+    fi
+}
