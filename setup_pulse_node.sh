@@ -95,7 +95,7 @@ fi
 clear
 echo -e "\033[1;33m"
 echo -e "+============================================+"
-echo -e "|                ☆ Shoutouts ☆              |"
+echo -e "|                ☆ Shoutouts ☆               |"
 echo -e "+============================================+"
 echo -e "| Sincere thanks to @rainbowtopgun for his   |"
 echo -e "| invaluable feedback & steadfast support    |"
