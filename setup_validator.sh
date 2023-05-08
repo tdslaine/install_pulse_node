@@ -400,8 +400,8 @@ Restore_from_MN() {
     sudo chmod -R 777 "${INSTALL_PATH}/validator_keys"
     sudo chmod -R 777 "${INSTALL_PATH}/wallet"
        
- 
-    ${INSTALL_PATH}/staking-deposit-cli/deposit.sh existing-mnemonic \
+    cd ${INSTALL_PATH}/staking-deposit-cli/
+    ./deposit.sh existing-mnemonic \
     --chain=${DEPOSIT_CLI_NETWORK} \
     --folder="${INSTALL_PATH}" 
      
