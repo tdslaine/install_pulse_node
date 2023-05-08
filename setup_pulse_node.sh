@@ -92,7 +92,8 @@ if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
   echo "Aborting."
   exit 1
 fi
-
+clear
+echo -e "\033[1;33m"
 echo -e "+============================================+"
 echo -e "|                ☆ Shoutouts ☆              |"
 echo -e "+============================================+"
@@ -111,6 +112,7 @@ echo -e "|                                            |"
 echo -e "| Big thanks to all who contributed with     |"
 echo -e "| constructive feedback to improve my work!  |"
 echo -e "+--------------------------------------------+"
+echo -e "\033[0m"
 
 press_enter_to_continue
 
