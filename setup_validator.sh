@@ -391,6 +391,16 @@ Restore_from_MN() {
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_DOWN
     fi
+    # Check if the address is a valid address, loop until it is...
+    while true; do
+    read -e -p "Please enter your Withdrawal-Wallet address: " withdrawal_wallet
+    if [[ "${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
+        break
+    else
+        echo "Invalid address format. Please enter a valid PRC20 address."
+    fi
+    done
+    
     
     echo ""
     echo "Now running staking-cli command to restore from your SeedPhrase (Mnemonic)"
@@ -403,7 +413,8 @@ Restore_from_MN() {
     cd ${INSTALL_PATH}/staking-deposit-cli/
     ./deposit.sh existing-mnemonic \
     --chain=${DEPOSIT_CLI_NETWORK} \
-    --folder="${INSTALL_PATH}" 
+    --folder="${INSTALL_PATH}" \
+    --eth1_withdrawal_address="${withdrawal_wallet}"
      
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
