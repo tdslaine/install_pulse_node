@@ -312,18 +312,6 @@ sudo chown -R $main_user:docker "${config_location}/Dashboards"
 sudo chmod -R 777 "${config_location}/Dashboards"
 
 echo ""
-echo "Please press Enter to continue..."
-read -p ""
-clear
-echo ""
-echo "Special thanks to raskitoma (@raskitoma) for forking the Yoldark_ETH_staking_dashboard. GitHub link: https://github.com/raskitoma/pulse-staking-dashboard"
-echo "Thanks to Jexxa (@JexxaJ) for providing further improvements to the forked dashboard. GitHub link: https://github.com/JexxaJ/Pulsechain-Validator-Script"
-echo "Shoutout to @rainbowtopgun for his valuable contributions in alpha/beta testing and providing awesome feedback while refining the scripts."
-echo "Greetings to the whole plsdev tg-channel, you guys rock"
-echo ""
-echo "HAPPY VALIDATIN' FRENS :p "
-echo "..."
-echo ""
 echo -e "${GREEN}Congratulations, setup is now complete.${NC}"
 echo ""
 if [[ $local_network_choice == "y" ]]; then
