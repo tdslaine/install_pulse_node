@@ -152,7 +152,7 @@ clone_staking_deposit_cli "${INSTALL_PATH}"
             create_subfolder "wallet"
             create_prysm_wallet_password
             sudo chmod -R 777 "${INSTALL_PATH}/wallet"
-            sudo chmod -R g+x "$INSTALL_PATH/wallet"
+            #sudo chmod -R g+x "$INSTALL_PATH/wallet"
             sudo chown $main_user: "$INSTALL_PATH/wallet"
         fi
     fi 
@@ -253,10 +253,9 @@ done
 
 
     cd "${INSTALL_PATH}"
-    sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
-    sudo chmod g+x "$INSTALL_PATH/validator_keys"
-    sudo chmod -R 666 "${INSTALL_PATH}/wallet"
-    sudo chmod -R g+x "$INSTALL_PATH/wallet"
+    sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
+    sudo chmod -R 770 "${INSTALL_PATH}/wallet"
+
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
@@ -338,10 +337,9 @@ import_restore_validator_keys() {
     echo "Importing validator keys now"
     echo ""
 
-    sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
-    sudo chmod g+x "$INSTALL_PATH/validator_keys"
-    sudo chmod -R 666 "${INSTALL_PATH}/wallet"
-    sudo chmod -R g+x "$INSTALL_PATH/wallet"
+    sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
+    sudo chmod -R 770 "${INSTALL_PATH}/wallet"
+    
     if [[ "$client_choice" == "1" ]]; then
         import_lighthouse_validator
         elif [[ "$client_choice" == "2" ]]; then
@@ -357,7 +355,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls
     start_script ../start_validator
     
     echo ""
-    sudo chmod -R 440 "${INSTALL_PATH}/validator_keys"
+    #sudo chmod 550 "${INSTALL_PATH}/validator_keys"
     echo "Import into existing Setup done."
     restart_tmux_logs_session
     exit 0
@@ -398,21 +396,15 @@ Restore_from_MN() {
     echo "Now running staking-cli command to restore from your SeedPhrase (Mnemonic)"
     echo ""
     
- cd "${INSTALL_PATH}"
+    cd "${INSTALL_PATH}"
     sudo chmod -R 777 "${INSTALL_PATH}/validator_keys"
-    sudo chmod g+x "$INSTALL_PATH/validator_keys"
     sudo chmod -R 777 "${INSTALL_PATH}/wallet"
-    sudo chmod g+x "$INSTALL_PATH/wallet"    
+       
  
     ${INSTALL_PATH}/staking-deposit-cli/deposit.sh existing-mnemonic \
     --chain=${DEPOSIT_CLI_NETWORK} \
     --folder="${INSTALL_PATH}" 
-    
-#    cd "${INSTALL_PATH}"
-#    sudo chmod -R 660 "${INSTALL_PATH}/validator_keys"
-#    sudo chmod g+x "$INSTALL_PATH/validator_keys"
-#    sudo chmod -R 660 "${INSTALL_PATH}/wallet"
-#    sudo chmod g+x "$INSTALL_PATH/wallet" 
+     
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
@@ -425,6 +417,7 @@ Restore_from_MN() {
 
     fi
 
+sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
 sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
 sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
 sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
@@ -435,7 +428,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls
     
     echo ""
     echo "Import into existing Setup done."
-    sudo chmod -R 440 "${INSTALL_PATH}/validator_keys"
+    #sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
     restart_tmux_logs_session
     exit 0
     fi
@@ -562,21 +555,18 @@ sudo usermod -aG pls-validator validator
 sudo chown -R validator:pls-validator "$INSTALL_PATH/validators" > /dev/null 2>&1       # set ownership to validator and pls-validator-group
 sudo chown -R validator:pls-validator "$INSTALL_PATH/wallet"     > /dev/null 2>&1       # ""
 sudo chown -R validator:pls-validator "$INSTALL_PATH/validator_keys" > /dev/null 2>&1   # ""
-sudo chown -R validator:pls-validator "$INSTALL_PATH/wallet" > /dev/null 2>&1   # ""
 
-sudo chmod -R 660 "$INSTALL_PATH/validator_keys"
-sudo chmod -R g+x "$INSTALL_PATH/validator_keys"
-sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chmod 440 {} \;
+sudo chmod -R 770 "$INSTALL_PATH/validator_keys"
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
 sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
-sudo chmod -R 660 "$INSTALL_PATH/wallet" > /dev/null 2>&1
-sudo chmod -R 660 "$INSTALL_PATH/validators" > /dev/null 2>&1
-sudo chmod -R g+x "$INSTALL_PATH/validators" > /dev/null 2>&1
 
-#exec su -l $($main_user)
+sudo chmod -R 770 "$INSTALL_PATH/wallet" > /dev/null 2>&1
+sudo chmod -R 770 "$INSTALL_PATH/validators" > /dev/null 2>&1
+
 
 # Prompt the user if they want to run the scripts
 start_scripts_first_time
-
 
 # Clearing the Bash-Histroy
 clear_bash_history
