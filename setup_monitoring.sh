@@ -377,5 +377,7 @@ if [[ "$log_it" =~ ^[Yy]$ ]]; then
     ;;
   esac
 fi
+reboot_prompt
+sleep 5
 reboot_advice
 exit 0
