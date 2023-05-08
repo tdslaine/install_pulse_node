@@ -93,6 +93,28 @@ if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
   exit 1
 fi
 
+echo -e "+============================================+"
+echo -e "|                ☆ Shoutouts ☆              |"
+echo -e "+============================================+"
+echo -e "| Sincere thanks to @rainbowtopgun for his   |"
+echo -e "| invaluable feedback & steadfast support    |"
+echo -e "| during the development of these scripts.   |"
+echo -e "|                                            |"
+echo -e "| Special thanks to raskitoma for forking    |"
+echo -e "| the Yoldark_ETH_staking_dashboard. GitHub: |"
+echo -e "| https://github.com/raskitoma/pulse-        |"
+echo -e "| staking-dashboard                          |"
+echo -e "|                                            |"
+echo -e "| Gratitude to the Pulse-dev Telegram for    |"
+echo -e "| their valuable info & collective wisdom.   |"
+echo -e "|                                            |"
+echo -e "| Big thanks to all who contributed with     |"
+echo -e "| constructive feedback to improve our work! |"
+echo -e "+--------------------------------------------+"
+
+press_enter_to_continue
+
+
 #enabling ntp for timesyncronization
 clear
 echo ""
