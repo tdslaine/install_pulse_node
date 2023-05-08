@@ -610,6 +610,8 @@ display_credits
 sleep 1
 echo ""
 echo "Due to changes in file-Permission it is highly recommended to reboot the system now"
+reboot_prompt
+sleep 5
 reboot_advice
 
 logviewer_prompt
