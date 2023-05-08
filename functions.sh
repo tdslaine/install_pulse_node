@@ -342,6 +342,7 @@ function clone_staking_deposit_cli() {
         # Clone the staking-deposit-cli repository
         if sudo git clone https://gitlab.com/pulsechaincom/staking-deposit-cli.git "${target_directory}/staking-deposit-cli"; then
             echo "Cloned staking-deposit-cli repository into ${target_directory}/staking-deposit-cli"
+            sudo chown -R $main_user:docker "${target_directory}/staking-deposit-cli"
             break
         else
             echo ""
