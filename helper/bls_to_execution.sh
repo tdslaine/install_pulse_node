@@ -95,18 +95,18 @@ if [[ $submit == "y" ]]; then
 	echo ""
 	read -e -p "choose 1 or 2: " client_choice
 		if [[ $client_choise == "1" ]]; then
-sudo -u lighthouse docker run -it \
-    -v ${install_path}/bls_converter:/bls_dir \
-    --name submit_bls_change \
-    --network="host" \
-    registry.gitlab.com/pulsechaincom/prysm-pulse/prysmctl:latest \
-    validator withdraw \
-    -beacon-node-host=localhost:5052 \
-    --path=/bls_dir \
-    --confirm
+			sudo docker run -it \
+		    	-v ${install_path}/bls_converter:/bls_dir \
+			--name submit_bls_change \
+			--network host \
+			registry.gitlab.com/pulsechaincom/prysm-pulse/prysmctl:latest \
+			validator withdraw \
+			-beacon-node-host=localhost:3500 \
+			--path=/bls_dir \
+			--confirm
 		
 		elif [[ $client_choice == "2" ]]; then
-			sudo -u prysm docker run -it \
+			sudo docker run -it \
 		    -v ${install_path}/bls_converter:/bls_dir \
 			--name submit_bls_change \
 			--network host \
