@@ -94,7 +94,7 @@ if [[ $submit == "y" ]]; then
 	echo "2. Prysm"
 	echo ""
 	read -e -p "choose 1 or 2: " client_choice
-		if [[ $client_choise == "1" ]]; then
+		if [[ $client_choice == "1" ]]; then
 			sudo docker run --rm -it \
 		    	-v ${install_path}/bls_converter:/bls_dir \
 			--name submit_bls_change \
