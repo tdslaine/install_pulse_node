@@ -18,17 +18,6 @@ script_dir=$(dirname "$0")
 
 source "$script_dir/functions.sh"
 
-
-# Checkpoint sync url
-CHECKPOINT="https://checkpoint.v4.testnet.pulsechain.com"
-# Execution Network FLAG
-EXECUTION_NETWORK_FLAG="pulsechain-testnet-v4"
-# PRYSM Network FLAG
-PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
-# Lighthouse Network FLAG
-LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
-
-
 clear
 echo "     Pulse Node/Validator/Monitoring Setup by Dipslayer"
 echo "                                                                                                                                                    
