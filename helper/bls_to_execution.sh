@@ -55,5 +55,5 @@ source venv/bin/activate > /dev/null 2>&1
 python3 setup.py install > /dev/null 2>&1
 pip3 install -r requirements.txt > /dev/null 2>&1
 
-./deposit.sh --language english /blockchain/convert generate-bls-to-execution-change \
+./deposit.sh --language english generate-bls-to-execution-change \
 --chain pulsechain-testnet-v4
