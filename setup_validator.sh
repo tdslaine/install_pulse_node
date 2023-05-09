@@ -14,11 +14,6 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-LAUNCHPAD_URL="https://launchpad.v4.testnet.pulsechain.com"
-DEPOSIT_CLI_NETWORK="pulsechain-testnet-v4"
-LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
-PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
-
 source "$script_dir/functions.sh"
 
 function get_user_choices() {
