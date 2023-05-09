@@ -486,6 +486,7 @@ sudo cp setup_monitoring.sh "$CUSTOM_PATH/helper"
 sudo cp functions.sh "$CUSTOM_PATH/helper"
 sudo cp helper/LogoVector.svg "$CUSTOM_PATH/helper"
 sudo cp helper/bls_to_execution.sh "$CUSTOM_PATH/helper"
+sudo cp helper/prysm_delete_validator.sh "$CUSTOM_PATH/helper"
 
 
 # Permissions to folders
