@@ -1,3 +1,4 @@
+
 #Vars for network:
 
 # Checkpoint sync url
@@ -12,6 +13,7 @@ PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
 LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 # Deposti CLI network
 DEPOSIT_CLI_NETWORK="pulsechain-testnet-v4"
+
 
 
 function logviewer_prompt() {
@@ -988,18 +990,26 @@ validator_submenu() {
 
 validator_setup_submenu() {
     while true; do
-        options=("Launch_Validator_Setup" "Validator Setup; Generate/Add/Import/Restore/EXIT" \
-                 "Convert_BLS_to_Execution_Key" "Convert BLS to Execution Key" \
+        options=("Validator_Setup" "Validator Setup; Generate/Add/Import/Restore/EXIT" \
+                 "Convert_BLS_to_Execution_Key" "Convert 00-BLS to 01-Execution Key" \
+                 "Prysm_List_Accounts" "List all Accounts from the Validator DB" \
+                 "Prysm_Delete_Validator_from_DB" "Prysm - Delete/Remove Accounts from Validator" \
                  "back" "Back to main menu; Return to the main menu.")
         vs_opt=$(dialog --stdout --title "Node/Validator Setup Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
         case $? in
             0)
                 case $vs_opt in
-                    "Launch_Validator_Setup")
+                    "Validator_Setup")
                         script_launch "setup_validator.sh"
                         ;;
                     "Convert_BLS_to_Execution_Key")
                         script_launch "bls_to_execution.sh"
+                        ;;
+                    "Prysm_List_Accounts")
+                        script_launch "prysm_read_keys.sh"
+                        ;;
+                    "Prysm_Delete_Validator_from_DB")
+                        script_launch "prysm_delete_validator.sh"
                         ;;
                     "back")
                         break
@@ -1012,8 +1022,6 @@ validator_setup_submenu() {
         esac
     done
 }
-
-
 
 
 system_submenu() {
