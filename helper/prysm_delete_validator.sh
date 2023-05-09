@@ -26,7 +26,7 @@ accounts delete --"${PRYSM_NETWORK_FLAG}" \
 --wallet-dir=/wallet --wallet-password-file=/wallet/pw.txt
 
 echo "restarting the validator container"
-sudo docker start validator
+${INSTALL_PATH}/start_validator.sh
 sudo docker stop delete_validator && sudo docker container prune -f
 
 echo "account(s) deleted"
