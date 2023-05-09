@@ -95,7 +95,7 @@ if [[ $submit == "y" ]]; then
 	echo ""
 	read -e -p "choose 1 or 2: " client_choice
 		if [[ $client_choise == "1" ]]; then
-			sudo docker run -rm -it \
+			sudo docker run -it \
 		    	-v ${install_path}/bls_converter:/bls_dir \
 			--name submit_bls_change \
 			--network host \
@@ -106,7 +106,7 @@ if [[ $submit == "y" ]]; then
 			--confirm
 		
 		elif [[ $client_choice == "2" ]]; then
-			sudo docker run -rm -it \
+			sudo docker run -it \
 		    -v ${install_path}/bls_converter:/bls_dir \
 			--name submit_bls_change \
 			--network host \
