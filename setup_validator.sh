@@ -113,6 +113,7 @@ if [[ "$setup_choice" == "3" ]]; then       # exit validator
                 #echo "exiting validator done"
                 stop_docker_container "exit_validator" > /dev/null 2>&1
                 sudo docker container prune -f > /dev/null 2>&1
+                sudo docker restart validator
                 press_enter_to_continue
             exit 0
         fi
@@ -617,7 +618,7 @@ sleep 1
 echo ""
 echo "Due to changes in file-Permission it is highly recommended to reboot the system now"
 reboot_prompt
-sleep 5
+sleep 2
 reboot_advice
 
 logviewer_prompt
