@@ -101,7 +101,7 @@ if [[ $submit == "y" ]]; then
 			--network host \
 			registry.gitlab.com/pulsechaincom/prysm-pulse/prysmctl:latest \
 			validator withdraw \
-			-beacon-node-host=localhost:3500 \
+			-beacon-node-host=localhost:5052 \
 			--path=/bls_dir \
 			--confirm
 		
