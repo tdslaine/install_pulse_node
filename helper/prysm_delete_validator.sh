@@ -2,10 +2,11 @@
 
 source functions.sh
 
-sudo docker stop delete_valdator && sudo docker container prune -f 
-echo "We will have to stop the validator coontainer first.."
-sudo docker stop validator && sudo docker container prune -f 
-echo "Deleting Prysm Validator Account"
+sudo docker stop delete_valdator && sudo docker container prune -f  > /dev/null 2>&1
+echo "We will have to stop the validator coontainer first..."
+sleep 1
+sudo docker stop validator && sudo docker container prune -f  > /dev/null 2>&1
+echo "Done. proceeding to Account-Deletion.."
 echo ""
 read -e -p "Please enter your installation folder (default: /blockchain): " INSTALL_PATH
 
@@ -25,10 +26,9 @@ registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest \
 accounts delete --"${PRYSM_NETWORK_FLAG}" \
 --wallet-dir=/wallet --wallet-password-file=/wallet/pw.txt
 
-echo "restarting the validator container"
-${INSTALL_PATH}/start_validator.sh
-sudo docker stop delete_validator && sudo docker container prune -f
-
-echo "account(s) deleted"
+echo "Now restarting the Validator Container..."
+${INSTALL_PATH}/start_validator.sh > /dev/null 2>&1
+sudo docker stop delete_validator && sudo docker container prune -f > /dev/null 2>&1
+echo "Done..."
 echo ""
 read -p "Press enter to continue..."
