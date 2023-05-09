@@ -200,7 +200,7 @@ registry.gitlab.com/pulsechaincom/go-pulse:latest \\
 --pprof \\
 --http.api eth,net,engine,admin "
 
-ERIGON_CMD="sudo -u erigon docker -t run --restart=always  \\
+ERIGON_CMD="sudo -u erigon docker run -dt --restart=always  \\
 --network=host \\
 --name execution \\
 -v ${CUSTOM_PATH}:/blockchain \\
