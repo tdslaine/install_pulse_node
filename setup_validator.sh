@@ -227,7 +227,7 @@ generate_new_validator_key() {
 
 # Check if the address is a valid address, loop until it is...
 while true; do
-    read -e -p "Please enter your Withdrawal-Wallet address: " withdrawal_wallet
+    read -e -p "Please enter your Execution/Withdrawal-Wallet address: " withdrawal_wallet
     if [[ "${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
         break
     else
@@ -389,7 +389,7 @@ Restore_from_MN() {
     fi
     # Check if the address is a valid address, loop until it is...
     while true; do
-    read -e -p "Please enter your Withdrawal-Wallet address: " withdrawal_wallet
+    read -e -p "Please enter your Execution/Withdrawal-Wallet address: " withdrawal_wallet
     if [[ "${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
         break
     else
