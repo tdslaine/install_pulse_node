@@ -4,9 +4,12 @@
 sudo docker stop execution && sudo docker container prune -f \
 
 sudo docker run -it -v /home/blockchain/execution/geth/:/blockchain \
+--name="geth_prun"
 registry.gitlab.com/pulsechaincom/go-pulse:latest \
 --datadir /blockchain \
 snapshot prune-state
+
+sudo docker stop geth_prun && sudo docker container prune -f
 ```
 
 
