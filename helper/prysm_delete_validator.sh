@@ -28,7 +28,8 @@ accounts delete --"${PRYSM_NETWORK_FLAG}" \
 
 echo "Now restarting the Validator Container..."
 ${INSTALL_PATH}/start_validator.sh > /dev/null 2>&1
-sudo docker stop delete_validator && sudo docker container prune -f > /dev/null 2>&1
+sudo docker stop delete_validator > /dev/null 2>&1 
+sudo docker container prune -f > /dev/null 2>&1
 echo "Done..."
 echo ""
 read -p "Press enter to continue..."
