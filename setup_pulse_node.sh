@@ -135,25 +135,53 @@ echo "   Recommended for developers and advanced users,"
 echo "   stores the entire history of the Ethereum blockchain, including all historical states"
 echo ""
 echo ""
-read -p "Enter the number (1 or 2): " ETH_CLIENT_CHOICE
-
-case $ETH_CLIENT_CHOICE in
-  1) ETH_CLIENT="geth" ;;
-  2) ETH_CLIENT="erigon" ;;
-  *) echo "Invalid choice. Exiting."; exit 1 ;;
-esac
+echo "3) Erigon (pruned to keep last 2000 blocks)"
+echo "   WARNING !: Still testing if this is beneficial over geth so use with caution."
+echo "   no guarantee this will work. It will only keep the last 2000 blocks"
 echo ""
+echo ""
+while true; do
+  read -e -p "Enter the ETH client choice (1, 2, or 3): " ETH_CLIENT_CHOICE
+  case $ETH_CLIENT_CHOICE in
+    1)ETH_CLIENT_CHOICE
+      ETH_CLIENT="geth"
+      break
+      ;;
+    2)
+      ETH_CLIENT="erigon"
+      break
+      ;;
+    3)
+      ETH_CLIENT="erigon"
+      break
+      ;;
+    *)
+      echo "Invalid choice. Please enter a valid choice (1, 2, or 3)."
+      ;;
+  esac
+done
 
-echo "Choose your Consensus client:"
-echo "1) Lighthouse"
-echo "2) Prysm"
-read -p "Enter the number (1 or 2): " CONSENSUS_CLIENT_CHOICE
 
-case $CONSENSUS_CLIENT_CHOICE in
-  1) CONSENSUS_CLIENT="lighthouse" ;;
-  2) CONSENSUS_CLIENT="prysm" ;;
-  *) echo "Invalid choice. Exiting."; exit 1 ;;
-esac
+while true; do
+  echo "Choose your Consensus client:"
+  echo "1) Lighthouse"
+  echo "2) Prysm"
+  read -p "Enter the number (1 or 2): " CONSENSUS_CLIENT_CHOICE
+
+  case $CONSENSUS_CLIENT_CHOICE in
+    1)
+      CONSENSUS_CLIENT="lighthouse"
+      break
+      ;;
+    2)
+      CONSENSUS_CLIENT="prysm"
+      break
+      ;;
+    *)
+      echo "Invalid choice. Please enter a valid choice (1 or 2)."
+      ;;
+  esac
+done
 
 # Enable tab autocompletion for the read command if line editing is enabled
 if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
@@ -197,7 +225,29 @@ registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
 --chain=${EXECUTION_NETWORK_FLAG} \\
 --authrpc.jwtsecret=/blockchain/jwt.hex \\
 --datadir=/blockchain/execution/erigon \\
+--http \\
+--http.api="eth,erigon,web3,net,debug,trace,txpool" \\
+--metrics \\
+--pprof \\
 --externalcl "
+
+ERIGON_CMD2="sudo -u erigon docker run -dt --restart=always  \\
+--network=host \\
+--name execution \\
+-v ${CUSTOM_PATH}:/blockchain \\
+registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
+--chain=${EXECUTION_NETWORK_FLAG} \\
+--authrpc.jwtsecret=/blockchain/jwt.hex \\
+--datadir=/blockchain/execution/erigon \\
+--externalcl \\
+--http \\
+--http.api="eth,erigon,web3,net,debug,trace,txpool" \\
+--metrics \\
+--pprof \\
+--prune.h.older=2000 \\
+--prune.t.older=2000 \\
+--prune.c.older=2000 \\
+--prune=r  "
 
 # Docker run commands for Consensus clients
 PRYSM_CMD="sudo -u prysm docker run -dt --restart=always \\
@@ -256,6 +306,7 @@ sudo apt-get install -y \
     rhash \
     openssl \
     wmctrl \
+    jq \
     lsb-release \
     dbus-x11 \
     python3.10 python3.10-venv python3.10-dev python3-pip
@@ -419,18 +470,23 @@ echo "Starting ${ETH_CLIENT}"
 
 EOL
 
-if [ "$ETH_CLIENT" = "geth" ]; then
-sudo docker pull registry.gitlab.com/pulsechaincom/go-pulse:latest
-  cat > start_execution.sh << EOL
+if [ $ETH_CLIENT_CHOICE = "1" ]; then
+    sudo docker pull registry.gitlab.com/pulsechaincom/go-pulse:latest
+    cat >> start_execution.sh << EOL
 ${GETH_CMD}
-
 EOL
+fi
 
-elif [ "$ETH_CLIENT" = "erigon" ]; then
-sudo docker pull registry.gitlab.com/pulsechaincom/erigon-pulse:latest
-  cat > start_execution.sh << EOL
+if [ $ETH_CLIENT_CHOICE = "2" ]; then
+    sudo docker pull registry.gitlab.com/pulsechaincom/erigon-pulse:latest
+    cat >> start_execution.sh << EOL
 ${ERIGON_CMD}
+EOL
+fi
 
+if [ $ETH_CLIENT_CHOICE = "3" ]; then
+    cat >> start_execution.sh << EOL
+${ERIGON_CMD2}
 EOL
 fi
 
@@ -486,14 +542,10 @@ sudo cp setup_monitoring.sh "$CUSTOM_PATH/helper"
 sudo cp functions.sh "$CUSTOM_PATH/helper"
 sudo cp helper/* "$CUSTOM_PATH/helper"
 
-
-
-
 # Permissions to folders
 sudo chmod -R +x $CUSTOM_PATH/helper/
 sudo chmod -R 755 $CUSTOM_PATH/helper/
 sudo chown -R $main_user:docker $CUSTOM_PATH/helper
-
 
 echo ""
 echo -e "${GREEN}Finished copying helper scripts${NC}"
@@ -531,6 +583,8 @@ echo "Menu generated and copied over to /usr/local/bin/plsmenu - you can open th
 echo ""
 press_enter_to_continue
 
+# setting 775 for the exeuction folder, in case of backup
+sudo chmod 775 -R $CUSTOM_PATH/execution
 
 clear
 read -p "$(echo -e ${GREEN})Would you like to setup a validator? (y/n):$(echo -e ${NC}))" VALIDATOR_CHOICE
