@@ -75,7 +75,7 @@ echo "copying over the conversion files"
 
 sudo mv ${install_path}/bls_converter/staking-deposit-cli/bls_to_execution_changes/*.json ${install_path}/bls_converter/
 
-read -p "enter"
+
 
 cd ${install_path}/bls_converter/
 sudo rm -R staking-deposit-cli
@@ -118,9 +118,11 @@ sudo -u lighthouse docker run -it \
 		fi
 else 
 	echo "dont forget to submit your changes to the network via your beacon..."
+	read -p "Press enter to continue..."
 	exit 0
 	
 sudo docker stop submit_bls_change && sudo docker container prune -f
 
 fi
+read -p "Press enter to continue..."
 echo "done"
