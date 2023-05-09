@@ -972,27 +972,31 @@ validator_submenu() {
 
 validator_setup_submenu() {
     while true; do
-     options=("Launch_Validator_Setup" "Validator Setup; Generate/Add/Import/Restore/EXIT" \
-              "back" "Back to main menu; Return to the main menu.")
-     vs_opt=$(dialog --stdout --title "Node/Validator Setup Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
-
+        options=("Launch_Validator_Setup" "Validator Setup; Generate/Add/Import/Restore/EXIT" \
+                 "Convert_BLS_to_Execution_Key" "Convert BLS to Execution Key" \
+                 "back" "Back to main menu; Return to the main menu.")
+        vs_opt=$(dialog --stdout --title "Node/Validator Setup Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
         case $? in
-          0)
-            case $vs_opt in
-                "Launch_Validator_Setup")
-                    script_launch "setup_validator.sh"
-                    ;;
-                "back")
-                    break
-                    ;;
-            esac
-            ;;
-          1)
-            break
-            ;;
+            0)
+                case $vs_opt in
+                    "Launch_Validator_Setup")
+                        script_launch "setup_validator.sh"
+                        ;;
+                    "Convert_BLS_to_Execution_Key")
+                        script_launch "bls_to_execution.sh"
+                        ;;
+                    "back")
+                        break
+                        ;;
+                esac
+                ;;
+            1)
+                break
+                ;;
         esac
     done
 }
+
 
 
 
