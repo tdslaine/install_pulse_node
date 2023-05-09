@@ -1,4 +1,5 @@
 ### Prunning DB with geth
+###### note: ajdust the /home/blockchain part of the command to your setup...
 
 ```bash
 sudo docker stop execution && sudo docker container prune -f \
@@ -20,6 +21,7 @@ docker run --rm -it -v "${install_path}/wallet:/wallet" registry.gitlab.com/puls
 ```
 
 ### Get Validator infos from local beacon
+###### note: replace YOUR_VALIDATOR_INDEX with the index from beacon-explorer...e.g. 7654
 
 prym:
  ```bash
@@ -29,4 +31,25 @@ prym:
 lighthouse:
 ```bash
 curl -X 'GET'   'http://127.0.0.1:5052/eth/v1/beacon/states/head/validators/YOUR_VALIDATOR_INDEX'   -H 'accept: application/json' 
+```
+
+### Submit bls-to-execution change to beacon
+###### note: @filename is the json generated from the bls-to-exeuction converion via staking-cli
+
+prysm:
+```bash
+curl -X 'POST' \
+  'localhost:3500/eth/v1/beacon/pool/bls_to_execution_changes' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d @filename.json
+```
+
+lighthouse:
+```bash
+curl -X 'POST' \
+  'localhost:5052/eth/v1/beacon/pool/bls_to_execution_changes' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d @filename.json
 ```
