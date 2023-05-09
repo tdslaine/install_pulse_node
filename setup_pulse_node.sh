@@ -143,7 +143,7 @@ echo ""
 while true; do
   read -e -p "Enter the ETH client choice (1, 2, or 3): " ETH_CLIENT_CHOICE
   case $ETH_CLIENT_CHOICE in
-    1)ETH_CLIENT_CHOICE
+    1)
       ETH_CLIENT="geth"
       break
       ;;
