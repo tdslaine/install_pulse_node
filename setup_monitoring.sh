@@ -355,10 +355,10 @@ if [[ "$log_it" =~ ^[Yy]$ ]]; then
 
   case $choice in
   1)
-    ${config_location}/log_viewer.sh
+    ${config_location}/helper/log_viewer.sh
     ;;
   2)
-    ${config_location}/tmux_logviewer.sh
+    ${config_location}/helper/tmux_logviewer.sh
     ;;
   *)
     echo "Invalid choice. Exiting."
