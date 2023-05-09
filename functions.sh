@@ -1006,7 +1006,7 @@ validator_setup_submenu() {
                         script_launch "bls_to_execution.sh"
                         ;;
                     "Prysm_List_Accounts")
-                        script_launch "prysm_read_account.sh"
+                        script_launch "prysm_read_accounts.sh"
                         ;;
                     "Prysm_Delete_Validator_from_DB")
                         script_launch "prysm_delete_validator.sh"
