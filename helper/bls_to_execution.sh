@@ -33,7 +33,7 @@ for ((i=0; i<$array_length; i++)); do
 done
 
 #read -e -p "Please enter the withdrawal-Credentials starting with 00 you want to generate a bls-to-execution key: " bls_key
-read -e -p "Please enter your installation folder: " install_path 
+read -e -p "Please enter your installation folder (default: /blockchain): " install_path 
 
 # Set the default installation path if the user didn't enter a value
 if [ -z "$install_path" ]; then
