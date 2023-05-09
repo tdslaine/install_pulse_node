@@ -1,23 +1,24 @@
 ### Prunning DB with geth
-###### note: ajdust the /home/blockchain part of the command to your setup...
+###### note: ajdust the /blockchain part of the command to your setup...
 
 ```bash
 sudo docker stop execution && sudo docker container prune -f \
 
-sudo docker run -it -v /home/blockchain/execution/geth/:/blockchain \
---name="geth_prun"
+sudo docker run --rm -it \
+-v /blockchain/execution/geth/:/blockchain \
+--name="geth_prun" \
 registry.gitlab.com/pulsechaincom/go-pulse:latest \
 --datadir /blockchain \
 snapshot prune-state
 
-sudo docker stop geth_prun && sudo docker container prune -f
+#sudo docker stop geth_prun && sudo docker container prune -f
 ```
 
 
 ### List keys currently validating with prysm
-
+###### note: ajdust the blockchain part of the command to your setup...
 ```bash
-docker run --rm -it -v "${install_path}/wallet:/wallet" registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest accounts list --pulsechain-testnet-v4  --wallet-dir=/wallet --wallet-password-file=/wallet/pw.txt
+docker run --rm -it -v "/blockchain/wallet:/wallet" registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest accounts list --pulsechain-testnet-v4  --wallet-dir=/wallet --wallet-password-file=/wallet/pw.txt
 ```
 
 ### Get Validator infos from local beacon
