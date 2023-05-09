@@ -28,5 +28,5 @@ prym:
 
 lighthouse:
 ```bash
-curl -X 'GET'   'http://127.0.0.1:5056/eth/v1/beacon/states/head/validators/YOUR_VALIDATOR_INDEX'   -H 'accept: application/json' 
+curl -X 'GET'   'http://127.0.0.1:5052/eth/v1/beacon/states/head/validators/YOUR_VALIDATOR_INDEX'   -H 'accept: application/json' 
 ```
