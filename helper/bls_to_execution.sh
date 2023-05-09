@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sudo apt install jq zenity -y
 # Prompt the user to select the deposit-JSON file using a file dialog
 json_file=$(zenity --file-selection --title="Select the deposit-JSON file")
 
