@@ -8,3 +8,10 @@ registry.gitlab.com/pulsechaincom/go-pulse:latest \
 --datadir /blockchain \
 snapshot prune-state
 ```
+
+
+### List keys currently validating with prysm
+
+```bash
+docker run --rm -it -v "${install_path}/wallet:/wallet" registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest accounts list --pulsechain-testnet-v4  --wallet-dir=/wallet --wallet-password-file=/wallet/pw.txt
+```
