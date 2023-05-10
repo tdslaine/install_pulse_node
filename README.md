@@ -33,14 +33,25 @@ Ethereum (ETH) &#x039E; : `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
 
 # - Installation Steps -
 
+### One command
+
+```bash
+sudo apt update && sudo apt install git -y && git clone https://github.com/tdslaine/install_pulse_node && cd install_pulse_node && chmod +x setup_pulse_node.sh && ./setup_pulse_node.sh
+```
+
+### Separate commands
 ### 1. Install Git** (if not already installed) 
 
 
 To install Git on a Unix-based system, you can use the package manager specific to your operating system. For example, on Ubuntu or Debian, you can use the following command:
 
-   ```bash
-   sudo apt-get install git
-   ```
+ ```bash
+   sudo apt update
+ ```
+ 
+```bash
+  sudo apt-get install git
+```
 ### 2. Clone the repository
 
 Open the terminal and navigate to the directory where you want to download the repository. Then, use the following command to clone the repository:
