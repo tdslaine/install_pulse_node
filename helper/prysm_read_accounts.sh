@@ -1,6 +1,9 @@
 #!/bin/bash
 
-source functions.sh
+start_dir=$(pwd)
+script_dir=$(dirname "$0")
+
+source "$script_dir/functions.sh"
 
 # Prompt the user to enter the installation path
 read -e -p "Enter the installation path (default: /blockchain): " INSTALL_PATH
