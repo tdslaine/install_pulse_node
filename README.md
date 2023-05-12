@@ -24,7 +24,7 @@ This streamlined approach ensures that you have a smooth and hassle-free setup e
 
 #####  I am currently validating on the testnet and am hoping to expand my validator node to the mainnet as well. Donations are appreciated and will help cover the costs of running and maintaining the validator node, including staking requirements and infrastructure expenses. If you're interested in contributing, you can make a donation. Thank you for your support!
 
-Ethereum (ETH) &#x039E; : `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
+Ethereum (ETH) &#x039E; & (PRC20) : `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
 
 ## |#| Prerequisites
 
