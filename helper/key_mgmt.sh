@@ -137,6 +137,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls
     sudo chmod -R 440 "${INSTALL_PATH}/validator_keys"
     echo "Import into existing Setup done."
     restart_tmux_logs_session
+    press_enter_to_continue
     exit 0
     
 }
@@ -214,6 +215,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls
     #sudo chmod 550 "${INSTALL_PATH}/validator_keys"
     echo "Import into existing Setup done."
     restart_tmux_logs_session
+    press_enter_to_continue
     exit 0
             
 }
@@ -294,6 +296,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls
     echo "Import into existing Setup done."
     #sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
     restart_tmux_logs_session
+    press_enter_to_continue
     exit 0
 }
     
