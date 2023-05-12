@@ -1,5 +1,3 @@
-#!/bin/bash
-
 start_dir=$(pwd)
 script_dir=$(dirname "$0")
 GREEN='\033[0;32m'
@@ -104,7 +102,8 @@ done
     echo "Starting staking-cli to Generate the new validator_keys"
     echo ""
 
-    ${INSTALL_PATH}/staking-deposit-cli/deposit.sh new-mnemonic \
+    cd ${INSTALL_PATH}/staking-deposit-cli
+    ./deposit.sh new-mnemonic \
     --mnemonic_language=english \
     --chain=${DEPOSIT_CLI_NETWORK} \
     --folder="${INSTALL_PATH}" \
