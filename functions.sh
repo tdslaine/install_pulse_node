@@ -759,12 +759,11 @@ script_launch() {
 
 main_menu() {
     while true; do
-        main_opt=$(dialog --stdout --title "Main Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
-                          "Logviewer" "Start different Logviewer" \
-                          "Clients Menu" "Execution, Beacon and Validator Clients" \
-                          "Validator & Key Setup" "Manage your Validator Keys" \
-                          "System" "Update, Reboot or Shutdown your system" \
-                          "-" ""\
+        main_opt=$(dialog --stdout --title "Main Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --ascii-lines --colors --menu "Choose an option:" 0 0 0 \
+                          "Logviewer" "Logviewer submenu" \
+                          "Client_actions" "Client actions submenu" \
+                          "Validator_Setup" "Validator Setup submenu" \
+                          "System" "System submenu" \
                           "exit" "Exit the program")
 
         case $? in
@@ -773,16 +772,14 @@ main_menu() {
                 "Logviewer")
                     logviewer_submenu
                     ;;
-                "Clients Menu")
+                "Client_actions")
                     client_actions_submenu
                     ;;
-                "Validator & Key Setup")
+                "Validator_Setup")
                     validator_setup_submenu
                     ;;
                 "System")
                     system_submenu
-                    ;;
-                "-")
                     ;;
                 "exit")
                     break
@@ -799,21 +796,18 @@ main_menu() {
 logviewer_submenu() {
     while true; do
         lv_opt=$(dialog --stdout --title "Logviewer Menu" --stdout --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
-                        "Tabbed-Terminal Logs" "Multiple Tabs" \
-                        "Tmux-Style Logs" "Single Window" \
-                        "-" ""\
+                        "single_logs" "Single logs" \
+                        "tmux_logs" "Tmux logs" \
                         "back" "Back to main menu")
 
         case $? in
           0)
             case $lv_opt in
-                "Tabbed-Terminal Logs")
-                    clear && script_launch "log_viewer.sh"
+                "single_logs")
+                    script_launch "log_viewer.sh"
                     ;;
-                "Tmux-Style Logs")
-                    clear && script_launch "tmux_logviewer.sh"
-                    ;;
-                "-")
+                "tmux_logs")
+                    script_launch "tmux_logviewer.sh"
                     ;;
                 "back")
                     break
@@ -829,44 +823,34 @@ logviewer_submenu() {
 
 client_actions_submenu() {
     while true; do
-        ca_opt=$(dialog --stdout --title "Client Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
-                        "Execution-Client Menu" ""\
-                        "Beacon-Client Menu" ""\
-                        "Validator-Client Menu" ""\
-                        "-" ""\
-                        "Start all Clients" ""\
-                        "Stop all Clients" ""\
-                        "Restart all Clients" ""\
-                        "Update all Clients" ""\
-                        "-" ""\
+        ca_opt=$(dialog --stdout --title "Client Actions Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+                        "Execution_Menu" "Execution" \
+                        "Beacon_Menu" "Beacon" \
+                        "Validator_Menu" "Validator" \
+                        "stop_clients" "Stop ALL clients" \
+                        "restart_clients" "Restart ALL clients" \
+                        "update_clients" "Update ALL clients" \
                         "back" "Back to main menu")
 
         case $? in
           0)
             case $ca_opt in
-                "Execution-Client Menu")
+                "Execution_Menu")
                     execution_submenu
                     ;;
-                "Beacon-Client Menu")
+                "Beacon_Menu")
                     beacon_submenu
                     ;;
-                "Validator-Client Menu")
+                "Validator_Menu")
                     validator_submenu
                     ;;
-                "-")
+                "stop_clients")
+                    script_launch "stop_docker.sh"
                     ;;
-                "Start all Clients")
-                    clear && ${CUSTOM_PATH}/start_execution.sh
-                    ${CUSTOM_PATH}/start_consensus.sh
-                    ${CUSTOM_PATH}//start_validator
+                "restart_clients")
+                    script_launch "restart_docker.sh"
                     ;;
-                "Stop all Clients")
-                    clear && script_launch "stop_docker.sh"
-                    ;;
-                "Restart all Clients")
-                    clear && script_launch "restart_docker.sh"
-                    ;;
-                "Update all Clients")
+                "update_clients")
                     script_launch "update_docker.sh"
                     ;;
                 "back")
@@ -883,40 +867,36 @@ client_actions_submenu() {
 
 execution_submenu() {
     while true; do
-        exe_opt=$(dialog --stdout --title "Execution-Client Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
-                        "Start Execution-Client" "" \
-                        "Stop Execution-Client" "" \
-                        "Restart Execution-Client" "" \
-                        "-" ""\
-                        "Edit Execution-Client Config" "" \
-                        "Show Logs" "" \
-                        "-" ""\
+        exe_opt=$(dialog --stdout --title "Execution Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+                        "start_execution" "Start Execution" \
+                        "stop_execution" "Stop Execution" \
+                        "restart_execution" "Restart Execution" \
+                        "show_logs" "show logs" \
+                        "Edit_Execution_Config" "Edit Execution config" \
                         "back" "Back to Client Actions Menu")
 
         case $? in
           0)
             case $exe_opt in
-                "Start Execution-Client")
-                    clear && ${CUSTOM_PATH}/start_execution.sh
+                "start_execution")
+                    ${CUSTOM_PATH}/start_execution.sh
                     ;;
-                "Stop Execution-Client")
-                    clear && sudo docker stop execution
+                "stop_execution")
+                    sudo docker stop execution
                     ssleep 1
                     sudo docker container prune -f
                     ;;
-                "Restart Execution-Client")
-                    clear && sudo docker stop execution
+                "restart_execution")
+                    sudo docker stop execution
                     sleep 1
                     sudo docker container prune -f
-                    clear && ${CUSTOM_PATH}/start_execution.sh
+                    ${CUSTOM_PATH}/start_execution.sh
                     ;;
-                 "Edit Execution-Client Config")
-                    clear && sudo nano "${CUSTOM_PATH}/start_execution.sh"
+                 "Edit_Execution_Config")
+                    sudo nano "${CUSTOM_PATH}/start_execution.sh"
                     ;;
-                 "Show Logs")
-                    clear && sudo docker logs -f execution
-                    ;;
-                "-")
+                 "show_logs")
+                    sudo docker logs -f execution
                     ;;
                 "back")
                     break
@@ -932,40 +912,36 @@ execution_submenu() {
 
 beacon_submenu() {
     while true; do
-        bcn_opt=$(dialog --stdout --title "Beacon-Client Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
-                        "Start Beacon-Client" "" \
-                        "Stop Beacon-Client" "" \
-                        "Restart Beacon-Client" "" \
-                        "-" ""\
-                        "Edit Beacon-Client Config" "" \
-                        "Show Logs" "" \
-                        "-" ""\
+        bcn_opt=$(dialog --stdout --title "Beacon Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+                        "start_beacon" "Start Beacon" \
+                        "stop_beacon" "Stop Beacon" \
+                        "restart_beacon" "Restart Beacon" \
+                        "Edit_Beacon_Config" "Edit Beacon config" \
+                        "show_logs" "show logs" \
                         "back" "Back to Client Actions Menu")
 
         case $? in
           0)
             case $bcn_opt in
-                "Start Beacon-Client")
-                    clear && ${CUSTOM_PATH}/start_consensus.sh
+                "start_beacon")
+                    ${CUSTOM_PATH}/start_consensus.sh
                     ;;
-                "Stop Beacon-Client")
-                    clear && sudo docker stop beacon 
+                "stop_beacon")
+                    sudo docker stop beacon 
                     sleep 1
                     sudo docker container prune -f
                     ;;
-                "Restart Beacon-Client")
-                    clear && sudo docker stop beacon
+                "restart_beacon")
+                    sudo docker stop beacon
                     sleep 1
                     sudo docker container prune -f
                     ${CUSTOM_PATH}/start_consensus.sh
                     ;;
-                 "Edit Beacon-Client Config")
-                    clear && sudo nano "${CUSTOM_PATH}/start_consensus.sh"
+                 "Edit_Beacon_Config")
+                    sudo nano "${CUSTOM_PATH}/start_consensus.sh"
                     ;;
-                 "Show Logs")
-                    clear && sudo docker logs -f beacon
-                    ;;
-                "-")
+                 "show_logs")
+                    sudo docker logs -f beacon
                     ;;
                 "back")
                     break
@@ -981,40 +957,36 @@ beacon_submenu() {
 
 validator_submenu() {
     while true; do
-        val_opt=$(dialog --stdout --title "Validator-Client Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
-                        "Start Validator-Client" ""\
-                        "Stop Validator-Client" ""\
-                        "Restart Validator-Client" ""\
-                        "-" ""\
-                        "Edit Validator-Client Config" ""\
-                        "Show Logs" ""\
-                        "-" ""\
+        val_opt=$(dialog --stdout --title "Validator Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+                        "start_validator" "Start Validator" \
+                        "stop_validator" "Stop Validator" \
+                        "restart_validator" "Restart Validator" \
+                        "Edit_Validator_Config" "Edit Validator config" \
+                        "show_logs" "show logs" \
                         "back" "Back to Client Actions Menu")
 
         case $? in
           0)
             case $val_opt in
-                "Start Validator-Client")
-                    clear && ${CUSTOM_PATH}/start_validator.sh
+                "start_validator")
+                    ${CUSTOM_PATH}/start_validator.sh
                     ;;
-                "Stop Validator-Client")${CUSTOM_PATH}/
-                    clear && sudo docker stop validator
+                "stop_validator")
+                    sudo docker stop validator
                     sleep 1
                     sudo docker container prune -f
                     ;;
-                "Restart Validator-Client")
-                    clear && sudo docker stop validator
+                "restart_validator")
+                    sudo docker stop validator
                     sleep 1
                     sudo docker container prune -f
-                    clear && ${CUSTOM_PATH}/start_validator.sh
+                    ${CUSTOM_PATH}/start_validator.sh
                     ;;
-                "Edit Validator Config")
-                    clear && sudo nano "${CUSTOM_PATH}/start_validator.sh"
+                "Edit_Validator_Config")
+                    sudo nano "${CUSTOM_PATH}/start_validator.sh"
                     ;;
-                "Show Logs")
-                    clear && sudo docker logs -f validator
-                    ;;
-                "-")
+                "show_logs")
+                    sudo docker logs -f validator
                     ;;
                 "back")
                     break
@@ -1031,40 +1003,26 @@ validator_submenu() {
 
 validator_setup_submenu() {
     while true; do
-        options=("Key Managment" "Generate, Add, Import or Restore Validator-Keys" \
-                 "-" "" \
-                 "Convert BLS-Keys" "00-BLS to 01-Execution Wallet conversion" \
-                 "Exit your Validator(s)" "Initiate the Exit of your Validator(s)" \
-                 "-" "" \
-                 "Prysm - List Accounts" "List all Accounts from the Validator DB" \
-                 "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
-                 "-" "" \
-                 "ReRun Initial Setup" "" \
-                 "-" ""\
+        options=("Validator_Setup" "Validator Setup; Generate/Add/Import/Restore/EXIT" \
+                 "Convert_BLS_to_Execution_Key" "Convert 00-BLS to 01-Execution Key" \
+                 "Prysm_List_Accounts" "List all Accounts from the Validator DB" \
+                 "Prysm_Delete_Validator_from_DB" "Prysm - Delete/Remove Accounts from Validator" \
                  "back" "Back to main menu; Return to the main menu.")
         vs_opt=$(dialog --stdout --title "Node/Validator Setup Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
         case $? in
             0)
                 case $vs_opt in
-                    "Key Managment")
-                        clear && script_launch "key_mgmt.sh"
+                    "Validator_Setup")
+                        script_launch "setup_validator.sh"
                         ;;
-                    "-")
+                    "Convert_BLS_to_Execution_Key")
+                        script_launch "bls_to_execution.sh"
                         ;;
-                    "Convert BLS to Execution Key")
-                        clear && script_launch "bls_to_execution.sh"
+                    "Prysm_List_Accounts")
+                        script_launch "prysm_read_accounts.sh"
                         ;;
-                    "Exit Validator")
-                        clear && script_launch "exit_validator.sh"
-                        ;;
-                    "Prysm - List Accounts")
-                        clear && script_launch "prysm_read_accounts.sh"
-                        ;;
-                    "Prysm - Delete Validator")
-                        clear && script_launch "prysm_delete_validator.sh"
-                        ;;
-                    "ReRun Initial Setup")
-                        clear && script_launch "setup_validator.sh"
+                    "Prysm_Delete_Validator_from_DB")
+                        script_launch "prysm_delete_validator.sh"
                         ;;
                     "back")
                         break
@@ -1082,25 +1040,22 @@ validator_setup_submenu() {
 system_submenu() {
     while true; do
         sys_opt=$(dialog --stdout --title "System Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
-                        "Update System" "" \
-                        "Reboot Sytem" "" \
-                        "Shutdown System" "" \
-                        "-" ""\
+                        "update_system" "Update system" \
+                        "reboot_system" "Reboot system" \
+                        "shutdown_system" "Shutdown system" \
                         "back" "Back to main menu")
 
         case $? in
           0)
             case $sys_opt in
-                "Update System")
-                    clear && sudo apt-get update && sudo apt-get upgrade -y
+                "update_system")
+                    sudo apt-get update && sudo apt-get upgrade -y
                     ;;
-                "Reboot Sytem")
+                "reboot_system")
                     sudo reboot now
                     ;;
-                "Shutdown Sytem")
+                "shutdown_system")
                     sudo shutdown now
-                    ;;
-                "-")
                     ;;
                 "back")
                     break
