@@ -14,6 +14,19 @@ LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
 # Deposti CLI network
 DEPOSIT_CLI_NETWORK="pulsechain-testnet-v4"
 
+#Mainnet, just prepping - dont know if these are actually the final flags to use !!!
+# Checkpoint sync url
+#CHECKPOINT="https://checkpoint.pulsechain.com"
+# Launchpad URL
+#LAUNCHPAD_URL="https://launchpad.pulsechain.com"
+# Execution Network FLAG
+#EXECUTION_NETWORK_FLAG="pulsechain"
+# PRYSM Network FLAG
+#PRYSM_NETWORK_FLAG="pulsechain"
+# Lighthouse Network FLAG
+#LIGHTHOUSE_NETWORK_FLAG="pulsechain"
+# Deposti CLI network
+#DEPOSIT_CLI_NETWORK="pulsechain"
 
 
 function logviewer_prompt() {
