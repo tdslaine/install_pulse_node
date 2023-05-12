@@ -1,6 +1,9 @@
 #!/bin/bash
 
-source functions.sh
+start_dir=$(pwd)
+script_dir=$(dirname "$0")
+
+source "$script_dir/functions.sh"
 
 sudo docker stop delete_valdator && sudo docker container prune -f  > /dev/null 2>&1
 echo "We will have to stop the validator coontainer first..."
