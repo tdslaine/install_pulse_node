@@ -54,7 +54,6 @@ echo "
 | .__/ \__,_|_|___/\___| \_|  |_/\__,_|_|_| |_|_| |_|\___|\__|
 | |                                                           
 |_|   donations: 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA                     
-
 "
 echo "Please press Enter to continue..."
 read -p ""
