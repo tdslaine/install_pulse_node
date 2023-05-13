@@ -348,14 +348,19 @@ For example for geth it would be: https://gitlab.com/pulsechaincom/go-pulse/cont
 
 
 
-### Ressources:
+### Resources:
 
-official gitlab: https://gitlab.com/pulsechaincom
+Official Homepage: https://pulsechain.com/
 
-validator launchpad: https://launchpad.pulsechain.com/en/overview
+Official Gitlab: https://gitlab.com/pulsechaincom
 
-pulsedev telegram: https://t.me/PulseDEV
+Validator-Launchpad: https://launchpad.pulsechain.com/en/overview
 
+Checkpoint: https://checkpoint.pulsechain.com/
+
+Pulsedev Telegram: https://t.me/PulseDEV
+
+--------------------------------------------------------------------------------------------
 
 ssh: https://www.digitalocean.com/community/tutorials/how-to-harden-openssh-on-ubuntu-20-04
 
