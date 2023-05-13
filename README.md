@@ -352,7 +352,7 @@ For example for geth it would be: https://gitlab.com/pulsechaincom/go-pulse/cont
 
 official gitlab: https://gitlab.com/pulsechaincom
 
-validator launchpad: https://launchpad.v4.testnet.pulsechain.com/en/overview
+validator launchpad: https://launchpad.pulsechain.com/en/overview
 
 pulsedev telegram: https://t.me/PulseDEV
 
