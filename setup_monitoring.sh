@@ -297,7 +297,7 @@ sudo wget -qO "${config_location}/Dashboards/003_System_dashboard.json" -P "${co
 if [[ "$client_choice" == "1" ]]; then
   sudo wget -O "${config_location}/Dashboards/004_Lighthouse_beacon_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/Summary.json >/dev/null
   sudo wget -O "${config_location}/Dashboards/005_Lighthouse_validator_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/sigp/lighthouse-metrics/master/dashboards/ValidatorClient.json
-  sudo wget -O "${config_location}/Dashboards/001_Staking_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/raskitoma/pulse-staking-dashboard/main/Yoldark_ETH_staking_dashboard.json
+  sudo wget -O "${config_location}/Dashboards/001_Staking_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/tdslaine/pulse-staking-dashboard/main/Yoldark_ETH_staking_dashboard.json
 
 elif [[ "$client_choice" == "2" ]]; then
   sudo wget -qO "${config_location}/Dashboards/001_Prysm_dashboard.json" -P "${config_location}/Dashboards" https://raw.githubusercontent.com/GuillaumeMiralles/prysm-grafana-dashboard/master/less_10_validators.json >/dev/null
