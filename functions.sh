@@ -853,7 +853,7 @@ client_actions_submenu() {
                 "Start all Clients")
                     clear && ${CUSTOM_PATH}/start_execution.sh
                     ${CUSTOM_PATH}/start_consensus.sh
-                    ${CUSTOM_PATH}/start_validator
+                    ${CUSTOM_PATH}/start_validator.sh
                     ;;
                 "Stop all Clients")
                     clear && script_launch "stop_docker.sh"
