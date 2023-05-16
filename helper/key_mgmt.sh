@@ -308,7 +308,7 @@ echo "|           Validator Key Setup         |"
 echo "-----------------------------------------"
 echo ""
 PS3=$'\nChoose an option (1-4): '
-options=("Generate new validator_keys (fresh)" "Import/Restore validator_keys from a Folder (from Offline generation or Backup)" "Restore or add from a Seed Phrase (Mnemonic) " "Exit/Cancel")
+options=("Generate new validator_keys (fresh)" "Import/Restore validator_keys from a Folder (from Offline generation or Backup)" "Restore or Add from a Seed Phrase (Mnemonic) " "Exit/Cancel")
 COLUMNS=1
 select opt in "${options[@]}"
 
