@@ -776,6 +776,7 @@ main_menu() {
                 "-")
                     ;;
                 "exit")
+                    clear
                     break
                     ;;
             esac
