@@ -1,20 +1,16 @@
 
 #Vars for network:
 
-# Checkpoint sync url
+# TESTNET v4- UNCOMMENT TO USE
+
 #CHECKPOINT="https://checkpoint.v4.testnet.pulsechain.com"
-# Launchpad URL
 #LAUNCHPAD_URL="https://launchpad.v4.testnet.pulsechain.com"
-# Execution Network FLAG
 #EXECUTION_NETWORK_FLAG="pulsechain-testnet-v4"
-# PRYSM Network FLAG
 #PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
-# Lighthouse Network FLAG
 #LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
-# Deposti CLI network
 #DEPOSIT_CLI_NETWORK="pulsechain-testnet-v4"
 
-#Mainnet, just prepping - dont know if these are actually the final flags to use !!!
+# MAINNET - add # if you want to use the Testnet v4 from above
 # Checkpoint sync url
 CHECKPOINT="https://checkpoint.pulsechain.com"
 # Launchpad URL
