@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# v.1
+# v.1.1
 
 #Icosa, Hex, Hedron,
 #Three shapes in symmetry dance,
@@ -40,31 +40,32 @@ function get_user_choices() {
         exit 0
     fi
 
-    echo ""
-    echo "-----------------------------------------"
-    echo "             Choose a Mode               "
-    echo "-----------------------------------------"
-    echo ""
-    echo "1. Initial Validator Setup - only for first time setup"
-    echo "2. Adding, Importing, or Restoring to an Existing Setup"
-    echo "3. Exit an Validator"
-    echo ""
-    echo "0. Return or Exit"
-    echo ""
-    read -p "Enter your choice (1, 2, 3 or 0): " setup_choice
-    
-    # Validate user input for setup choice
-    while [[ ! "$setup_choice" =~ ^[0-3]$ ]]; do
-        echo "Invalid input. Please enter a valid choice (1, 2, 3 or 0): "
-        read -p "Enter your choice (1, 2, 3 or 0): " setup_choice
-    done
-    
-    if [[ "$setup_choice" == "0" ]]; then
-        echo "Exiting..."
-        exit 0
-    fi
-
-    echo "${client_choice} ${setup_choice}"
+#    echo ""
+#    echo "-----------------------------------------"
+#    echo "             Choose a Mode               "
+#    echo "-----------------------------------------"
+#    echo ""
+#    echo "1. Initial Validator Setup - only for first time setup"
+#    echo ""    
+#    echo "2. Adding, Importing, or Restoring to an Existing Setup"
+#    echo "" 
+#    echo ""
+#    echo "0. Return or Exit"
+#    echo ""
+#    read -p "Enter your choice (1, 2, 3 or 0): " setup_choice
+#    
+#    # Validate user input for setup choice
+#    while [[ ! "$setup_choice" =~ ^[0-2]$ ]]; do
+#        echo "Invalid input. Please enter a valid choice (1, 2 or 0): "
+#        read -p "Enter your choice (1, 2 or 0): " setup_choice
+#    done
+#    
+#    if [[ "$setup_choice" == "0" ]]; then
+#        echo "Exiting..."
+#        exit 0
+#    fi
+#
+#    echo "${client_choice} ${setup_choice}"
 }
 
 # Main Setup Starts here ################################################################
@@ -90,35 +91,35 @@ tab_autocomplete
 # Checking for installed/Required software
 common_task_software_check
 
-if [[ "$setup_choice" == "3" ]]; then       # exit validator
-    if [[ "$client_choice" == "1" ]]; then  # lighthouse
-                get_install_path
-        while true; do
-                start_script "../start_validator" > /dev/null 2>&1
-                exit_validator_LH
-                #echo "debug: exit validator done"
-                stop_docker_container "exit_validator" > /dev/null 2>&1
-                sudo docker container prune -f > /dev/null 2>&1
-            press_enter_to_continue
-        read -p "Would you like to exit another Validator? (y/n): " user_input
-        if [[ "${user_input,,}" == "n" ]]; then
-            break
-                   fi
-       done
-       exit 0 
-    elif [[ "$client_choice" == "2" ]]; then  # PRYSM
-                get_install_path
-                start_script "../start_validator" > /dev/null 2>&1
-                exit_validator_PR
-                #echo "exiting validator done"
-                stop_docker_container "exit_validator" > /dev/null 2>&1
-                sudo docker container prune -f > /dev/null 2>&1
-                sudo docker restart validator
-                press_enter_to_continue
-            exit 0
-        fi
-
-fi
+#if [[ "$setup_choice" == "3" ]]; then       # exit validator
+#    if [[ "$client_choice" == "1" ]]; then  # lighthouse
+#                get_install_path
+#        while true; do
+#                start_script "../start_validator" > /dev/null 2>&1
+#                exit_validator_LH
+#                #echo "debug: exit validator done"
+#                stop_docker_container "exit_validator" > /dev/null 2>&1
+#                sudo docker container prune -f > /dev/null 2>&1
+#            press_enter_to_continue
+#        read -p "Would you like to exit another Validator? (y/n): " user_input
+#        if [[ "${user_input,,}" == "n" ]]; then
+#            break
+#                   fi
+#       done
+#       exit 0 
+#    elif [[ "$client_choice" == "2" ]]; then  # PRYSM
+#                get_install_path
+#                start_script "../start_validator" > /dev/null 2>&1
+#                exit_validator_PR
+#                #echo "exiting validator done"
+#                stop_docker_container "exit_validator" > /dev/null 2>&1
+#                sudo docker container prune -f > /dev/null 2>&1
+#                sudo docker restart validator
+#                press_enter_to_continue
+#            exit 0
+#        fi
+#
+#fi
 
 # Add "validator" user to system and docker-grp
 create_user "validator"  >/dev/null 2>&1
@@ -127,12 +128,12 @@ create_user "validator"  >/dev/null 2>&1
 
 # Prompt User for Set up installation path
 
-if [[ "$setup_choice" == "1" ]]; then      # initial
+#if [[ "$setup_choice" == "1" ]]; then      # initial
         set_install_path
-    elif [[ "$setup_choice" == "2" ]]; then # add to
-        get_install_path
+#    elif [[ "$setup_choice" == "2" ]]; then # add to
+#        get_install_path
     
-fi
+#fi
 
 
 
@@ -143,7 +144,7 @@ clone_staking_deposit_cli "${INSTALL_PATH}"
 
 # Create PRYSM-Wallet pw.txt if First-Time Setup and User choose Prysm-Client
 
-    if [[ "$setup_choice" == "1" ]]; then
+    #if [[ "$setup_choice" == "1" ]]; then
         if [[ "$client_choice" == "2" ]]; then
             create_subfolder "wallet"
             create_prysm_wallet_password
@@ -151,7 +152,7 @@ clone_staking_deposit_cli "${INSTALL_PATH}"
             #sudo chmod -R g+x "$INSTALL_PATH/wallet"
             sudo chown $main_user: "$INSTALL_PATH/wallet"
         fi
-    fi 
+    #fi 
 
 sudo groupadd pls-validator
 
@@ -178,11 +179,11 @@ generate_new_validator_key() {
         check_and_pull_prysm_validator
     fi
 
-    if [[ "$setup_choice" == "2" ]]; then
-    echo "Adding into an existing setup requires all running validator-clients to stop. This action will take place now."
-    press_enter_to_continue
-    stop_docker_container "validator" >/dev/null 2>&1
-    fi
+    #if [[ "$setup_choice" == "2" ]]; then
+    #echo "Adding into an existing setup requires all running validator-clients to stop. This action will take place now."
+    #press_enter_to_continue
+    #stop_docker_container "validator" >/dev/null 2>&1
+    #fi
 
     clear
 
@@ -269,15 +270,15 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sud
 sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 
 
-    if [[ "$setup_choice" == "2" ]]; then
-    start_script ../start_validator
+    #if [[ "$setup_choice" == "2" ]]; then
+    #start_script ../start_validator
     
-    echo ""
-    sudo chmod -R 440 "${INSTALL_PATH}/validator_keys"
-    echo "Import into existing Setup done."
-    restart_tmux_logs_session
-    exit 0
-    fi
+    #echo ""
+    #sudo chmod -R 440 "${INSTALL_PATH}/validator_keys"
+    #echo "Import into existing Setup done."
+    #restart_tmux_logs_session
+    #exit 0
+    #fi
     
 }
 
@@ -290,11 +291,11 @@ import_restore_validator_keys() {
         check_and_pull_prysm_validator
     fi
 
-    if [[ "$setup_choice" == "2" ]]; then
-    echo "Importing into an existing setup requires all running validator-clients to stop. This action will take place now."
-    press_enter_to_continue
-    stop_docker_container "validator" >/dev/null 2>&1
-    fi
+    #if [[ "$setup_choice" == "2" ]]; then
+    #echo "Importing into an existing setup requires all running validator-clients to stop. This action will take place now."
+    #press_enter_to_continue
+   # stop_docker_container "validator" >/dev/null 2>&1
+   # fi
 
 
     while true; do
@@ -348,15 +349,15 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sud
 sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 
 
-    if [[ "$setup_choice" == "2" ]]; then          
-    start_script ../start_validator
+    #if [[ "$setup_choice" == "2" ]]; then          
+    #start_script ../start_validator
     
-    echo ""
+    #echo ""
     #sudo chmod 550 "${INSTALL_PATH}/validator_keys"
-    echo "Import into existing Setup done."
-    restart_tmux_logs_session
-    exit 0
-    fi
+    #echo "Import into existing Setup done."
+    #restart_tmux_logs_session
+    #exit 0
+    #fi
             
 }
 
@@ -372,11 +373,11 @@ Restore_from_MN() {
         check_and_pull_prysm_validator
     fi
 
-    if [[ "$setup_choice" == "2" ]]; then
-    echo "Importing into an existing setup requires all running validator-clients to stop. This action will take place now."
-    press_enter_to_continue
-    stop_docker_container "validator" >/dev/null 2>&1
-    fi
+    #if [[ "$setup_choice" == "2" ]]; then
+    #echo "Importing into an existing setup requires all running validator-clients to stop. This action will take place now."
+    #press_enter_to_continue
+    #stop_docker_container "validator" >/dev/null 2>&1
+    #fi
     
     clear
 
@@ -431,15 +432,15 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sud
 sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 
 
-    if [[ "$setup_choice" == "2" ]]; then          
-    start_script ../start_validator
-    
-    echo ""
-    echo "Import into existing Setup done."
-    #sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
-    restart_tmux_logs_session
-    exit 0
-    fi
+    #if [[ "$setup_choice" == "2" ]]; then          
+    #start_script ../start_validator
+   # 
+   # echo ""
+   # echo "Import into existing Setup done."
+   # #sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
+   # restart_tmux_logs_session
+   # exit 0
+   # fi
 }
     
 
@@ -450,7 +451,7 @@ echo "|           Validator Key Setup         |"
 echo "-----------------------------------------"
 echo ""
 PS3=$'\nChoose an option (1-3): '
-options=("Generate new validator_keys (fresh)" "Import/Restore validator_keys from a Folder (from Offline generation or Backup)" "Restore or add from a Seed Phrase (Mnemonic) to current or initial setup")
+options=("Generate new validator_keys (fresh)" "Import/Restore validator_keys from a Folder (from Offline generation or Backup)" "Restore or Add from a Seed Phrase (Mnemonic) to current or initial setup")
 COLUMNS=1
 select opt in "${options[@]}"
 
@@ -477,7 +478,7 @@ done
 
 # Code from here is for fresh-install only to generate the start_validator.sh launch script.
 
-if [[ "$setup_choice" == "1" ]]; then
+#if [[ "$setup_choice" == "1" ]]; then
 
 echo "Gathering data for the Validator-Client, data will be used to generate the start_validator script"
 
