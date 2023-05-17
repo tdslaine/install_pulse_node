@@ -497,13 +497,13 @@ EOL
 if [ "$CONSENSUS_CLIENT" = "prysm" ]; then
 sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest
 sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse/prysmctl:latest
-  cat > start_consensus.sh << EOL
+  cat >> start_consensus.sh << EOL
 ${PRYSM_CMD}
 
 EOL
 elif [ "$CONSENSUS_CLIENT" = "lighthouse" ]; then
 sudo docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
-  cat > start_consensus.sh << EOL
+  cat >> start_consensus.sh << EOL
 ${LIGHTHOUSE_CMD}
 
 EOL
