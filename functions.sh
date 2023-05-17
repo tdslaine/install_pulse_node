@@ -1108,7 +1108,7 @@ system_submenu() {
     while true; do
         sys_opt=$(dialog --stdout --title "System Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                         "Update System" "" \
-                        "Reboot Sytem" "" \
+                        "Reboot System" "" \
                         "Shutdown System" "" \
                         "-" ""\
                         "back" "Back to main menu")
@@ -1119,10 +1119,10 @@ system_submenu() {
                 "Update System")
                     clear && sudo apt-get update && sudo apt-get upgrade -y
                     ;;
-                "Reboot Sytem")
+                "Reboot System")
                     sudo reboot now
                     ;;
-                "Shutdown Sytem")
+                "Shutdown System")
                     sudo shutdown now
                     ;;
                 "-")
