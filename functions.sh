@@ -1,28 +1,61 @@
 
 #Vars for network:
 
-# TESTNET v4- UNCOMMENT TO USE
+set_network_variables() {
+  if [[ $1 == "testnet" ]]; then
+    CHECKPOINT="https://checkpoint.v4.testnet.pulsechain.com"
+    LAUNCHPAD_URL="https://launchpad.v4.testnet.pulsechain.com"
+    EXECUTION_NETWORK_FLAG="pulsechain-testnet-v4"
+    PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
+    LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
+    DEPOSIT_CLI_NETWORK="pulsechain-testnet-v4"
+  else
+    CHECKPOINT="https://checkpoint.pulsechain.com"
+    LAUNCHPAD_URL="https://launchpad.pulsechain.com"
+    EXECUTION_NETWORK_FLAG="pulsechain"
+    PRYSM_NETWORK_FLAG="pulsechain"
+    LIGHTHOUSE_NETWORK_FLAG="pulsechain"
+    DEPOSIT_CLI_NETWORK="pulsechain"
+  fi
 
-#CHECKPOINT="https://checkpoint.v4.testnet.pulsechain.com"
-#LAUNCHPAD_URL="https://launchpad.v4.testnet.pulsechain.com"
-#EXECUTION_NETWORK_FLAG="pulsechain-testnet-v4"
-#PRYSM_NETWORK_FLAG="pulsechain-testnet-v4"
-#LIGHTHOUSE_NETWORK_FLAG="pulsechain_testnet_v4"
-#DEPOSIT_CLI_NETWORK="pulsechain-testnet-v4"
+  export CHECKPOINT
+  export LAUNCHPAD_URL
+  export EXECUTION_NETWORK_FLAG
+  export PRYSM_NETWORK_FLAG
+  export LIGHTHOUSE_NETWORK_FLAG
+  export DEPOSIT_CLI_NETWORK
+}
+clear 
+check_and_set_network_variables() {
+  if [[ -z $EXECUTION_NETWORK_FLAG ]]; then
+    echo ""
+    echo "+-----------------+"
+    echo "| Choose network: |"
+    echo "+-----------------+"
+    echo "| 1) Mainnet      |"
+    echo "|                 |"
+    echo "| 2) Testnet      |"
+    echo "+-----------------+"
+    echo ""
+    read -p "Enter your choice (1 or 2): " -r choice
+    echo ""
 
-# MAINNET - add # if you want to use the Testnet v4 from above
-# Checkpoint sync url
-CHECKPOINT="https://checkpoint.pulsechain.com"
-# Launchpad URL
-LAUNCHPAD_URL="https://launchpad.pulsechain.com"
-# Execution Network FLAG
-EXECUTION_NETWORK_FLAG="pulsechain"
-# PRYSM Network FLAG
-PRYSM_NETWORK_FLAG="pulsechain"
-# Lighthouse Network FLAG
-LIGHTHOUSE_NETWORK_FLAG="pulsechain"
-# Deposti CLI network
-DEPOSIT_CLI_NETWORK="pulsechain"
+    case $choice in
+      1)
+        set_network_variables "mainnet"
+        ;;
+      2)
+        set_network_variables "testnet"
+        ;;
+      *)
+        echo "Invalid choice. Exiting."
+        exit 1
+        ;;
+    esac
+  fi
+}
+
+
 
 
 function logviewer_prompt() {
@@ -356,7 +389,7 @@ function clone_staking_deposit_cli() {
 
     # Check if the staking-deposit-cli folder already exists
     if [ -d "${target_directory}/staking-deposit-cli" ]; then
-        read -p "The staking-deposit-cli folder already exists. Do you want to delete it and clone the latest version? (y/n): " confirm_delete
+        read -p "The staking-deposit-cli folder already exists. Do you want to delete it and clone the latest version? (y/N): " confirm_delete
         if [ "$confirm_delete" == "y" ] || [ "$confirm_delete" == "Y" ]; then
             sudo rm -rf "${target_directory}/staking-deposit-cli"
         else
