@@ -1,5 +1,10 @@
 #!/bin/bash
 
+start_dir=$(pwd)
+script_dir=$(dirname "$0")
+source "$script_dir/functions.sh"
+check_and_set_network_variables
+
 sudo apt install jq zenity -y
 # Prompt the user to select the deposit-JSON file using a file dialog
 json_file=$(zenity --file-selection --title="Select the deposit-JSON file you wish to exit and scan it for pubkey/bls-withdrawal creds: ")
@@ -38,12 +43,12 @@ echo ""
 echo " - Path to your Blockchain installation"
 echo " - Mnemonic you used to create the validator"
 echo " - Starting index for the keys you want to convert (usually 0)"
-echo " - The Validator index as shown on the pls-beacon-explorer https://beacon.v4.testnet.pulsechain.com/"
+echo " - The Validator index as shown on the pls-beacon-explorer ${LAUNCHPAD_URL}"
 echo " - BLS withdrawal-Credentials (starting with 00)"
 echo " - the new execution withdrawal wallet "
 echo ""
 echo "Note: you can enter multiple values, sepperated with a comma"
-echo "      you can get your BLS-Withdrawal Credential above or via https://launchpad.v4.testnet.pulsechain.com/en/withdrawals"
+echo "      you can get your BLS-Withdrawal Credential above or via ${LAUNCHPAD_URL}/en/withdrawals"
 echo ""
 
 read -e -p "Please enter your installation folder (default: /blockchain): " install_path 
@@ -68,7 +73,7 @@ python3 setup.py install > /dev/null 2>&1
 pip3 install -r requirements.txt > /dev/null 2>&1
 
 ./deposit.sh --language english generate-bls-to-execution-change \
---chain pulsechain-testnet-v4
+--chain ${DEPOSIT_CLI_NETWORK}
 
 
 echo "copying over the conversion files"
