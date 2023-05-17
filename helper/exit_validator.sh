@@ -8,6 +8,7 @@ script_dir=$(dirname "$0")
 source "$script_dir/functions.sh"
 
 tab_autocomplete
+check_and_set_network_variables
 
 function get_user_choices() {
     echo "-----------------------------------------"
