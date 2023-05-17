@@ -14,6 +14,12 @@ snapshot prune-state
 #sudo docker stop geth_prun && sudo docker container prune -f
 ```
 ### Show Version
+
+###### Prysm
+```bash
+docker exec -it beacon /app/cmd/beacon-chain/beacon-chain --version
+```
+
 ###### Lighthouse
 ```bash
 curl -X GET "http://localhost:5052/eth/v1/node/version" -H 'accept: application/json' | jq
