@@ -8,18 +8,24 @@ source "$script_dir/functions.sh"
 
 get_main_user
 tab_autocomplete
+check_and_set_network_variables
 get_install_path
 
+
 function get_user_choices() {
-    echo "-----------------------------------------"
-    echo "       Choose your Validator Client      "
-    echo "-----------------------------------------"
-    echo "(based on your consensus/beacon Client)"
     echo ""
-    echo "1. Lighthouse"
-    echo "2. Prysm"
-    echo ""
-    echo "0. Return or Exit"
+    echo "+--------------------------------------------+"
+    echo "| Choose your Validator Client               |"
+    echo "|                                            |"
+    echo "| (based on your consensus/beacon Client)    |"
+    echo "+--------------------------------------------+"
+    echo "| 1. Lighthouse                              |"
+    echo "|                                            |"
+    echo "| 2. Prysm                                   |"
+    echo "+--------------------------------------------+"
+    echo "| 0. Return or Exit                          |"
+    echo "+--------------------------------------------+"
+
     echo ""
     read -p "Enter your choice (1, 2 or 0): " client_choice
 
@@ -111,8 +117,8 @@ done
 
 
     cd "${INSTALL_PATH}"
-    sudo chmod -R 770 "${INSTALL_PATH}/validator_keys" > /dev/null 2>&1 
-    sudo chmod -R 770 "${INSTALL_PATH}/wallet" > /dev/null 2>&1 
+    sudo chmod -R 770 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
+    sudo chmod -R 770 "${INSTALL_PATH}/wallet" >/dev/null 2>&1
 
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
@@ -124,10 +130,9 @@ done
     elif [[ "$client_choice" == "2" ]]; then
         import_prysm_validator
     fi
-    
-sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
-sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 770 {} \;
-sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 774 {} \;
+
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
 sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 
 
@@ -135,6 +140,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls
     start_script ../start_validator
     
     echo ""
+    sudo chmod -R 440 "${INSTALL_PATH}/validator_keys"
     echo "Import into existing Setup done."
     restart_tmux_logs_session
     press_enter_to_continue
@@ -194,8 +200,8 @@ import_restore_validator_keys() {
     echo "Importing validator keys now"
     echo ""
 
-    sudo chmod -R 770 "${INSTALL_PATH}/validator_keys" > /dev/null 2>&1 
-    sudo chmod -R 770 "${INSTALL_PATH}/wallet" > /dev/null 2>&1 
+    sudo chmod -R 770 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
+    sudo chmod -R 770 "${INSTALL_PATH}/wallet" >/dev/null 2>&1
     
     if [[ "$client_choice" == "1" ]]; then
         import_lighthouse_validator
@@ -203,9 +209,8 @@ import_restore_validator_keys() {
         import_prysm_validator
     fi
 
-sudo chmod -R 770 "${INSTALL_PATH}/validator_keys"
-sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 770 {} \;
-sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 774 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
+sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
 sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 
 
@@ -263,8 +268,8 @@ Restore_from_MN() {
     echo ""
     
     cd "${INSTALL_PATH}"
-    sudo chmod -R 777 "${INSTALL_PATH}/validator_keys" > /dev/null 2>&1 
-    sudo chmod -R 777 "${INSTALL_PATH}/wallet" > /dev/null 2>&1 
+    sudo chmod -R 777 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
+    sudo chmod -R 777 "${INSTALL_PATH}/wallet" >/dev/null 2>&1
        
     cd ${INSTALL_PATH}/staking-deposit-cli/
     ./deposit.sh existing-mnemonic \
