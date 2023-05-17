@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# v.1
+# v.1.1
 
 #Icosa, Hex, Hedron,
 #Three shapes in symmetry dance,
@@ -95,6 +95,30 @@ echo -e "+--------------------------------------------+"
 echo -e "\033[0m"
 
 press_enter_to_continue
+clear
+echo "+=================+"
+echo "| Choose Network: |"
+echo "+=================+"
+echo "| 1) Mainnet      |"
+echo "|                 |"
+echo "| 2) Testnet      |"
+echo "+-----------------+"
+echo ""
+read -p "Enter your Network choice (1 or 2): " -r choice
+
+case $choice in
+  1)
+    set_network_variables "mainnet"
+    ;;
+  2)
+    set_network_variables "testnet"
+    ;;
+  *)
+    echo "Invalid choice. Exiting."
+    exit 1
+    ;;
+esac
+
 
 
 #enabling ntp for timesyncronization
@@ -116,23 +140,26 @@ echo "timezone set"
 sleep 1
 echo ""
 clear
-echo "Please choose a node option:"
-echo ""
-echo "1) Geth (full node, faster sync time.)"
-echo "   Recommended for normal usage, stores all transactions and the most recent states"
-echo ""
-echo "2) Erigon (archive node, longer sync time.)"
-echo "   Recommended for developers and advanced users,"
-echo "   stores the entire history of the Ethereum blockchain, including all historical states"
-echo ""
-echo ""
-echo "3) Erigon (pruned to keep last 2000 blocks)"
-echo "   WARNING !: Still testing if this is beneficial over geth so use with caution."
-echo "   no guarantee this will work. It will only keep the last 2000 blocks"
-echo ""
+echo "+=============================================================+"
+echo "| Please choose a Execution-Client:                           |"
+echo "+=============================================================+"
+echo "| 1) Geth (full node, faster sync time.)                      |"
+echo "|    Recommended for normal usage, stores all transactions    |"
+echo "|    and the most recent states                               |"
+echo "+-------------------------------------------------------------+"
+echo "| 2) Erigon (archive node, longer sync time.)                 |"
+echo "|    Recommended for developers and advanced users,           |"
+echo "|    stores the entire history of the Ethereum blockchain,    |"
+echo "|    including all historical states                          |"
+echo "+-------------------------------------------------------------+"
+echo "| 3) Erigon (pruned to keep last 2000 blocks)                 |"
+echo "|    WARNING !: Still testing if this is beneficial over geth |"
+echo "|    so use with caution. No guarantee this will work.        |"
+echo "|    It will only keep the last 2000 blocks                   |"
+echo "+-------------------------------------------------------------+"
 echo ""
 while true; do
-  read -e -p "Enter the ETH client choice (1, 2, or 3): " ETH_CLIENT_CHOICE
+  read -e -p "Enter your Client choice (1, 2, or 3): " ETH_CLIENT_CHOICE
   case $ETH_CLIENT_CHOICE in
     1)
       ETH_CLIENT="geth"
@@ -154,10 +181,16 @@ done
 
 
 while true; do
-  echo "Choose your Consensus client:"
-  echo "1) Lighthouse"
-  echo "2) Prysm"
-  read -p "Enter the number (1 or 2): " CONSENSUS_CLIENT_CHOICE
+  echo ""
+  echo ""
+  echo -e "+===================================+"
+  echo -e "| Choose your Consensus client:     |"
+  echo -e "+===================================+"
+  echo -e "| 1) Lighthouse                     |"
+  echo -e "| 2) Prysm                          |"
+  echo -e "+-----------------------------------+"
+  echo ""
+  read -p "Enter your Client choice (1 or 2): " CONSENSUS_CLIENT_CHOICE
 
   case $CONSENSUS_CLIENT_CHOICE in
     1)
@@ -178,18 +211,23 @@ done
 if [ -n "$BASH_VERSION" ] && [ -n "$PS1" ] && [ -t 0 ]; then
   bind '"\t":menu-complete'
 fi
-
+clear
 
 # Get custom path for the blockchain folder
-read -e -p $'\nThe following setup will be installed under the custom path you specified.\nIt includes the creation of an execution and a consensus folder, where the databases, the keystore, and the different startup scripts will be located.\nAdditionally, the jwt-secret file will be created in this path.\n \n Setup the installation path (default: /blockchain): '  CUSTOM_PATH
+echo ""
+echo -e "+===============================================================+"
+echo -e "| Node/Clients and all required DataFolders/files will be       |"
+echo -e "| installed under the specified path. It includes databases,    |"
+echo -e "| keystore, and various startup/helper scripts.                 |"
+echo -e "+===============================================================+"
+echo ""
+read -e -p 'Enter target path (Press Enter for default: /blockchain): ' CUSTOM_PATH
+echo ""
 
 # Set the default value for custom path if the user enters nothing
 if [ -z "$CUSTOM_PATH" ]; then
   CUSTOM_PATH="/blockchain"
 fi
-
-# Working BootNode, temp fix for low peerCount on the consensus client - kudos to @SIN3R6Y for sharing this BootNode
-# BOOTNODE="enr:-L64QNIt1R1_ou9Aw5ci8gLAsV1TrK2MtWiPNGy21YsTW0HpA86hGowakgk3IVEZNjBOTVdqtXObXyErbEfxEi8Y8Z-CARSHYXR0bmV0c4j__________4RldGgykFuckgYAAAlE__________-CaWSCdjSCaXCEA--2T4lzZWNwMjU2azGhArzEiK-HUz_pnQBn_F8g7sCRKLU4GUocVeq_TX6UlFXIiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo"
 
 # Docker run commands for Ethereum clients
 GETH_CMD="sudo -u geth docker run -dt --restart=always \\
@@ -383,8 +421,8 @@ echo ""
 echo -e "${GREEN}Setting up firewall to allow access to SSH and port 8545 for localhost and private network connection to the RPC.${NC}"
 
 ip_range=$(get_ip_range)
-read -p "Do you want to allow access to the RPC and SSH from within your local network ($ip_range)? (y/n): " local_network_choice
-read -p "Do you want to allow RPC (8545) access ?(y/n): " rpc_choice
+read -p "Do you want to allow access to the RPC and SSH from within your local network ($ip_range)? (y/N): " local_network_choice
+read -p "Do you want to allow RPC (8545) access ?(y/N): " rpc_choice
 
 if [[ $rpc_choice == "y" ]]; then
   sudo ufw allow from 127.0.0.1 to any port 8545 proto tcp comment 'RPC Port'
@@ -393,7 +431,7 @@ if [[ $rpc_choice == "y" ]]; then
   fi
 fi
 
-read -p "Do you want to allow SSH access to this server? (y/n): " ssh_choice
+read -p "Do you want to allow SSH access to this server? (y/N): " ssh_choice
 
 if [[ $ssh_choice == "y" ]]; then
   read -p "Enter SSH port (default is 22): " ssh_port
@@ -409,7 +447,7 @@ fi
 #############################################################################################################
 
 echo ""
-echo -e "${GREEN}Setting to default deny incomming and allow outgoing, enabling the Firewall${NC}"
+echo -e "${GREEN}Setting Firewall to default, deny incomming and allow outgoing, enabling the Firewall${NC}"
 echo ""
 sudo ufw default deny incoming
 echo ""
