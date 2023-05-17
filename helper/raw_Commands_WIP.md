@@ -13,7 +13,17 @@ snapshot prune-state
 
 #sudo docker stop geth_prun && sudo docker container prune -f
 ```
+### Show Version
+###### Lighthouse
+```bash
+curl -X GET "http://localhost:5052/eth/v1/node/version" -H 'accept: application/json' | jq
+```
 
+###### Geth
+
+```bash
+docker exec -it execution geth version
+``` 
 
 ### List keys currently validating with prysm
 ###### note: ajdust the blockchain part of the command to your setup...
