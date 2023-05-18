@@ -926,7 +926,7 @@ execution_submenu() {
                     ;;
                 "Stop Execution-Client")
                     clear && sudo docker stop execution
-                    ssleep 1
+                    sleep 1
                     sudo docker container prune -f
                     ;;
                 "Restart Execution-Client")
