@@ -309,6 +309,15 @@ lighthouse bn \\
 
 # Use the variables in both single and separate script modes
 clear
+# check for any snap Version of docker installed and remove it (because it enables images to be mounted writable only in home folders)
+
+if snap list | grep -q '^docker '; then
+    echo "Docker snap package found. Removing..."
+    sudo snap remove docker
+else
+    echo "No Docker snap package found."
+fi
+
 # Add the deadsnakes PPA repository to install the latest Python version
 echo -e "${GREEN}Adding deadsnakes PPA to get the latest Python Version${NC}"
 sudo add-apt-repository ppa:deadsnakes/ppa -y
