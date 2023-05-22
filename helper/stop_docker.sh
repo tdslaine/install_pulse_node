@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sudo docker stop execution
-sudo docker stop beacon
-sudo docker stop validator
+sudo docker stop -t 180 execution
+sudo docker stop -t 180 beacon
+sudo docker stop -t 180 validator
 
 sudo docker rm execution
 sudo docker rm beacon
