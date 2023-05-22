@@ -925,12 +925,12 @@ execution_submenu() {
                     clear && ${CUSTOM_PATH}/start_execution.sh
                     ;;
                 "Stop Execution-Client")
-                    clear && sudo docker stop execution
+                    clear && sudo docker stop -t 180 execution
                     sleep 1
                     sudo docker container prune -f
                     ;;
                 "Restart Execution-Client")
-                    clear && sudo docker stop execution
+                    clear && sudo docker stop -t 180 execution
                     sleep 1
                     sudo docker container prune -f
                     clear && ${CUSTOM_PATH}/start_execution.sh
@@ -974,12 +974,12 @@ beacon_submenu() {
                     clear && ${CUSTOM_PATH}/start_consensus.sh
                     ;;
                 "Stop Beacon-Client")
-                    clear && sudo docker stop beacon 
+                    clear && sudo docker stop -t 180 beacon 
                     sleep 1
                     sudo docker container prune -f
                     ;;
                 "Restart Beacon-Client")
-                    clear && sudo docker stop beacon
+                    clear && sudo docker stop -t 180 beacon
                     sleep 1
                     sudo docker container prune -f
                     ${CUSTOM_PATH}/start_consensus.sh
@@ -1023,12 +1023,12 @@ validator_submenu() {
                     clear && ${CUSTOM_PATH}/start_validator.sh
                     ;;
                 "Stop Validator-Client")${CUSTOM_PATH}/
-                    clear && sudo docker stop validator
+                    clear && sudo docker stop -t 180 validator
                     sleep 1
                     sudo docker container prune -f
                     ;;
                 "Restart Validator-Client")
-                    clear && sudo docker stop validator
+                    clear && sudo docker stop -t 180 validator
                     sleep 1
                     sudo docker container prune -f
                     clear && ${CUSTOM_PATH}/start_validator.sh
@@ -1120,9 +1120,15 @@ system_submenu() {
                     clear && sudo apt-get update && sudo apt-get upgrade -y
                     ;;
                 "Reboot System")
+                    sudo docker stop -t 180 execution
+                    sudo docker stop -t 180 beacon
+                    sudo docker stop -t 180 validator
                     sudo reboot now
                     ;;
                 "Shutdown System")
+                    sudo docker stop -t 180 execution
+                    sudo docker stop -t 180 beacon
+                    sudo docker stop -t 180 validator
                     sudo shutdown now
                     ;;
                 "-")
