@@ -200,7 +200,7 @@ function stop_docker_container() {
     
     if [ "$container_status" == "running" ]; then
         echo "Stopping container with name or ID: $container_name_or_id"
-        sudo docker stop "$container_name_or_id"
+        sudo docker stop -t 180 "$container_name_or_id"
         sudo docker container prune -f
 
     elif [ -n "$container_status" ]; then
@@ -545,7 +545,7 @@ function stop_and_prune_validator_import(){
 function stop_docker_image(){
     echo "To import the keys into an existing setup, we need to stop the running validator container first."
     image=$1
-    sudo docker stop ${image} > /dev/null 2>&1
+    sudo docker stop -t 180 ${image} > /dev/null 2>&1
     sudo docker prune -f > /dev/null 2>&1
 }
 
