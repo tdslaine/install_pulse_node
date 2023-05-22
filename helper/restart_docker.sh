@@ -2,9 +2,9 @@
 #This is the main Folder, where your start_scripts reside, please change according to your setup (default /blockchain)
 CONFIG_FOLDER=/blockchain
 
-sudo docker stop execution
-sudo docker stop beacon
-sudo docker stop validator
+sudo docker stop -t 180 execution
+sudo docker stop -t 180 beacon
+sudo docker stop -t 180 validator
 
 sudo docker rm execution
 sudo docker rm beacon
