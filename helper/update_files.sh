@@ -24,7 +24,7 @@ main_user=$(whoami)
 
 # Replace the value of CUSTOM_PATH with the actual INSTALL_PATH in menu.sh
 sed -i "/^CUSTOM_PATH=/c\CUSTOM_PATH=\"$INSTALL_PATH\"" $TMP_DIR/helper/menu.sh
-sed -i "/^helper_scripts_path=/c\helper_scripts_path=\"$INSTALL_PATH/helper\"" $TMP_DIR/menu.sh
+sed -i "/^helper_scripts_path=/c\helper_scripts_path=\"$INSTALL_PATH/helper\"" $TMP_DIR/helper/menu.sh
 
 
 cp $TMP_DIR/setup_validator.sh $INSTALL_PATH/helper
