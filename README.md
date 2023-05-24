@@ -7,6 +7,11 @@
 ## AIO Interactive Setup
 Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace of Mind with this interactive setup script 
 
+####  Donations: I am currently validating on testnet only and am hoping to expand my validator node to the mainnet as well. Donations are appreciated and will help cover the costs of running and maintaining the validator node as well as to reach the 32M PLS staking requirement for my Mainnet Validator. If you're interested in contributing, you can make a donation. Thank you for your support!
+
+(PRC20) : `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
+
+
 ## Installing and Running a Pulsechain Node/Validator + Prometheus/Grafana Monitoring
 
 <small>This setup is split into three parts to provide greater flexibility for users based on their needs.
@@ -20,103 +25,288 @@ The third part is the monitoring setup, which involves setting up Prometheus/Gra
 You can run each step individually, based on your requirements, by calling the appropriate setup_###.sh script. This provides a convenient way to install and configure only the necessary components.
 
 Additionally, it's worth noting that after completing each installation step, you'll be prompted to continue with the next setup. This means that there's no need to run each script separately, as the setup process will guide you through each step in sequence.
+   
+To prepare dedicated devices for offline-key generation use (`setup_offline_keygen.sh`), this will work on a linux live iso and devices which are meant to stay offline after the initial keygen setup.
 
 This streamlined approach ensures that you have a smooth and hassle-free setup experience, and can get up and running quickly. </small>
 
-#####  I am currently validating on the testnet and am hoping to expand my validator node to the mainnet as well. Donations are appreciated and will help cover the costs of running and maintaining the validator node, including staking requirements and infrastructure expenses. If you're interested in contributing, you can make a donation. Thank you for your support!
-
-Ethereum (ETH) &#x039E; & (PRC20) : `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
 
 ## |#| Prerequisites
 
-- A Unix-based operating system (e.g., Ubuntu, Debian)
-- Git installed
+- A Unix-based operating system (e.g., Ubuntu)
 
-# - Installation Steps -
+## |#| Installation Steps
 
-### One command
+### Single-Command
 
 ```bash
 sudo apt update && sudo apt install git -y && git clone https://github.com/tdslaine/install_pulse_node && cd install_pulse_node && chmod +x setup_pulse_node.sh && ./setup_pulse_node.sh
 ```
 
-### Separate commands
-### 1. Install Git** (if not already installed) 
+### Manual Steps
 
-
-To install Git on a Unix-based system, you can use the package manager specific to your operating system. For example, on Ubuntu or Debian, you can use the following command:
+#### 1. Install Git** (if not already installed) 
 
  ```bash
-   sudo apt update
+   sudo apt update && sudo apt install git -y
  ```
  
-```bash
-  sudo apt-get install git
-```
-### 2. Clone the repository
-
-Open the terminal and navigate to the directory where you want to download the repository. Then, use the following command to clone the repository:
+#### 2. Clone the repository
 
 ```bash
   git clone https://github.com/tdslaine/install_pulse_node
 ```
-### 3. Change directory
 
-Change to the `install_pulse_node` directory:
+#### 3. Change to the `install_pulse_node` directory:
 
 ```bash
   cd install_pulse_node
 ```
 
-### 4. Modify script permissions
-
-Give execution permissions to the `setup_pulse_node.sh` script:
+#### 4. Give execution permissions to the `setup_pulse_node.sh` script:
 
 ```bash
   chmod +x setup_pulse_node.sh
 ```
 
-### 5. Run the script
+#### 5. Run the `setup_pulse_node.sh` script:
 
-Finally, run the `setup_pulse_node.sh` script:
 ```bash
 ./setup_pulse_node.sh
 ```
 
-### 6. After the setup is complete
+#### 6. After the initial setup
 
-The setup will create several start_###.sh scripts inside the folder you chose in the setup (default: /blockchain), these are:
+:exclamation: This only applies if you didn't choose to autostart the scripts during the setup script when asked if you want to start them now! :exclamation:
+
+After completing the initial setup, you will have to run each `start_###.sh` script at least once manually. Once done, the Docker container will automatically restart in the event of a reboot or crash, without requiring manual intervention.
+
+cd into the folder you provided in the setup (default: `/blockchain`):
 
 ```bash
-start_execution.sh
-start_consensus.sh
-start_validator.sh
+cd /blockchain \
+
+./start_execution.sh \
+./start_consensus.sh \
+./start_validator.sh 
 ```
 
-There will also be copys of a couple helper-scripts that should ease up the tasks for:
+#### 7. Make sure your docker-images are running:
 
-key-managment,
+```bash
+docker ps
+```
 
-editing configs, 
+## |#| Managing Node/Validator
 
-viewing/following logs,
+There will be a couple of helper-scripts that should ease up the tasks for key-managment, viewing/following logs, stopping, restarting and updating the Docker Images gracefully, shutting down, restarting and updating the system.
 
-stopping, restarting and updating the Docker Images.
+`plsmenu` combines most of these Tasks in one, easy to use menu.
 
-Most prominent and you goto for general "housekeeping" should be plsmenu
-You can call plsmenu from anywhere in your terminal or use the "Validator Menu" Icon from Desktop if you opted to generate one during setup.
-Plsmenu combines most of the Tasks one could need for the validator in one place.
+You can call `plsmenu` from anywhere in your terminal or use the "Validator Menu" Icon from Desktop if you opted to generate it during the setup.
 
 ```bash
 plsmenu
 ```
+-----------------------------------------------------------------
+
+## Logging:
+
+To view the log files for the execution, beacon, and validator you can use the generated Desktop-Icons, launch them via plsmenu or call the scripts manually from within the /helper folder (default: /blockchain/helper) or use the docker logs command.
+
+There are two AIO version available. as well as the single, client specific Logs:
+1. log_viewer.sh using Gnome-Terminal (Ubuntu GUI-Version)
+2. tmux_logviewer.sh using tmux (terminal-based, please get to know on how to control tmux prior).
+
+
+#### -via plsmenu:
+
+```bash
+plsmenu
+```
+
+AIO-Logs:
+`Logviewer > choose a type of AIO-Log`
+
+Client Specific Logs:
+`Logviewer > Clients Menu > desired Client > Show Logs`
+
+-----------------------------------------------------------------
+
+#### -via Desktop Shortcut
+
+if created during setup, just double-click the UI_logs or TMUX_logs -Dekstop Icon.
+
+
+-----------------------------------------------------------------
+
+#### -via script:
+
+```bash
+cd /blockchain/helper
+./log_viewer.sh
+```
+
+```bash
+cd /blockchain/helper
+./tmux_logviewer.sh
+```
+-----------------------------------------------------------------
+
+#### -via single command that follows and shows the last 50 lines of the clients-log:
+```bash
+docker logs -f --tail=50 execution
+docker logs -f --tail=50 beacon
+docker logs -f --tail=50 validator
+```
+
+
+
+## Stopping/Restarting Containers (Do this prior to Shutdowns/Reboots) :
+
+Should you need to alter the original start_###.sh scripts or reboot/shutdown your system, you should! stop/restart the Docker Images that are currently running gracefully. 
+Use either `plsmenu`, the stop_docker.sh/ restart_docker.sh script within the /helper folder (default: /blockchain/helper) or a manually command:
+
+#### -via plsmenu
+
+```bash
+plsmenu
+```
+Stop All: `Clients Menu > stop all docker`
+
+
+Stop Single: `Clients Menu > desired Client > Stop Client`
+
+#### Note: The Shutdown and Reboot options from within plsmenu also provide a gracefull shutdown prior to perform the action.
+-----------------------------------------------------------------
+
+#### -via Desktop Icon
+
+if opted to genearte the Desktop icons during initial setup, you should find a `stop docker` icon on your Dekstop
+
+-----------------------------------------------------------------
+
+#### -via script:
+
+```bash
+cd /blockchain/helper
+./stop_docker.sh
+./restart_docker.sh
+```
+-----------------------------------------------------------------
+
+#### -via aio-command:
+```bash
+docker stop -t 300 $(docker ps -q) && docker -rm $(docker ps -q) && docker container prune -f
+```
+-----------------------------------------------------------------
+
+#### -via specific command:
+
+```bash
+docker stop -t 300 execution && docker -rm execution && docker container prune -f
+docker stop -t 180 beacon && docker -rm beacon && docker container prune -f
+docker stop -t 180 validator && docker -rm validator && docker container prune -f
+```
+
+## Restarting 
+After a Reboot the Docker-Images should launch automatically. Check the status with the command: `docker ps`.
+
+Should you need to start them manually use either `plsmenu` or the start_ scripts.
+
+#### -via plsmenu
+```bash
+plsmenu
+```
+AIO: `Clients-Menu > Start all Clients`
+Client Specific: `Clients-Menu > desired Client > Start desired Client`
+
+-----------------------------------------------------------------
+
+#### -via terminal
+
+```bash
+cd /blockchain
+./start_execution.sh
+./start_consensus.sh
+./start_validator.sh
+```
+-----------------------------------------------------------------
+
+## |#| Modifying flags/options
+
+If you ever find yourself in the need to change/add/remove some option-flags or alter the config you can achieve this by editing the start_###.sh script as you desire. You can use any editor available. Pay attention to end each line with a " \" (space, forward slash) except the last one.
+
+#### -via plsmenu
+```bash
+plsmenu
+```
+`Clients Menu > desired Client > Edit Client config > Enter your PW > Apply Changes > Write changes to file with ctrl.+s > Exit editor with ctrl.+x > Restart client via menu`
+
+-----------------------------------------------------------------
+
+#### -via terminal
+```bash
+cd \blockchain
+sudo nano start_execution.sh
+```
+-----------------------------------------------------------------
+
+
+## |#| Updating the Nodes Docker-Images
+
+To update your Docker containers/images you can use plsmenu or call the provided `update_docker.sh` script from the /helper folder  (default: /blockchain/helper):
+
+#### -via plsmenu
+```bash
+plsmenu
+```
+`Clients-Menu > Update all Clients`
+
+-----------------------------------------------------------------
+
+#### -via script
+```bash
+cd /blockchain/helper
+sudo ./update_docker.sh
+```
+
+The script will automatically check for updates and update the necessary containers and images. Review the output of the script to ensure that the update process was successful.
+
+###### Note: that the update_docker script require administrative privileges to execute
+-----------------------------------------------------------------
+
+## |#| Reverting to an Older Docker Image Version
+
+In case a recent update to the Geth, Erigon, Lighthouse or Prysm Docker image causes issues, you can follow these steps to revert to a previous, stable version (e.g., v2.0.0):
+
+1. Stop the running Docker clients: Execute the appropriate stop command or use docker stop with the container name or ID.
+
+2. Edit the corresponding start_###.sh script: Choose the appropriate script from start_execution.sh, start_consensus.sh, or start_validator.sh. Modify the line that refers to the Docker image, changing the image version from :latest to the desired older version. For this example in start_execution.sh:
+
+Change this line:
+```bash
+registry.gitlab.com/pulsechaincom/go-pulse:latest
+```
+To:
+```bash
+registry.gitlab.com/pulsechaincom/go-pulse:v2.0.0
+```
+
+3. Save the changes and restart the appropriate client: Execute the modified start_###.sh script to restart the client with the older Docker image version.
+
+By following these steps, you can revert to a previous, stable version of the Docker image and continue working without disruption. Be sure to communicate any changes made to the team to maintain consistency across your systems.
+
+Note: you can find the version history for each docker-image on the gitlab https://gitlab.com/pulsechaincom from the pulsedevs.
+For example for geth it would be: https://gitlab.com/pulsechaincom/go-pulse/container_registry/2121084 - you have to click next until you are at the last page.
+###### howto get there: On the Page, choose your desired client > on left side navigation Panel click "Packages and registries" > then click "Packages and registries" 
 
 
 ## |#| Prometheus/Grafana Monitoring:
 
 ### Setup
 
-:exclamation: If you opted not to run the monitoring setup during the validator setup, follow these steps:
+:exclamation: If you opted not to run the monitoring setup during the validator setup, follow these steps: :exclamation:
 
 Make the `setup_monitoring.sh` script executable: 
 ```bash 
@@ -145,7 +335,7 @@ Import the JSON files from your setup target directory (default: `/blockchain/Da
 That's it! Prometheus and Grafana should now be up and running on your machine, allowing you to import more dashboards tailored to your needs.
 
 ### Allow Access from within your local Network
-:exclamation: If you opted not to allow access from within your local-network to Grafana during the monitoring setup, follow these steps:
+:exclamation: If you opted not to allow access from within your local-network to Grafana during the monitoring setup, follow these steps: :exclamation:
 
 1. Find current local IP-Range:
 To find your own IP address range, you can use the `hostname -I` command. Open a terminal and enter the following command:
@@ -166,179 +356,6 @@ Once done, you can reload your firewall and should be able to access your grafan
 ```bash
 sudo ufw reload
 ```
-
-## |#| Managing Node-Clients
-
-### Launching
-
-:exclamation: This only applies if you didn't choose to autostart the scripts during the setup script when asked if you want to start them now!
-
-After completing the initial setup, you will have to run each `start_###.sh` script at least once manually. Once you have done so, the Docker container will automatically restart in the event of a reboot or crash, without requiring manual intervention. You will only need to run the scripts manually again if you have manually stopped the containers.
-
-cd into the folder you provided in the setup (default: `/blockchain`) f.e.:
-
-```bash
-cd /blockchain
-
-./start_execution.sh
-./start_consensus.sh
-./start_validator.sh
-```
-
-### Logging:
-
-To view the log files for the execution, beacon, and validator you can use the generated Desktop-Icons, launch them via plsmenu or call the scripts manually from within the /helper folder (default: /blockchain/helper) or use the docker logs command.
-
-There are two version available:
-1. log_viewer.sh using Gnome-Terminal (Ubuntu GUI-Version)
-2. tmux_logviewer.sh using tmux (terminal-based, please get to know on how to control tmux prior).
-
-### plsmenu:
-
-```bash
-plsmenu
-```
-navigate the options
-
-
-###  via script:
-
-```bash
-cd /blockchain/helper
-./log_viewer.sh
-```
-
-```bash
-cd /blockchain/helper
-./tmux_logviewer.sh
-```
-### single commands, that shows last 50 lines of logs:
-```bash
-docker logs -f --tail=50 execution
-docker logs -f --tail=50 beacon
-docker logs -f --tail=50 validator
-```
-
-### Stopping/Restarting Containers:
-
-Should you need to alter the original start_###.sh scripts or reboot/shutdown your system,  you have  to stop/restart the docker-containers/images that are currently running. To achieve this, you can use the stop_docker.sh/ restart_docker.sh script provided which should be inside the folder you chose in the setup (default: /blockchain/helper) or use the plsmenu
-
-```bash
-plsmenu
-```
-navigate the clients -or system-menu
-
-#### via script:
-
-```bash
-cd /blockchain/helper
-
-./stop_docker.sh
-
-or
-
-./restart_docker.sh
-```
-
-#### single commands:
-
-```bash
-docker stop -t 300 execution
-docker stop -t 180 beacon
-docker stop -t 180 validator
-```
-
-```bash
-docker -rm execution
-docker -rm beacon
-docker -rm validator
-```
-
-Once the containers are stopped, you might also need to prune/clean the cache using the command:
-
-```bash
-docker container prune -f
-```
-
-After you made desired changes, you can start the Docker Images/Containers again with the initial start_###.sh scripts from within the folder you chose in the setup (default: /blockchain):
-
-```bash
-cd /blockchain
-
-./start_execution.sh
-./start_consensus.sh
-./start_validator.sh
-```
-
-## |#| Modifying flags/options
-
-If you ever find yourself in the need to change/add/remove some option-flags or alter the config you can achieve this by editing the start_###.sh script as you desire. You can use any editor available. Pay attention to end each line with a " \" (space, forward slash) except the last one.
-
-```bash
-plsmenu
-```
-Navigate to Client-Menu, choose the Client you want to edit > Edit config > enter pw > apply changes > writeout file with ctrl.+s, exit with ctrl.+x, restart client via menu.
-
-```bash
-cd \blockchain
-
-sudo nano start_execution.sh
-```
-
-2. save changes
-3. stop/restart the docker image manually or via plsmenu
-
-
-## |#| Updating the Nodes Docker-Images
-
-To update your Docker containers/images you can use the provided the `update_docker.sh` or simply `restart_docker.sh` script which can be found inside the folder you chose in the setup (default: /blockchain/helper) or use the plsmenu (Validator-Menu Shortcut on Dekstop):
-
-```bash
-plsmenu
-```
-
-```bash
-cd /blockchain/helper
-
-./update_docker.sh
-```
-
-Review the output: 
-
-The script will automatically check for updates and update the necessary containers and images. Review the output of the script to ensure that the update process was successful.
-
-###### Note: that the update_docker script might require administrative privileges to execute. If necessary, use sudo to run the script with elevated privileges:
-
-``` bash
-cd /blockchain/helper
-
-sudo ./update_docker.sh
-```
-
-## |#| Reverting to an Older Docker Image Version
-
-In case a recent update to the Geth or Lighthouse Docker image causes issues, you can follow these steps to revert to a previous, stable version (e.g., v2.0.0):
-
-1. Stop the running Docker clients: Execute the appropriate stop command or use docker stop with the container name or ID.
-
-2. Edit the corresponding start_###.sh script: Choose the appropriate script from start_execution.sh, start_consensus.sh, or start_validator.sh. Modify the line that refers to the Docker image, changing the image version from :latest to the desired older version. For this example in start_execution.sh:
-
-Change this line:
-```bash
-registry.gitlab.com/pulsechaincom/go-pulse:latest
-```
-To:
-```bash
-registry.gitlab.com/pulsechaincom/go-pulse:v2.0.0
-```
-3. Save the changes and restart the appropriate client: Execute the modified start_###.sh script to restart the client with the older Docker image version.
-
-By following these steps, you can revert to a previous, stable version of the Docker image and continue working without disruption. Be sure to communicate any changes made to the team to maintain consistency across your systems.
-
-Note: you can find the version history for each docker-image on the gitlab https://gitlab.com/pulsechaincom from the pulsedevs.
-For example for geth it would be: https://gitlab.com/pulsechaincom/go-pulse/container_registry/2121084 - you have to click next until you are at the last page.
-###### howto get there: On the Page, choose your desired client > on left side navigation Panel click "Packages and registries" > then click "Packages and registries" 
-
 
 
 ### Resources:
