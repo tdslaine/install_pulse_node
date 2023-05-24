@@ -80,7 +80,7 @@ Give execution permissions to the `setup_pulse_node.sh` script:
 
 Finally, run the `setup_pulse_node.sh` script:
 ```bash
-sudo ./setup_pulse_node.sh
+./setup_pulse_node.sh
 ```
 
 ### 6. After the setup is complete
@@ -93,7 +93,23 @@ start_consensus.sh
 start_validator.sh
 ```
 
-There will also be copys of a couple helper_scripts to ease up the task of viewing/following logs, stopping, restarting and updating the Docker Images. Read bellow for further informaion
+There will also be copys of a couple helper-scripts that should ease up the tasks for:
+
+key-managment,
+
+editing configs, 
+
+viewing/following logs,
+
+stopping, restarting and updating the Docker Images.
+
+Most prominent and you goto for general "housekeeping" should be plsmenu
+You can call plsmenu from anywhere in your terminal or use the "Validator Menu" Icon from Desktop if you opted to generate one during setup.
+Plsmenu combines most of the Tasks one could need for the validator in one place.
+
+```bash
+plsmenu
+```
 
 
 ## |#| Prometheus/Grafana Monitoring:
@@ -220,7 +236,7 @@ Should you need to alter the original start_###.sh scripts you might need to sto
 The scripts should already be executable, if not make the script executable via:
 
 ```bash
-cd /blockchain
+cd /blockchain/helper
 
 sudo chmod +x stop_docker.sh
 
@@ -231,7 +247,7 @@ sudo chmod +x restart_docker.sh
 
 run the script:
 ```bash
-cd /blockchain
+cd /blockchain/helper
 
 ./stop_docker.sh
 
@@ -243,9 +259,9 @@ or
 #### B) single commands:
 
 ```bash
-sudo docker stop execution
-sudo docker stop beacon
-sudo docker stop validator
+sudo docker stop -t 300 execution
+sudo docker stop -t 180 beacon
+sudo docker stop -t 180 validator
 ```
 
 ```bash
@@ -292,20 +308,14 @@ sudo docker restart execution
 
 ## |#| Updating the Nodes Docker-Images
 
-To update your Docker containers/images you can use the provided the `update_docker.sh` or simply `restart_docker.sh` script which can be found inside the folder you chose in the setup (default: /blockchain):
-
-The script should already be executable, if not make the script executable via::
+To update your Docker containers/images you can use the provided the `update_docker.sh` or simply `restart_docker.sh` script which can be found inside the folder you chose in the setup (default: /blockchain/helper) or use the plsmenu (Validator-Menu Shortcut on Dekstop):
 
 ```bash
-cd /blockchain
-
-chmod +x update_docker.sh
+plsmenu
 ```
 
-Run the script: 
-
 ```bash
-cd /blockchain
+cd /blockchain/helper
 
 ./update_docker.sh
 ```
@@ -317,7 +327,7 @@ The script will automatically check for updates and update the necessary contain
 ###### Note: that the update_docker script might require administrative privileges to execute. If necessary, use sudo to run the script with elevated privileges:
 
 ``` bash
-cd /blockchain
+cd /blockchain/helper
 
 sudo ./update_docker.sh
 ```
