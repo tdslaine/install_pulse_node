@@ -346,6 +346,7 @@ system_submenu() {
                         "Update & Reboot System" "" \
                         "Reboot System" "" \
                         "Shutdown System" "" \
+                        "Update Local Helper-Files" ""\
                         "-" ""\
                         "back" "Back to main menu")
 
@@ -374,6 +375,9 @@ system_submenu() {
                     sudo docker stop -t 180 validator
                     sleep 5
                     sudo shutdown now
+                    ;;
+                "Update Local helper files")
+                    clear && script_launch "update_files.sh"
                     ;;
                 "-")
                     ;;
