@@ -545,7 +545,7 @@ function stop_and_prune_validator_import(){
 function stop_docker_image(){
     echo "To import the keys into an existing setup, we need to stop the running validator container first."
     image=$1
-    sudo docker stop -t 180 ${image} > /dev/null 2>&1
+    sudo docker stop -t 300 ${image} > /dev/null 2>&1
     sudo docker prune -f > /dev/null 2>&1
 }
 
@@ -925,12 +925,12 @@ execution_submenu() {
                     clear && ${CUSTOM_PATH}/start_execution.sh
                     ;;
                 "Stop Execution-Client")
-                    clear && sudo docker stop -t 180 execution
+                    clear && sudo docker stop -t 300 execution
                     sleep 1
                     sudo docker container prune -f
                     ;;
                 "Restart Execution-Client")
-                    clear && sudo docker stop -t 180 execution
+                    clear && sudo docker stop -t 300 execution
                     sleep 1
                     sudo docker container prune -f
                     clear && ${CUSTOM_PATH}/start_execution.sh
@@ -1120,13 +1120,13 @@ system_submenu() {
                     clear && sudo apt-get update && sudo apt-get upgrade -y
                     ;;
                 "Reboot System")
-                    sudo docker stop -t 180 execution
+                    sudo docker stop -t 300 execution
                     sudo docker stop -t 180 beacon
                     sudo docker stop -t 180 validator
                     sudo reboot now
                     ;;
                 "Shutdown System")
-                    sudo docker stop -t 180 execution
+                    sudo docker stop -t 300 execution
                     sudo docker stop -t 180 beacon
                     sudo docker stop -t 180 validator
                     sudo shutdown now
