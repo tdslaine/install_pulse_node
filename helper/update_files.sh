@@ -15,7 +15,7 @@ INSTALL_PATH=${INSTALL_PATH:-/blockchain}
 
 # Verify the directory exists or create it
 if [ ! -d "$INSTALL_PATH" ]; then
-    echo "Directory $INSTALL_PATH does not exist. Creating it now."
+    echo "Directory $INSTALL_PATH does not exist"
     exit 1
 fi
 
