@@ -187,65 +187,49 @@ cd /blockchain
 
 ### Logging:
 
-To view the log files for the execution, beacon, and validator after a reboot you can use the provided log_viewer.sh or tmux_logviewer.sh script that should be inside the folder you chose in the setup (default: /blockchain) You can also use sepperate commands inside a terminal:
+To view the log files for the execution, beacon, and validator you can use the generated Desktop-Icons, launch them via plsmenu or call the scripts manually from within the /helper folder (default: /blockchain/helper) or use the docker logs command.
 
-### A) via script:
 There are two version available:
-1. log_viewer.sh for GUI-Ubuntu
-2. tmux_logviewer.sh for terminal-based environments (please get to know on how to control tmux prior).
+1. log_viewer.sh using Gnome-Terminal (Ubuntu GUI-Version)
+2. tmux_logviewer.sh using tmux (terminal-based, please get to know on how to control tmux prior).
 
-The script should already be executable, if not make the script executable via:
+### plsmenu:
 
 ```bash
-cd /blockhain
-sudo chmod +x log_viewer.sh
+plsmenu
 ```
-or
+navigate the options
+
+
+###  via script:
 
 ```bash
-cd /blockhain
-sudo chmod +x tmux_logviewer.sh
-```
-run the script:
-
-```bash
-cd /blockchain
+cd /blockchain/helper
 ./log_viewer.sh
 ```
 
-or
-
 ```bash
-cd /blockchain
+cd /blockchain/helper
 ./tmux_logviewer.sh
 ```
-
-### B) single commands:
+### single commands, that shows last 50 lines of logs:
 ```bash
-docker logs -f execution
-docker logs -f beacon
-docker logs -f validator
+docker logs -f --tail=50 execution
+docker logs -f --tail=50 beacon
+docker logs -f --tail=50 validator
 ```
 
 ### Stopping/Restarting Containers:
 
-Should you need to alter the original start_###.sh scripts you might need to stop/restart the docker-containers/images that are currently running. To achieve this, you can use the stop_docker.sh/ restart_docker.sh script provided which should be inside the folder you chose in the setup (default: /blockchain).
-
-#### A) via script:
-
-The scripts should already be executable, if not make the script executable via:
+Should you need to alter the original start_###.sh scripts or reboot/shutdown your system,  you have  to stop/restart the docker-containers/images that are currently running. To achieve this, you can use the stop_docker.sh/ restart_docker.sh script provided which should be inside the folder you chose in the setup (default: /blockchain/helper) or use the plsmenu
 
 ```bash
-cd /blockchain/helper
-
-sudo chmod +x stop_docker.sh
-
-or
-
-sudo chmod +x restart_docker.sh
+plsmenu
 ```
+navigate the clients -or system-menu
 
-run the script:
+#### via script:
+
 ```bash
 cd /blockchain/helper
 
@@ -256,24 +240,24 @@ or
 ./restart_docker.sh
 ```
 
-#### B) single commands:
+#### single commands:
 
 ```bash
-sudo docker stop -t 300 execution
-sudo docker stop -t 180 beacon
-sudo docker stop -t 180 validator
+docker stop -t 300 execution
+docker stop -t 180 beacon
+docker stop -t 180 validator
 ```
 
 ```bash
-sudo docker -rm execution
-sudo docker -rm beacon
-sudo docker -rm validator
+docker -rm execution
+docker -rm beacon
+docker -rm validator
 ```
 
 Once the containers are stopped, you might also need to prune/clean the cache using the command:
 
 ```bash
-sudo docker container prune -f
+docker container prune -f
 ```
 
 After you made desired changes, you can start the Docker Images/Containers again with the initial start_###.sh scripts from within the folder you chose in the setup (default: /blockchain):
@@ -288,10 +272,12 @@ cd /blockchain
 
 ## |#| Modifying flags/options
 
-If you ever find yourself in the need to change/add/remove some option-flags or alter the config you can achieve this by first stopping the docker-images/containers, then editing the start_###.sh script as you desire. You can use any editor available, just make sure you run these as sudo to be able to save changes inside the .sh file. Also pay attention to end each line with a \ 
+If you ever find yourself in the need to change/add/remove some option-flags or alter the config you can achieve this by editing the start_###.sh script as you desire. You can use any editor available. Pay attention to end each line with a " \" (space, forward slash) except the last one.
 
-
-1. Edit desired start_###.sh script
+```bash
+plsmenu
+```
+Navigate to Client-Menu, choose the Client you want to edit > Edit config > enter pw > apply changes > writeout file with ctrl.+s, exit with ctrl.+x, restart client via menu.
 
 ```bash
 cd \blockchain
@@ -300,11 +286,8 @@ sudo nano start_execution.sh
 ```
 
 2. save changes
-3. restart the docker container-images as described above manually via f.e.
+3. stop/restart the docker image manually or via plsmenu
 
-```bash
-sudo docker restart execution
-```
 
 ## |#| Updating the Nodes Docker-Images
 
