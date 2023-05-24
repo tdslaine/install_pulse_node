@@ -4,6 +4,7 @@ start_dir=$(pwd)
 script_dir=$(dirname "$0")
 
 source "$script_dir/functions.sh"
+check_and_set_network_variables
 
 # Prompt the user to enter the installation path
 read -e -p "Enter the installation path (default: /blockchain): " INSTALL_PATH
