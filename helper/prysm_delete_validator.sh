@@ -5,6 +5,8 @@ script_dir=$(dirname "$0")
 
 source "$script_dir/functions.sh"
 
+check_and_set_network_variables
+
 sudo docker stop delete_valdator && sudo docker container prune -f  > /dev/null 2>&1
 echo "We will have to stop the validator coontainer first..."
 sleep 1
