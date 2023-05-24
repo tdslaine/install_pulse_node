@@ -18,4 +18,4 @@ gnome-terminal --tab --title="HTOP" -- bash -c "htop; exec bash"
 
 gnome-terminal --tab --title="DiskUsage" -- bash -c "watch df -H; exec bash"
 
-gnome-terminal --tab --title="Docker Status" --bash -c "watch docker ps; exec bash"
+gnome-terminal --tab --title="Docker Status" -- bash -c "watch docker ps; exec bash"
