@@ -607,7 +607,7 @@ if [[ "$log_choice" =~ ^[Yy]$ || "$log_choice" == "" ]]; then
     create-desktop-shortcut ${CUSTOM_PATH}/helper/tmux_logviewer.sh tmux_LOGS
     create-desktop-shortcut ${CUSTOM_PATH}/helper/log_viewer.sh ui_LOGS
     #create-desktop-shortcut ${CUSTOM_PATH}/helper/restart_docker.sh Restart-clients
-    #create-desktop-shortcut ${CUSTOM_PATH}/helper/stop_docker.sh Stop-clients
+    create-desktop-shortcut ${CUSTOM_PATH}/helper/stop_docker.sh Stop-clients
     #create-desktop-shortcut ${CUSTOM_PATH}/helper/update_docker.sh Update-clients
     create-desktop-shortcut ${CUSTOM_PATH}/menu.sh Validator-Menu ${CUSTOM_PATH}/helper/LogoVector.svg
 fi
