@@ -783,11 +783,11 @@ script_launch() {
 
 main_menu() {
     while true; do
-        main_opt=$(dialog --stdout --title "Main Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+        main_opt=$(dialog --stdout --title "Main Menu v1.1b" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                           "Logviewer" "Start different Logviewer" \
                           "Clients Menu" "Execution, Beacon and Validator Clients" \
                           "Validator & Key Setup" "Manage your Validator Keys" \
-                          "System" "Upate, Reboot or Shutdown your system" \
+                          "System" "Update, Reboot or Shutdown your system" \
                           "-" ""\
                           "exit" "Exit the program")
 
@@ -1107,29 +1107,41 @@ validator_setup_submenu() {
 system_submenu() {
     while true; do
         sys_opt=$(dialog --stdout --title "System Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
-                        "Update System" "" \
+                        "Update & Reboot System" "" \
                         "Reboot System" "" \
                         "Shutdown System" "" \
+                        "Update Local Helper-Files" ""\
                         "-" ""\
                         "back" "Back to main menu")
 
         case $? in
           0)
             case $sys_opt in
-                "Update System")
+                "Update & Reboot System")
+                    sudo docker stop -t 300 execution
+                    sudo docker stop -t 180 beacon
+                    sudo docker stop -t 180 validator
+                    sleep 5
                     clear && sudo apt-get update && sudo apt-get upgrade -y
+                    sleep 5
+                    sudo reebot now
                     ;;
                 "Reboot System")
                     sudo docker stop -t 300 execution
                     sudo docker stop -t 180 beacon
                     sudo docker stop -t 180 validator
+                    sleep 5
                     sudo reboot now
                     ;;
                 "Shutdown System")
                     sudo docker stop -t 300 execution
                     sudo docker stop -t 180 beacon
                     sudo docker stop -t 180 validator
+                    sleep 5
                     sudo shutdown now
+                    ;;
+                "Update Local Helper-Files")
+                    clear && script_launch "update_files.sh"
                     ;;
                 "-")
                     ;;
