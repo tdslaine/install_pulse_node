@@ -24,5 +24,5 @@ while true; do
     echo "Local node is behind by ${difference} blocks."
   fi
 
-  sleep 30
+  sleep 60
 done
