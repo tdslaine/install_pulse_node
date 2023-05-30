@@ -1,3 +1,4 @@
+    VERSION="1.1c"
     script_launch() {
         local script_name=$1
         local script_path="${helper_scripts_path}/${script_name}"
@@ -19,7 +20,7 @@ script_launch() {
 
 main_menu() {
     while true; do
-        main_opt=$(dialog --stdout --title "Main Menu v1.1b" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+        main_opt=$(dialog --stdout --title "Main Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                           "Logviewer" "Start different Logviewer" \
                           "Clients Menu" "Execution, Beacon and Validator Clients" \
                           "Validator & Key Setup" "Manage your Validator Keys" \
@@ -59,7 +60,7 @@ main_menu() {
 
 logviewer_submenu() {
     while true; do
-        lv_opt=$(dialog --stdout --title "Logviewer Menu" --stdout --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+        lv_opt=$(dialog --stdout --title "Logviewer Menu $VERSION" --stdout --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                         "Tabbed-Terminal Logs" "Multiple Tabs" \
                         "Tmux-Style Logs" "Single Window" \
                         "-" ""\
@@ -90,7 +91,7 @@ logviewer_submenu() {
 
 client_actions_submenu() {
     while true; do
-        ca_opt=$(dialog --stdout --title "Client Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+        ca_opt=$(dialog --stdout --title "Client Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                         "Execution-Client Menu" ""\
                         "Beacon-Client Menu" ""\
                         "Validator-Client Menu" ""\
@@ -117,7 +118,8 @@ client_actions_submenu() {
                 "-")
                     ;;
                 "Start all Clients")
-                    clear && ${CUSTOM_PATH}/start_execution.sh
+                    clear
+                    ${CUSTOM_PATH}/start_execution.sh
                     ${CUSTOM_PATH}/start_consensus.sh
                     ${CUSTOM_PATH}/start_validator.sh
                     ;;
@@ -148,7 +150,7 @@ client_actions_submenu() {
 
 execution_submenu() {
     while true; do
-        exe_opt=$(dialog --stdout --title "Execution-Client Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+        exe_opt=$(dialog --stdout --title "Execution-Client Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                         "Start Execution-Client" "" \
                         "Stop Execution-Client" "" \
                         "Restart Execution-Client" "" \
@@ -197,7 +199,7 @@ execution_submenu() {
 
 beacon_submenu() {
     while true; do
-        bcn_opt=$(dialog --stdout --title "Beacon-Client Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+        bcn_opt=$(dialog --stdout --title "Beacon-Client Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                         "Start Beacon-Client" "" \
                         "Stop Beacon-Client" "" \
                         "Restart Beacon-Client" "" \
@@ -246,7 +248,7 @@ beacon_submenu() {
 
 validator_submenu() {
     while true; do
-        val_opt=$(dialog --stdout --title "Validator-Client Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+        val_opt=$(dialog --stdout --title "Validator-Client Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                         "Start Validator-Client" ""\
                         "Stop Validator-Client" ""\
                         "Restart Validator-Client" ""\
@@ -308,7 +310,7 @@ validator_setup_submenu() {
                  "ReRun Initial Setup" "" \
                  "-" ""\
                  "back" "Back to main menu; Return to the main menu.")
-        vs_opt=$(dialog --stdout --title "Node/Validator Setup Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
+        vs_opt=$(dialog --stdout --title "Node/Validator Setup Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
         case $? in
             0)
                 case $vs_opt in
@@ -350,7 +352,7 @@ validator_setup_submenu() {
 
 system_submenu() {
     while true; do
-        sys_opt=$(dialog --stdout --title "System Menu" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+        sys_opt=$(dialog --stdout --title "System Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                         "Update & Reboot System" "" \
                         "Reboot System" "" \
                         "Shutdown System" "" \
