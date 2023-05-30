@@ -368,7 +368,7 @@ system_submenu() {
                     sleep 5
                     clear && sudo apt-get update && sudo apt-get upgrade -y
                     sleep 5
-                    sudo reebot now
+                    sudo reboot now
                     ;;
                 "Reboot System")
                     sudo docker stop -t 300 execution
