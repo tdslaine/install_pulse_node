@@ -1,5 +1,10 @@
 #!/bin/bash
 
+docker stop -t 300 execution
+docker stop -t 300 geth
+docker stop -t 180 beacon
+docker stop -t 180 validator
+
 # Pull the latest watchtower image
 echo "Pulling the latest watchtower image..."
 docker pull containrrr/watchtower
