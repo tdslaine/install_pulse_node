@@ -128,7 +128,11 @@ client_actions_submenu() {
                     clear && script_launch "restart_docker.sh"
                     ;;
                 "Update all Clients")
+                    clear && script_launch "stop_docker.sh"
                     script_launch "update_docker.sh"
+                    ${CUSTOM_PATH}/start_execution.sh
+                    ${CUSTOM_PATH}/start_consensus.sh
+                    ${CUSTOM_PATH}/start_validator.sh
                     ;;
                 "back")
                     break
