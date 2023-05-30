@@ -531,7 +531,7 @@ function check_and_pull_prysm_validator() {
         echo ""
         echo "Prysm validator Docker image not found. Pulling the latest image..."
         sudo docker pull registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest
-        echoe ""
+        echo ""
     else
         echo ""
     fi
