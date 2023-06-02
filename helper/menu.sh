@@ -415,17 +415,17 @@ system_submenu() {
                     sudo shutdown now
                     ;;
                 "-")
-                ;;
+                    ;;
                 "Update Local Helper-Files")
                     clear && script_launch "update_files.sh"
                     ;;
                 "-")
-                ;;
+                    ;;
                 "Backup and Restore")
                     clear $$ script_launch "backup_restore.sh"
                     ;;
                 "-")
-                ;;
+                    ;;
                 "back")
                     break
                     ;;
