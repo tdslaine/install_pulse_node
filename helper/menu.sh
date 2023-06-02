@@ -329,7 +329,8 @@ validator_setup_submenu() {
                  "Convert BLS-Keys" "00-BLS to 01-Execution Wallet conversion" \
                  "Exit your Validator(s)" "Initiate the Exit of your Validator(s)" \
                  "-" "" \
-                 "Geth - BlockMonitor" "Compare local Block# with scan.puslechain.com" \
+                 "GoPLS - BlockMonitor" "Compare local Block# with scan.puslechain.com" \
+                 "GoPLS - Database Prunning" "Prune your local DB to freeup space" \
                  "Prysm - List Accounts" "List all Accounts from the Validator DB" \
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
                  "-" "" \
@@ -351,9 +352,16 @@ validator_setup_submenu() {
                     "Exit your Validator(s)")
                         clear && script_launch "exit_validator.sh"
                         ;;
-                    "Geth - BlockMonitor")
+                    "-")
+                        ;;
+                    "GoPLS - BlockMonitor")
                         clear && script_launch "compare_blocks.sh"
                         ;;
+                    "GoPLS - Database Prunning")
+                        tmux new-session -s bandr $(CUSTOM_PATH)/helper/gopls_prune.sh
+                        ;;
+                    "-")
+                        ;;                        
                     "Prysm - List Accounts")
                         clear && script_launch "prysm_read_accounts.sh"
                         ;;
