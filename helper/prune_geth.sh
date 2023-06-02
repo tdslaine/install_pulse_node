@@ -18,7 +18,7 @@ INSTALL_PATH="${INSTALL_PATH%/}"
 echo "Using install path: $INSTALL_PATH"
 
 # Stop the execution-client and prune Docker
-sudo docker stop -t 300 execution && sudo docker container prune -f
+docker stop -t 300 execution && docker container prune -f && docker rm execution -f
 
 # Run the Docker command to prune the state
 sudo docker run --rm --name geth_prune -it -v $INSTALL_PATH/execution/geth:/geth \
