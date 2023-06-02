@@ -4,10 +4,17 @@
 ```bash
 sudo docker stop -t 300 execution && sudo docker container prune -f \
 
-sudo -u geth docker run --rm -it --name="geth_prun" -v /blockchain/execution/geth/:/blockchain registry.gitlab.com/pulsechaincom/go-pulse:latest --datadir /blockchain/geth snapshot prune-state
+sudo docker run --rm --name geth_prune -it -v /home/blockchain/execution/geth:/geth \
+registry.gitlab.com/pulsechaincom/go-pulse:latest \
+snapshot prune-state \
+--datadir /geth
 
+#sudo -u geth docker run --rm -it --name="geth_prun" \
+#-v /blockchain/execution/geth/:/blockchain \
+#registry.gitlab.com/pulsechaincom/go-pulse:latest \
+#snapshot prune-state \
+#--datadir /blockchain/geth 
 
-#sudo docker stop geth_prun && sudo docker container prune -f
 ```
 ### Show Version
 
