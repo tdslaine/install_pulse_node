@@ -422,7 +422,7 @@ system_submenu() {
                 "-")
                     ;;
                 "Backup and Restore")
-                    clear $$ script_launch "backup_restore.sh"
+                    clear && script_launch "backup_restore.sh"
                     ;;
                 "-")
                     ;;
