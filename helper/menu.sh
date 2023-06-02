@@ -127,11 +127,13 @@ client_actions_submenu() {
                     clear && script_launch "stop_docker.sh"
                     ;;
                 "Restart all Clients")
-                    clear && script_launch "restart_docker.sh"
+                    clear && script_launch "stop_docker.sh"
+                    ${CUSTOM_PATH}/start_execution.sh
+                    ${CUSTOM_PATH}/start_consensus.sh
+                    ${CUSTOM_PATH}/start_validator.sh
                     ;;
                 "Update all Clients")
-                    clear && script_launch "stop_docker.sh"
-                    script_launch "update_docker.sh"
+                    clear && script_launch "update_docker.sh"
                     ${CUSTOM_PATH}/start_execution.sh
                     ${CUSTOM_PATH}/start_consensus.sh
                     ${CUSTOM_PATH}/start_validator.sh
@@ -157,6 +159,7 @@ execution_submenu() {
                         "-" ""\
                         "Edit Execution-Client Config" "" \
                         "Show Logs" "" \
+                        "Update Execution-Client" "" \
                         "-" ""\
                         "back" "Back to Client Actions Menu")
 
@@ -183,6 +186,12 @@ execution_submenu() {
                  "Show Logs")
                     clear && sudo docker logs -f execution
                     ;;
+                 "Update Execution-Client")
+                   clear && docker stop -t 300 execution
+                   docker container prune -f && docker image prune -f
+                   docker rmi registry.gitlab.com/pulsechaincom/go-pulse > /dev/null 2>&1
+                   docker rmi registry.gitlab.com/pulsechaincom/go-erigon > /dev/null 2>&1
+                   ${CUSTOM_PATH}/start_execution.sh
                 "-")
                     ;;
                 "back")
