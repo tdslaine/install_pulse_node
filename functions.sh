@@ -787,7 +787,7 @@ main_menu() {
                           "Logviewer" "Start different Logviewer" \
                           "Clients Menu" "Execution, Beacon and Validator Clients" \
                           "Validator & Key Setup" "Manage your Validator Keys" \
-                          "System" "Update, Reboot or Shutdown your system" \
+                          "System" "Update, Reboot, shutodwn, Backup & Restore" \
                           "-" ""\
                           "exit" "Exit the program")
 
@@ -890,10 +890,16 @@ client_actions_submenu() {
                     clear && script_launch "stop_docker.sh"
                     ;;
                 "Restart all Clients")
-                    clear && script_launch "restart_docker.sh"
+                    clear && script_launch "stop_docker.sh"
+                    ${CUSTOM_PATH}/start_execution.sh
+                    ${CUSTOM_PATH}/start_consensus.sh
+                    ${CUSTOM_PATH}/start_validator.sh
                     ;;
                 "Update all Clients")
-                    script_launch "update_docker.sh"
+                    clear && script_launch "update_docker.sh"
+                    ${CUSTOM_PATH}/start_execution.sh
+                    ${CUSTOM_PATH}/start_consensus.sh
+                    ${CUSTOM_PATH}/start_validator.sh
                     ;;
                 "back")
                     break
@@ -916,6 +922,7 @@ execution_submenu() {
                         "-" ""\
                         "Edit Execution-Client Config" "" \
                         "Show Logs" "" \
+                        "Update Execution-Client" "" \
                         "-" ""\
                         "back" "Back to Client Actions Menu")
 
@@ -942,6 +949,13 @@ execution_submenu() {
                  "Show Logs")
                     clear && sudo docker logs -f execution
                     ;;
+                 "Update Execution-Client")
+                   clear && docker stop -t 300 execution
+                   docker container prune -f && docker image prune -f
+                   docker rmi registry.gitlab.com/pulsechaincom/go-pulse > /dev/null 2>&1
+                   docker rmi registry.gitlab.com/pulsechaincom/go-erigon > /dev/null 2>&1
+                   ${CUSTOM_PATH}/start_execution.sh
+                   ;;
                 "-")
                     ;;
                 "back")
@@ -965,6 +979,7 @@ beacon_submenu() {
                         "-" ""\
                         "Edit Beacon-Client Config" "" \
                         "Show Logs" "" \
+                        "Update Beacon-Client" "" \
                         "-" ""\
                         "back" "Back to Client Actions Menu")
 
@@ -991,6 +1006,13 @@ beacon_submenu() {
                  "Show Logs")
                     clear && sudo docker logs -f beacon
                     ;;
+                 "Update Beacon-Client")
+                   clear && docker stop -t 180 beacon
+                   docker container prune -f && docker image prune -f
+                   docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain > /dev/null 2>&1
+                   docker rmi registry.gitlab.com/pulsechaincom/lighthouse-pulse > /dev/null 2>&1
+                   ${CUSTOM_PATH}/start_consensus.sh
+                   ;;
                 "-")
                     ;;
                 "back")
@@ -1008,13 +1030,14 @@ beacon_submenu() {
 validator_submenu() {
     while true; do
         val_opt=$(dialog --stdout --title "Validator-Client Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
-                        "Start Validator-Client" ""\
-                        "Stop Validator-Client" ""\
-                        "Restart Validator-Client" ""\
+                        "Start Validator-Client" "" \
+                        "Stop Validator-Client" "" \
+                        "Restart Validator-Client" "" \
                         "-" ""\
-                        "Edit Validator-Client Config" ""\
+                        "Edit Validator-Client Config" "" \
                         "Show Logs" ""\
-                        "-" ""\
+                        "Update Validator-Client" "" \
+                        "-" "" \
                         "back" "Back to Client Actions Menu")
 
         case $? in
@@ -1040,6 +1063,13 @@ validator_submenu() {
                 "Show Logs")
                     clear && sudo docker logs -f validator
                     ;;
+                "Update Validator-Client")
+                   clear && docker stop -t 180 validator
+                   docker container prune -f && docker image prune -f
+                   docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/validator > /dev/null 2>&1
+                   docker rmi registry.gitlab.com/pulsechaincom/lighthouse-pulse > /dev/null 2>&1
+                   ${CUSTOM_PATH}/start_validator.sh
+                   ;;
                 "-")
                     ;;
                 "back")
@@ -1062,6 +1092,7 @@ validator_setup_submenu() {
                  "Convert BLS-Keys" "00-BLS to 01-Execution Wallet conversion" \
                  "Exit your Validator(s)" "Initiate the Exit of your Validator(s)" \
                  "-" "" \
+                 "Geth - BlockMonitor" "Compare local Block# with scan.puslechain.com" \
                  "Prysm - List Accounts" "List all Accounts from the Validator DB" \
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
                  "-" "" \
@@ -1082,6 +1113,9 @@ validator_setup_submenu() {
                         ;;
                     "Exit your Validator(s)")
                         clear && script_launch "exit_validator.sh"
+                        ;;
+                    "Geth - BlockMonitor")
+                        clear && script_launch "compare_blocks.sh"
                         ;;
                     "Prysm - List Accounts")
                         clear && script_launch "prysm_read_accounts.sh"
@@ -1111,8 +1145,10 @@ system_submenu() {
                         "Update & Reboot System" "" \
                         "Reboot System" "" \
                         "Shutdown System" "" \
-                        "Update Local Helper-Files" ""\
-                        "-" ""\
+                        "Update Local Helper-Files" "" \
+                        "-" "" \
+                        "Backup and Restore" "Chaindata for go-pulse"
+                        "-" "" \
                         "back" "Back to main menu")
 
         case $? in
@@ -1145,7 +1181,12 @@ system_submenu() {
                     clear && script_launch "update_files.sh"
                     ;;
                 "-")
+                ;;
+                "Backup and Restore")
+                    clear $$ script_launch "backup_restore.sh"
                     ;;
+                "-")
+                ;;
                 "back")
                     break
                     ;;
