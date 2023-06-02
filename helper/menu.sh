@@ -216,6 +216,7 @@ beacon_submenu() {
                         "-" ""\
                         "Edit Beacon-Client Config" "" \
                         "Show Logs" "" \
+                        "Update Beacon-Clien" "" \
                         "-" ""\
                         "back" "Back to Client Actions Menu")
 
@@ -242,6 +243,13 @@ beacon_submenu() {
                  "Show Logs")
                     clear && sudo docker logs -f beacon
                     ;;
+                 "Update Beacon-Client")
+                   clear && docker stop -t 180 beacon
+                   docker container prune -f && docker image prune -f
+                   docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain > /dev/null 2>&1
+                   docker rmi registry.gitlab.com/pulsechaincom/lighthouse-pulse > /dev/null 2>&1
+                   ${CUSTOM_PATH}/start_consensus.sh
+                   ;;
                 "-")
                     ;;
                 "back")
@@ -259,13 +267,14 @@ beacon_submenu() {
 validator_submenu() {
     while true; do
         val_opt=$(dialog --stdout --title "Validator-Client Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
-                        "Start Validator-Client" ""\
-                        "Stop Validator-Client" ""\
-                        "Restart Validator-Client" ""\
+                        "Start Validator-Client" "" \
+                        "Stop Validator-Client" "" \
+                        "Restart Validator-Client" "" \
                         "-" ""\
-                        "Edit Validator-Client Config" ""\
+                        "Edit Validator-Client Config" "" \
                         "Show Logs" ""\
-                        "-" ""\
+                        "Update Validator-Client" "" \
+                        "-" "" \
                         "back" "Back to Client Actions Menu")
 
         case $? in
@@ -291,6 +300,13 @@ validator_submenu() {
                 "Show Logs")
                     clear && sudo docker logs -f validator
                     ;;
+                "Update Validator-Client")
+                   clear && docker stop -t 180 validator
+                   docker container prune -f && docker image prune -f
+                   docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/validator > /dev/null 2>&1
+                   docker rmi registry.gitlab.com/pulsechaincom/lighthouse-pulse > /dev/null 2>&1
+                   ${CUSTOM_PATH}/start_validator.sh
+                   ;;
                 "-")
                     ;;
                 "back")
