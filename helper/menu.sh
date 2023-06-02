@@ -384,7 +384,7 @@ system_submenu() {
                         "Shutdown System" "" \
                         "Update Local Helper-Files" "" \
                         "-" "" \
-                        "Backup and Restore" "Chaindata for go-pulse"
+                        "Backup and Restore" "Chaindata for go-pulse" \
                         "-" "" \
                         "back" "Back to main menu")
 
