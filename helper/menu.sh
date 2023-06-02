@@ -359,7 +359,7 @@ validator_setup_submenu() {
                         clear && script_launch "compare_blocks.sh"
                         ;;
                     "GoPLS - Database Prunning")
-                        tmux new-session -s prune $(CUSTOM_PATH)/helper/gopls_prune.sh
+                        tmux new-session -s prune $CUSTOM_PATH/helper/gopls_prune.sh
                         ;;
                     "-")
                         ;;                        
