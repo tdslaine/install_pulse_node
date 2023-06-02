@@ -2,14 +2,10 @@
 ###### note: ajdust the /blockchain part of the command to your setup...
 
 ```bash
-sudo docker stop execution && sudo docker container prune -f \
+sudo docker stop -t 300 execution && sudo docker container prune -f \
 
-sudo docker run --rm -it \
--v /blockchain/execution/geth/:/blockchain \
---name="geth_prun" \
-registry.gitlab.com/pulsechaincom/go-pulse:latest \
---datadir /blockchain \
-snapshot prune-state
+sudo -u geth docker run --rm -it --name="geth_prun" -v /blockchain/execution/geth/:/blockchain registry.gitlab.com/pulsechaincom/go-pulse:latest --datadir /blockchain/geth snapshot prune-state
+
 
 #sudo docker stop geth_prun && sudo docker container prune -f
 ```
