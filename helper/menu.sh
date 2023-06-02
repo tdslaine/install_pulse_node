@@ -431,7 +431,7 @@ system_submenu() {
                 "-")
                     ;;
                 "Backup and Restore")
-                    tmux new-session -s bandr $(CUSTOM_PATH)/helper/backup_restore.sh
+                    tmux new-session -s bandr $CUSTOM_PATH/helper/backup_restore.sh
                     ;;
                 "-")
                     ;;
