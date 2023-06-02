@@ -331,6 +331,7 @@ validator_setup_submenu() {
                  "-" "" \
                  "GoPLS - BlockMonitor" "Compare local Block# with scan.puslechain.com" \
                  "GoPLS - Database Prunning" "Prune your local DB to freeup space" \
+                 "-" "" \
                  "Prysm - List Accounts" "List all Accounts from the Validator DB" \
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
                  "-" "" \
