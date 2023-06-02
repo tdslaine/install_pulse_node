@@ -775,7 +775,7 @@ function menu_script_template() {
     cat <<-'EOF' | sed "s|@@CUSTOM_PATH@@|$CUSTOM_PATH|g"
 #!/bin/bash
 CUSTOM_PATH="@@CUSTOM_PATH@@"
-VERSION="1.1c"
+VERSION="1.1d"
 script_launch() {
     echo "Launching script: ${CUSTOM_PATH}/helper/$1"
     ${CUSTOM_PATH}/helper/$1
@@ -1147,7 +1147,7 @@ system_submenu() {
                         "Shutdown System" "" \
                         "Update Local Helper-Files" "" \
                         "-" "" \
-                        "Backup and Restore" "Chaindata for go-pulse"
+                        "Backup and Restore" "Chaindata for go-pulse" \
                         "-" "" \
                         "back" "Back to main menu")
 
@@ -1177,16 +1177,18 @@ system_submenu() {
                     sleep 5
                     sudo shutdown now
                     ;;
+                "-")
+                    ;;
                 "Update Local Helper-Files")
                     clear && script_launch "update_files.sh"
                     ;;
                 "-")
-                ;;
+                    ;;
                 "Backup and Restore")
-                    clear $$ script_launch "backup_restore.sh"
+                    clear && script_launch "backup_restore.sh"
                     ;;
                 "-")
-                ;;
+                    ;;
                 "back")
                     break
                     ;;
