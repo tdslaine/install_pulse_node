@@ -11,7 +11,7 @@
     docker rmi registry.gitlab.com/pulsechaincom/lighthouse-pulse 
     docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain
     docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/validator
-    docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/prysmctl
+    #docker rmi registry.gitlab.com/pulsechaincom/prysm-pulse/prysmctl
     
 
    
