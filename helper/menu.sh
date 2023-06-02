@@ -216,7 +216,7 @@ beacon_submenu() {
                         "-" ""\
                         "Edit Beacon-Client Config" "" \
                         "Show Logs" "" \
-                        "Update Beacon-Clien" "" \
+                        "Update Beacon-Client" "" \
                         "-" ""\
                         "back" "Back to Client Actions Menu")
 
