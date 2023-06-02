@@ -192,6 +192,7 @@ execution_submenu() {
                    docker rmi registry.gitlab.com/pulsechaincom/go-pulse > /dev/null 2>&1
                    docker rmi registry.gitlab.com/pulsechaincom/go-erigon > /dev/null 2>&1
                    ${CUSTOM_PATH}/start_execution.sh
+                   ;;
                 "-")
                     ;;
                 "back")
