@@ -24,7 +24,7 @@ main_menu() {
                           "Logviewer" "Start different Logviewer" \
                           "Clients Menu" "Execution, Beacon and Validator Clients" \
                           "Validator & Key Setup" "Manage your Validator Keys" \
-                          "System" "Update, Reboot or Shutdown your system" \
+                          "System" "Update, Reboot, shutodwn, Backup & Restore" \
                           "-" ""\
                           "exit" "Exit the program")
 
@@ -382,8 +382,10 @@ system_submenu() {
                         "Update & Reboot System" "" \
                         "Reboot System" "" \
                         "Shutdown System" "" \
-                        "Update Local Helper-Files" ""\
-                        "-" ""\
+                        "Update Local Helper-Files" "" \
+                        "-" "" \
+                        "Backup and Restore" "Chaindata for go-pulse"
+                        "-" "" \
                         "back" "Back to main menu")
 
         case $? in
@@ -416,7 +418,12 @@ system_submenu() {
                     clear && script_launch "update_files.sh"
                     ;;
                 "-")
+                ;;
+                "Backup and Restore")
+                    clear $$ script_launch "backup_restore.sh"
                     ;;
+                "-")
+                ;;
                 "back")
                     break
                     ;;
