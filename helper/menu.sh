@@ -414,6 +414,8 @@ system_submenu() {
                     sleep 5
                     sudo shutdown now
                     ;;
+                "-")
+                ;;
                 "Update Local Helper-Files")
                     clear && script_launch "update_files.sh"
                     ;;
