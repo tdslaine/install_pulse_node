@@ -16,7 +16,7 @@ BEACON_NODE=http://localhost:5052
 #USER=lighthouse
 
 # Loop through each keystore file in the directory
-for KEYSTORE_FILE in $KEYSTORE_DIR/*.json
+for KEYSTORE_FILE in $KEYSTORE_DIR/key*.json
 do
   echo "Processing $KEYSTORE_FILE..."
 
