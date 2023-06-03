@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Define the path to the folder containing your keystore files
-KEYSTORE_DIR=/path/to/keystorefiles
+KEYSTORE_DIR=/blockchain/validator_keys
 
 # Define the path to your password file
-PASSWORD_FILE=/path/to/passwordfile
+PASSWORD_FILE=/blockchain/test.txt
 
 # Define your installation path
 INSTALL_PATH=/blockchain
@@ -21,9 +21,9 @@ do
   echo "Processing $KEYSTORE_FILE..."
 
   # Run the exit command for the current keystore file
-  sudo -u lighthouse docker run --rm -it validator lighthouse \
-    --network pulsechain \
-    account validator exit \
+  sudo -u lighthouse docker exec -it validator lighthouse  \
+   --network pulsechain \
+   account validator exit \
     --keystore=$KEYSTORE_FILE \
     --password-file=$PASSWORD_FILE \
     --beacon-node $BEACON_NODE \
@@ -33,3 +33,4 @@ do
 done
 
 echo "All done!"
+
