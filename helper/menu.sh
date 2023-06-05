@@ -403,9 +403,7 @@ system_submenu() {
                 "Update & Reboot System")
                     clear
                     echo "Stopping running docker container..."
-                    sudo docker stop -t 300 execution
-                    sudo docker stop -t 180 beacon
-                    sudo docker stop -t 180 validator
+                    script_launch "stop_docker.sh"
                     sleep 5
                     clear
                     echo "Getting System updates..."
