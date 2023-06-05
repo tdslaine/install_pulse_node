@@ -431,7 +431,14 @@ system_submenu() {
                 "-")
                     ;;
                 "Backup and Restore")
-                    tmux new-session -s bandr $CUSTOM_PATH/helper/backup_restore.sh
+                    if tmux has-session -t bandr 2>/dev/null; then
+                    # If the session exists, attach to it
+                    tmux attach-session -t bandr
+                    else
+                    # If the session does not exist, create and attach to it
+                    tmux new-session -d -s bandr $CUSTOM_PATH/helper/backup_restore.sh
+                    tmux attach-session -t bandr
+                    fi
                     ;;
                 "-")
                     ;;
