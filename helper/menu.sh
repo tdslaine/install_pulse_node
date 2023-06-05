@@ -1,4 +1,4 @@
-    VERSION="1.1d"
+    VERSION="1.1e"
     script_launch() {
         local script_name=$1
         local script_path="${helper_scripts_path}/${script_name}"
@@ -405,7 +405,8 @@ system_submenu() {
                     sudo docker stop -t 180 beacon
                     sudo docker stop -t 180 validator
                     sleep 5
-                    clear && sudo apt-get update && sudo apt-get upgrade -y
+                    clear && sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y
+                    read -p "Update done, reboot now? Press enter to continue or Ctrl+C to cancel."
                     sleep 5
                     sudo reboot now
                     ;;
