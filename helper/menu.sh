@@ -401,11 +401,15 @@ system_submenu() {
           0)
             case $sys_opt in
                 "Update & Reboot System")
+                    clear
+                    echo "Stopping running docker container..."
                     sudo docker stop -t 300 execution
                     sudo docker stop -t 180 beacon
                     sudo docker stop -t 180 validator
                     sleep 5
-                    clear && sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y
+                    clear
+                    echo "Getting System updates..."
+                    sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y
                     read -p "Update done, reboot now? Press enter to continue or Ctrl+C to cancel."
                     sleep 5
                     sudo reboot now
