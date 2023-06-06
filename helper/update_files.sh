@@ -10,7 +10,7 @@ TMP_DIR=$(mktemp -d -t ci-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
 git clone $REPO_URL $TMP_DIR
 
 # Prompt the user for the install location with a default value
-read -p "Please enter the path to your install location (default is /blockchain): " INSTALL_PATH
+read -e -p "Please enter the path to your install location (default is /blockchain): " INSTALL_PATH
 INSTALL_PATH=${INSTALL_PATH:-/blockchain}
 
 # Verify the directory exists or create it
