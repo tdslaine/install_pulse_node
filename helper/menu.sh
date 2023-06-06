@@ -1,4 +1,4 @@
-    VERSION="1.1g"
+    VERSION="1.1h"
     
     
 trap cleanup SIGINT
@@ -407,10 +407,11 @@ validator_setup_submenu() {
 system_submenu() {
     while true; do
         sys_opt=$(dialog --stdout --title "System Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+                        "Update Local Helper-Files" "Get latest additions/changes for plsmenu" \
+                        "-" "" \
                         "Update & Reboot System" "" \
                         "Reboot System" "" \
                         "Shutdown System" "" \
-                        "Update Local Helper-Files" "" \
                         "-" "" \
                         "Backup and Restore" "Chaindata for go-pulse" \
                         "-" "" \
@@ -419,11 +420,16 @@ system_submenu() {
         case $? in
           0)
             case $sys_opt in
+                "Update Local Helper-Files")
+                    clear && script_launch "update_files.sh"
+                    ;;
+                "-")
+                    ;;                    
                 "Update & Reboot System")
                     clear
                     echo "Stopping running docker container..."
                     script_launch "stop_docker.sh"
-                    sleep 5
+                    sleep 3
                     clear
                     echo "Getting System updates..."
                     sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y
@@ -432,24 +438,20 @@ system_submenu() {
                     sudo reboot now
                     ;;
                 "Reboot System")
-                    sudo docker stop -t 300 execution
-                    sudo docker stop -t 180 beacon
-                    sudo docker stop -t 180 validator
-                    sleep 5
+                    echo "Stopping running docker container..."
+                    script_launch "stop_docker.sh"  
+                    sleep 3
+                    read -p "Reboot now? Press enter to continue or Ctrl+C to cancel."
                     sudo reboot now
                     ;;
                 "Shutdown System")
-                    sudo docker stop -t 300 execution
-                    sudo docker stop -t 180 beacon
-                    sudo docker stop -t 180 validator
-                    sleep 5
+                    echo "Stopping running docker container..."
+                    script_launch "stop_docker.sh"  
+                    sleep 3
+                    read -p "Shutdown now? Press enter to continue or Ctrl+C to cancel."                    
                     sudo shutdown now
                     ;;
-                "-")
-                    ;;
-                "Update Local Helper-Files")
-                    clear && script_launch "update_files.sh"
-                    ;;
+
                 "-")
                     ;;
                 "Backup and Restore")
