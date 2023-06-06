@@ -69,4 +69,5 @@ do
   done
 
   echo "Finished one cycle, starting another..."
+  echo "interrupt with Ctrl.C"
 done
