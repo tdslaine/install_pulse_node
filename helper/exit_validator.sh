@@ -25,7 +25,7 @@ function get_user_choices() {
     echo ""
     echo "0. Return or Exit"
     echo ""
-    read -p "Enter your choice (1, 2 or 0): " client_choice
+    read -p "Enter your choice (1, 2, 3 or 0): " client_choice
 
     # Validate user input for client choice
     while [[ ! "$client_choice" =~ ^[0-3]$ ]]; do
@@ -62,6 +62,7 @@ if [[ "$client_choice" == "1" ]]; then  # lighthouse
     exit 0
     
 elif [[ "$client_choice" == "2" ]]; then  # Lighthouse Multi-Key Exit
+    get_install_path
     start_script "lh_batch_exit"
     exit 0
 fi
