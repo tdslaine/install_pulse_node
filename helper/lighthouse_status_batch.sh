@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 # Define your beacon node address 
-BEACON_NODE=http://localhost:5052 
+BEACON_NODE=http://localhost
 
 # Prompt the user for the install location with a default value
 read -e -p "Please enter the path to your install location (default is /blockchain): " INSTALL_PATH
@@ -36,11 +36,18 @@ do
     do 
       echo "Processing validator index $VALIDATOR_INDEX..." 
 
-      # Run the GET curl command for the current validator index 
-      curl -s -S -X GET "$BEACON_NODE/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq
-
-      # Run the POST curl command for the current validator index 
-      curl -s -S -X POST "$BEACON_NODE/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
+      # Check ports
+      if nc -z localhost 5052; then
+        # Run the POST curl command for the current validator index 
+        curl -s -S -X POST "$BEACON_NODE:5052/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
+        # Run the GET curl command for the current validator index 
+        curl -s -S -X GET "$BEACON_NODE:5052/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq
+      elif nc -z localhost 3500; then
+        # Run the GET curl command for the current validator index 
+        curl -s -S -X GET "$BEACON_NODE:3500/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq
+      else
+        echo "Neither port 5052 nor port 3500 is reachable!"
+      fi
 
       echo "Finished processing validator index $VALIDATOR_INDEX." 
 
@@ -56,11 +63,18 @@ do
   do
     echo "Processing validator index $VALIDATOR_INDEX..." 
 
-    # Run the GET curl command for the current validator index 
-    curl -s -S -X GET "$BEACON_NODE/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq
-
-    # Run the POST curl command for the current validator index 
-    curl -s -S -X POST "$BEACON_NODE/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
+    # Check ports
+    if nc -z localhost 5052; then
+      # Run the POST curl command for the current validator index 
+      curl -s -S -X POST "$BEACON_NODE:5052/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
+      # Run the GET curl command for the current validator index 
+      curl -s -S -X GET "$BEACON_NODE:5052/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq
+    elif nc -z localhost 3500; then
+      # Run the GET curl command for the current validator index 
+      curl -s -S -X GET "$BEACON_NODE:3500/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq
+    else
+      echo "Neither port 5052 nor port 3500 is reachable!"
+    fi
 
     echo "Finished processing validator index $VALIDATOR_INDEX." 
 
