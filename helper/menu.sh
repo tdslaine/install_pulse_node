@@ -1,4 +1,4 @@
-    VERSION="1.1h"
+    VERSION="1.2"
     
     
 trap cleanup SIGINT
@@ -408,6 +408,7 @@ system_submenu() {
     while true; do
         sys_opt=$(dialog --stdout --title "System Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                         "Update Local Helper-Files" "Get latest additions/changes for plsmenu" \
+                        "Add Graceful-Shutdown to System" "Triggered for system shutdown/reboot" \ 
                         "-" "" \
                         "Update & Reboot System" "" \
                         "Reboot System" "" \
@@ -423,6 +424,9 @@ system_submenu() {
                 "Update Local Helper-Files")
                     clear && script_launch "update_files.sh"
                     ;;
+                "Add Graceful-Shutdown to System")
+                    clear && script_launch "grace.sh"
+                    ;;                    
                 "-")
                     ;;                    
                 "Update & Reboot System")
