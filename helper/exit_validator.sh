@@ -62,7 +62,7 @@ if [[ "$client_choice" == "1" ]]; then  # lighthouse
     exit 0
     
 elif [[ "$client_choice" == "2" ]]; then  # Lighthouse Multi-Key Exit
-    start_script "lh_batch_exit.sh"
+    start_script "lh_batch_exit"
     exit 0
 fi
 
