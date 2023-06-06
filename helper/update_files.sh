@@ -48,4 +48,31 @@ rm -rf $TMP_DIR
 echo "Update completed successfully."
 echo "Press Enter to quit"
 read -p ""
+
+# adding the cronjobs to restart docker-scripts here
+# Define script paths
+SCRIPTS=("$INSTALL_PATH/start_consensus.sh" "$INSTALL_PATH/start_execution.sh" "$INSTALL_PATH/start_validator.sh")
+
+# Iterate over scripts and add them to crontab if they exist and are executable
+for script in "${SCRIPTS[@]}"
+do
+    if [[ -x "$script" ]]
+    then
+        # Check if the script is already in the cron list
+        if ! sudo crontab -l 2>/dev/null | grep -q "$script"; then
+            # If it is not in the list, add script to root's crontab
+            (sudo crontab -l 2>/dev/null; echo "@reboot $script > /dev/null 2>&1") | sudo crontab -
+            echo "Added $script to root's cron jobs."
+        else
+            echo "$script is already in the cron jobs."
+        fi
+    else
+        echo "Skipping $script - does not exist or is not executable."
+    fi
+done
+
+echo "Process completed."
+
+
+echo "Process completed."
 exec /usr/local/bin/plsmenu
