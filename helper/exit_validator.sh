@@ -18,7 +18,7 @@ function get_user_choices() {
     echo ""
     echo "---------------------------------------"
     echo "1. Lighthouse - single key exit"
-    echo "2. Lighthouse -multiple keys exit"
+    echo "2. Lighthouse - multiple keys exit"
     echo "---------------------------------------"
     echo "3. Prysm - single or multiple key exit"
     echo ""
