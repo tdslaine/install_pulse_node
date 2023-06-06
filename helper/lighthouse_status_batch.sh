@@ -1,14 +1,40 @@
-
 #!/bin/bash 
 
 # Define your beacon node address 
 BEACON_NODE=http://localhost:5052 
 
+# Prompt the user for the install location with a default value
+read -e -p "Please enter the path to your install location (default is /blockchain): " INSTALL_PATH
+INSTALL_PATH=${INSTALL_PATH:-/blockchain}
+echo "Using install path: $INSTALL_PATH"
+
 # Define the path to your file
-INDICES_FILE=/blockchain/valis.txt
+INDICES_FILE="$INSTALL_PATH/valis.txt"
+
+# Check if the indices file exists
+if [ ! -f "$INDICES_FILE" ]; then
+    read -p "$INDICES_FILE not found. Would you like to create it now? (y/n): " create_file
+
+    if [[ "${create_file,,}" == "y" ]]; then
+        touch "$INDICES_FILE"
+        read -p "Would you like to edit $INDICES_FILE now? (y/n): " edit_file
+
+        if [[ "${edit_file,,}" == "y" ]]; then
+            nano "$INDICES_FILE"
+        fi
+    fi
+fi
 
 # Array of hardcoded validator indices
-HARDCODED_INDICES=(6694 6695 6696)
+HARDCODED_INDICES=(5555)
+
+read -p "Would you like to check other validator indices not listed in $INDICES_FILE? (y/n): " check_others
+
+if [[ "${check_others,,}" == "y" ]]; then
+    read -p "Please enter the validator indices separated by comma (e.g., 1234,5678,9012): " other_indices
+    IFS=',' read -r -a additional_indices <<< "$other_indices"
+    HARDCODED_INDICES=("${HARDCODED_INDICES[@]}" "${additional_indices[@]}")
+fi
 
 # Infinite loop
 while true
@@ -45,11 +71,4 @@ do
     # Run the POST curl command for the current validator index 
     curl -X POST "$BEACON_NODE/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
 
-    echo "Finished processing validator index $VALIDATOR_INDEX." 
-
-    # Sleep for 3 seconds
-    sleep 3
-  done
-
-  echo "Finished one cycle, starting another..."
-done
+    echo "Finished processing validator index $VALIDATOR_INDEX
