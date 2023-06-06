@@ -37,10 +37,10 @@ do
       echo "Processing validator index $VALIDATOR_INDEX..." 
 
       # Run the GET curl command for the current validator index 
-      curl -s -X GET "$BEACON_NODE/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq -r '{index: .data.index, status: .data.status}'
+      curl -s -S -X GET "$BEACON_NODE/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq -r '{index: .data.index, status: .data.status}'
 
       # Run the POST curl command for the current validator index 
-      curl -X POST "$BEACON_NODE/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
+      curl -s -S -X POST "$BEACON_NODE/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
 
       echo "Finished processing validator index $VALIDATOR_INDEX." 
 
@@ -57,10 +57,10 @@ do
     echo "Processing validator index $VALIDATOR_INDEX..." 
 
     # Run the GET curl command for the current validator index 
-    curl -s -X GET "$BEACON_NODE/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq -r '{index: .data.index, status: .data.status}'
+    curl -s -S -X GET "$BEACON_NODE/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq -r '{index: .data.index, status: .data.status}'
 
     # Run the POST curl command for the current validator index 
-    curl -X POST "$BEACON_NODE/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
+    curl -s -S -X POST "$BEACON_NODE/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
 
     echo "Finished processing validator index $VALIDATOR_INDEX." 
 
