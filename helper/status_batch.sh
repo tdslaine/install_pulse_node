@@ -27,9 +27,12 @@ fi
 read -p "Enter any validator indices to check that are not listed in valis.txt, separated by commas: " indices
 HARDCODED_INDICES=(${indices//,/ })
 
-# Infinite loop
-while true
-do
+# Ask user if they want to run the script in a loop
+read -p "Do you want to run this script in a loop? (y/n): " run_in_loop
+run_in_loop=${run_in_loop:-y}
+
+# Function to process validators
+function process_validators {
   # Read from external file if it exists
   if [ -f "$INDICES_FILE" ]; then
     while read -r VALIDATOR_INDEX 
@@ -37,17 +40,7 @@ do
       echo "Processing validator index $VALIDATOR_INDEX..." 
 
       # Check ports
-      if nc -z localhost 5052; then
-        # Run the POST curl command for the current validator index 
-        curl -s -S -X POST "$BEACON_NODE:5052/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
-        # Run the GET curl command for the current validator index 
-        curl -s -S -X GET "$BEACON_NODE:5052/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq
-      elif nc -z localhost 3500; then
-        # Run the GET curl command for the current validator index 
-        curl -s -S -X GET "$BEACON_NODE:3500/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq
-      else
-        echo "Neither port 5052 nor port 3500 is reachable!"
-      fi
+      check_and_run_curl $VALIDATOR_INDEX
 
       echo "Finished processing validator index $VALIDATOR_INDEX." 
 
@@ -64,24 +57,40 @@ do
     echo "Processing validator index $VALIDATOR_INDEX..." 
 
     # Check ports
-    if nc -z localhost 5052; then
-      # Run the POST curl command for the current validator index 
-      curl -s -S -X POST "$BEACON_NODE:5052/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
-      # Run the GET curl command for the current validator index 
-      curl -s -S -X GET "$BEACON_NODE:5052/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq
-    elif nc -z localhost 3500; then
-      # Run the GET curl command for the current validator index 
-      curl -s -S -X GET "$BEACON_NODE:3500/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq
-    else
-      echo "Neither port 5052 nor port 3500 is reachable!"
-    fi
+    check_and_run_curl $VALIDATOR_INDEX
 
     echo "Finished processing validator index $VALIDATOR_INDEX." 
 
     # Sleep for 3 seconds
     sleep 3
   done
+}
 
-  echo "Finished one cycle, starting another..."
-  echo "interrupt with Ctrl.C"
-done
+# Function to check ports and run curl commands
+function check_and_run_curl {
+  if nc -z localhost 5052; then
+    # Run the POST curl command for the current validator index 
+    curl -s -S -X POST "$BEACON_NODE:5052/lighthouse/ui/validator_metrics" -d "{\"indices\": [$1]}" -H "Content-Type: application/json" | jq 
+    # Run the GET curl command for the current validator index 
+    curl -s -S -X GET "$BEACON_NODE:5052/eth/v1/beacon/states/head/validators/$1" -H "accept: application/json" | jq
+  elif nc -z localhost 3500; then
+    # Run the GET curl command for the current validator index 
+    curl -s -S -X GET "$BEACON_NODE:3500/eth/v1/beacon/states/head/validators/$1" -H "accept: application/json" | jq
+  else
+    echo "Neither port 5052 nor port 3500 is reachable!"
+  fi
+}
+
+# Run once or in a loop
+if [[ "$run_in_loop" =~ ^[Yy]$ ]]
+then
+  while true
+  do
+    process_validators
+    echo "Finished one cycle, starting another..."
+    echo "interrupt with Ctrl.C"
+  done
+else
+  process_validators
+  echo "Finished processing validators."
+fi
