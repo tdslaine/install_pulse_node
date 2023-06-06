@@ -65,3 +65,6 @@ do
 done
 
 echo "All done! You can find the log file at $INSTALL_PATH/processed_keystores.log"
+echo ""
+echo "Press Enter to continue"
+read -p ""
