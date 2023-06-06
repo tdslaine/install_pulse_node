@@ -16,17 +16,21 @@ function get_user_choices() {
     echo "-----------------------------------------"
     echo "(based on your consensus/beacon Client)"
     echo ""
-    echo "1. Lighthouse"
-    echo "2. Prysm"
+    echo "---------------------------------------"
+    echo "1. Lighthouse - single key exit"
+    echo "2. Lighthouse -multiple keys exit"
+    echo "---------------------------------------"
+    echo "3. Prysm - single or multiple key exit"
+    echo ""
     echo ""
     echo "0. Return or Exit"
     echo ""
     read -p "Enter your choice (1, 2 or 0): " client_choice
 
     # Validate user input for client choice
-    while [[ ! "$client_choice" =~ ^[0-2]$ ]]; do
-        echo "Invalid input. Please enter a valid choice (1, 2 or 0): "
-        read -p "Enter your choice (1, 2 or 0): " client_choice
+    while [[ ! "$client_choice" =~ ^[0-3]$ ]]; do
+        echo "Invalid input. Please enter a valid choice (1, 2, 3 or 0): "
+        read -p "Enter your choice (1, 2, 3 or 0): " client_choice
     done
 
     if [[ "$client_choice" == "0" ]]; then
@@ -55,8 +59,14 @@ if [[ "$client_choice" == "1" ]]; then  # lighthouse
             break
         fi
     done
-    exit 0 
-elif [[ "$client_choice" == "2" ]]; then  # PRYSM
+    exit 0
+    
+elif [[ "$client_choice" == "2" ]]; then  # Lighthouse Multi-Key Exit
+    start_script "lh_batch_exit.sh"
+    exit 0
+fi
+
+elif [[ "$client_choice" == "3" ]]; then  # PRYSM
     get_install_path
     start_script "../start_validator" > /dev/null 2>&1
     exit_validator_PR
