@@ -345,7 +345,7 @@ validator_setup_submenu() {
                  "Prysm - List Accounts" "List all Accounts from the Validator DB" \
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
                  "-" "" \
-                 "Lighthouse - Validator Info" "Get status of validators via CURL"\
+                 "Validator Info per indice" "Backup, should beacon.pulsechain.com be down"\
                  "-" ""
                  "ReRun Initial Setup" "" \
                  "-" ""\
@@ -383,8 +383,8 @@ validator_setup_submenu() {
                         ;;
                     "-")
                         ;;
-                    "Lighthouse - Validator Info")
-                        clear && script_launch "lighthouse_status_batch.sh"
+                    "Validator Info per indice")
+                        clear && script_launch "status_batch.sh"
                         ;;
                     "-")
                         ;;                    
