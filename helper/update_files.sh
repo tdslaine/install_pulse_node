@@ -51,6 +51,7 @@ read -p ""
 
 # adding the cronjobs to restart docker-scripts here
 # Define script paths
+INSTALL_PATH=${INSTALL_PATH%/}
 SCRIPTS=("$INSTALL_PATH/start_consensus.sh" "$INSTALL_PATH/start_execution.sh" "$INSTALL_PATH/start_validator.sh")
 
 # Iterate over scripts and add them to crontab if they exist and are executable
