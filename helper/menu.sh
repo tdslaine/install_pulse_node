@@ -1,4 +1,4 @@
-    VERSION="1.1e"
+    VERSION="1.1f"
     script_launch() {
         local script_name=$1
         local script_path="${helper_scripts_path}/${script_name}"
