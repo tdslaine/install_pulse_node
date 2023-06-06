@@ -13,10 +13,12 @@ INDICES_FILE="$INSTALL_PATH/valis.txt"
 
 # Check if the indices file exists
 if [ ! -f "$INDICES_FILE" ]; then
-    read -p "$INDICES_FILE not found. Would you like to create it now? (y/n): " create_file
+    read -p "$INDICES_FILE not found. This file will be used to store the indices of validators you want to check in the future. Would you like to create it now? (y/n): " create_file
+
 
     if [[ "${create_file,,}" == "y" ]]; then
         touch "$INDICES_FILE"
+        echo "#Add one validator-indice you want to check on per line" > "$INDICES_FILE"
         read -p "Would you like to edit $INDICES_FILE now? (y/n): " edit_file
 
         if [[ "${edit_file,,}" == "y" ]]; then
@@ -46,7 +48,7 @@ do
       echo "Processing validator index $VALIDATOR_INDEX..." 
 
       # Run the GET curl command for the current validator index 
-      curl -s -X GET "$BEACON_NODE/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq -r '{index: .data.index, status: .data.status}'
+      curl -s -X GET "$BEACON_NODE/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq'
 
       # Run the POST curl command for the current validator index 
       curl -X POST "$BEACON_NODE/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
@@ -66,9 +68,10 @@ do
     echo "Processing validator index $VALIDATOR_INDEX..." 
 
     # Run the GET curl command for the current validator index 
-    curl -s -X GET "$BEACON_NODE/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq -r '{index: .data.index, status: .data.status}'
+    curl -s -X GET "$BEACON_NODE/eth/v1/beacon/states/head/validators/$VALIDATOR_INDEX" -H "accept: application/json" | jq'
 
     # Run the POST curl command for the current validator index 
     curl -X POST "$BEACON_NODE/lighthouse/ui/validator_metrics" -d "{\"indices\": [$VALIDATOR_INDEX]}" -H "Content-Type: application/json" | jq 
 
-    echo "Finished processing validator index $VALIDATOR_INDEX
+    echo "Finished processing validator index $VALIDATOR_INDEX "
+    echo "Exit this loop via Ctrl.c"
