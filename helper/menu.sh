@@ -1,4 +1,14 @@
     VERSION="1.1f"
+    
+    
+trap cleanup SIGINT
+
+function cleanup() {
+    clear
+    echo "Exiting..."
+    exit
+}
+
     script_launch() {
         local script_name=$1
         local script_path="${helper_scripts_path}/${script_name}"
