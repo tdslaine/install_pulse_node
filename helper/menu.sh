@@ -345,6 +345,8 @@ validator_setup_submenu() {
                  "Prysm - List Accounts" "List all Accounts from the Validator DB" \
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
                  "-" "" \
+                 "Lighthouse - Validator Info" "Get status of validators via CURL"\
+                 "-" ""
                  "ReRun Initial Setup" "" \
                  "-" ""\
                  "back" "Back to main menu; Return to the main menu.")
@@ -379,6 +381,13 @@ validator_setup_submenu() {
                     "Prysm - Delete Validator")
                         clear && script_launch "prysm_delete_validator.sh"
                         ;;
+                    "-")
+                        ;;
+                    "Lighthouse - Validator Info")
+                        clear && script_launch "lighthouse_status_batch.sh"
+                        ;;
+                    "-")
+                        ;;                    
                     "ReRun Initial Setup")
                         clear && script_launch "setup_validator.sh"
                         ;;
