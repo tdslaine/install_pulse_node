@@ -93,4 +93,5 @@ then
 else
   process_validators
   echo "Finished processing validators."
+  read -p "Press any key to exit"
 fi
