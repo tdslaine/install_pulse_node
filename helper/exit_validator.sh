@@ -65,7 +65,6 @@ elif [[ "$client_choice" == "2" ]]; then  # Lighthouse Multi-Key Exit
     get_install_path
     start_script "lh_batch_exit"
     exit 0
-fi
 
 elif [[ "$client_choice" == "3" ]]; then  # PRYSM
     get_install_path
