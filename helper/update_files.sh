@@ -48,3 +48,4 @@ rm -rf $TMP_DIR
 echo "Update completed successfully."
 echo "Press Enter to quit"
 read -p ""
+/usr/local/bin/plsmenu
