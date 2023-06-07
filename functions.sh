@@ -1321,8 +1321,35 @@ function reboot_prompt() {
     fi
 }
 
-function Gracefulstop() {
+grace() {
     echo "Adding systemwide graceful stop for our docker containers, as well as auto-restarts of the start-scripts via cron"
+    # Create a systemd service unit file
+    cat << EOF | sudo tee /etc/systemd/system/graceful_stop.service
+[Unit]
+Description=Gracefully stop docker containers on shutdown
+
+[Service]
+ExecStart=/bin/true
+ExecStop=$INSTALL_PATH/helper/stop_docker.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    
+    # Reload systemd manager configuration
+    sudo systemctl daemon-reload
+
+    # Enable the new service to be started on bootup
+    sudo systemctl enable graceful_stop.service
+    sudo systemctl start graceful_stop.service
+    echo ""
+    echo "Set up and enabled graceful_stop service. Activated cronjob to always restart docker clients after a reboot"
+    echo ""
+    read -p "Press Enter to continue"
+}
+
+cron() {
 
     INSTALL_PATH=$CUSTOM_PATH
     INSTALL_PATH=${INSTALL_PATH%/}
@@ -1347,29 +1374,4 @@ function Gracefulstop() {
             echo "Skipping $script - does not exist or is not executable."
         fi
     done
-
-    # Create a systemd service unit file
-    cat << EOF | sudo tee /etc/systemd/system/graceful_stop.service
-    [Unit]
-    Description=Gracefully stop docker containers on shutdown
-
-    [Service]
-    ExecStart=/bin/true
-    ExecStop=$INSTALL_PATH/helper/stop_docker.sh
-    RemainAfterExit=yes
-
-    [Install]
-    WantedBy=multi-user.target
-    EOF
-    
-    # Reload systemd manager configuration
-    sudo systemctl daemon-reload
-
-    # Enable the new service to be started on bootup
-    sudo systemctl enable graceful_stop.service
-    sudo systemctl start graceful_stop.service
-
-    echo "Set up and enabled graceful_stop service. Activated cronjob to always restart docker clients after a reboot"
-    read -p "Press Enter to continue"
 }
-
