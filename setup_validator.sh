@@ -422,6 +422,8 @@ sudo chown -R $main_user:docker ${INSTALL_PATH}/*.sh
 
 sleep 1
 
+
+
 # Setup ownership and file permissions
 
                                                          # get main user via logname
@@ -443,6 +445,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls
 sudo chmod -R 770 "$INSTALL_PATH/wallet" > /dev/null 2>&1
 sudo chmod -R 770 "$INSTALL_PATH/validators" > /dev/null 2>&1
 
+cron2
 
 # Prompt the user if they want to run the scripts
 start_scripts_first_time
