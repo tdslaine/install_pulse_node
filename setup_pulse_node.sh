@@ -616,6 +616,11 @@ echo "Menu generated and copied over to /usr/local/bin/plsmenu - you can open th
 echo ""
 press_enter_to_continue
 
+
+###### added feature
+Gracefulstop
+
+
 # setting 775 for the exeuction folder, in case of backup
 sudo chmod 775 -R $CUSTOM_PATH/execution
 
