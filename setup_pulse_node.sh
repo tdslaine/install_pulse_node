@@ -617,9 +617,9 @@ echo ""
 press_enter_to_continue
 
 
-###### added feature
-Gracefulstop
-
+###### added features
+cron
+grace
 
 # setting 775 for the exeuction folder, in case of backup
 sudo chmod 775 -R $CUSTOM_PATH/execution
