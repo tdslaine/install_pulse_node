@@ -84,6 +84,9 @@ sudo groupadd pls-validator > /dev/null 2>&1
 
 Staking_Cli_launch_setup
 
+sudo chmod -R 777 $INSTALL_PATH/validator_keys
+sudo chmod -R 777 $INSTALL_PATH/staking-deposit-cli
+
 clear
 
 # Generate Key functions 
