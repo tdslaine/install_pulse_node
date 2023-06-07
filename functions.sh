@@ -775,7 +775,7 @@ function menu_script_template() {
     cat <<-'EOF' | sed "s|@@CUSTOM_PATH@@|$CUSTOM_PATH|g"
 #!/bin/bash
 CUSTOM_PATH="@@CUSTOM_PATH@@"
-VERSION="1.1d"
+VERSION="1.2"
 script_launch() {
     echo "Launching script: ${CUSTOM_PATH}/helper/$1"
     ${CUSTOM_PATH}/helper/$1
@@ -1092,10 +1092,14 @@ validator_setup_submenu() {
                  "Convert BLS-Keys" "00-BLS to 01-Execution Wallet conversion" \
                  "Exit your Validator(s)" "Initiate the Exit of your Validator(s)" \
                  "-" "" \
-                 "Geth - BlockMonitor" "Compare local Block# with scan.puslechain.com" \
+                 "GoPLS - BlockMonitor" "Compare local Block# with scan.puslechain.com" \
+                 "GoPLS - Database Prunning" "Prune your local DB to freeup space" \
+                 "-" "" \
                  "Prysm - List Accounts" "List all Accounts from the Validator DB" \
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
                  "-" "" \
+                 "Validator Info per indice" "Backup, should beacon.pulsechain.com be down"\
+                 "-" ""
                  "ReRun Initial Setup" "" \
                  "-" ""\
                  "back" "Back to main menu; Return to the main menu.")
@@ -1114,15 +1118,29 @@ validator_setup_submenu() {
                     "Exit your Validator(s)")
                         clear && script_launch "exit_validator.sh"
                         ;;
-                    "Geth - BlockMonitor")
+                    "-")
+                        ;;
+                    "GoPLS - BlockMonitor")
                         clear && script_launch "compare_blocks.sh"
                         ;;
+                    "GoPLS - Database Prunning")
+                        tmux new-session -s prune $CUSTOM_PATH/helper/gopls_prune.sh
+                        ;;
+                    "-")
+                        ;;                        
                     "Prysm - List Accounts")
                         clear && script_launch "prysm_read_accounts.sh"
                         ;;
                     "Prysm - Delete Validator")
                         clear && script_launch "prysm_delete_validator.sh"
                         ;;
+                    "-")
+                        ;;
+                    "Validator Info per indice")
+                        clear && script_launch "status_batch.sh"
+                        ;;
+                    "-")
+                        ;;                    
                     "ReRun Initial Setup")
                         clear && script_launch "setup_validator.sh"
                         ;;
@@ -1142,10 +1160,12 @@ validator_setup_submenu() {
 system_submenu() {
     while true; do
         sys_opt=$(dialog --stdout --title "System Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
+                        "Update Local Helper-Files" "Get latest additions/changes for plsmenu" \
+                        "Add Graceful-Shutdown to System" "for system shutdown/reboot" \
+                        "-" "" \
                         "Update & Reboot System" "" \
                         "Reboot System" "" \
                         "Shutdown System" "" \
-                        "Update Local Helper-Files" "" \
                         "-" "" \
                         "Backup and Restore" "Chaindata for go-pulse" \
                         "-" "" \
@@ -1154,38 +1174,52 @@ system_submenu() {
         case $? in
           0)
             case $sys_opt in
+                "Update Local Helper-Files")
+                    clear && script_launch "update_files.sh"
+                    ;;
+                "Add Graceful-Shutdown to System")
+                    clear && script_launch "grace.sh"
+                    ;;                    
+                "-")
+                    ;;                    
                 "Update & Reboot System")
-                    sudo docker stop -t 300 execution
-                    sudo docker stop -t 180 beacon
-                    sudo docker stop -t 180 validator
-                    sleep 5
-                    clear && sudo apt-get update && sudo apt-get upgrade -y
+                    clear
+                    echo "Stopping running docker container..."
+                    script_launch "stop_docker.sh"
+                    sleep 3
+                    clear
+                    echo "Getting System updates..."
+                    sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y
+                    read -p "Update done, reboot now? Press enter to continue or Ctrl+C to cancel."
                     sleep 5
                     sudo reboot now
                     ;;
                 "Reboot System")
-                    sudo docker stop -t 300 execution
-                    sudo docker stop -t 180 beacon
-                    sudo docker stop -t 180 validator
-                    sleep 5
+                    echo "Stopping running docker container..."
+                    script_launch "stop_docker.sh"  
+                    sleep 3
+                    read -p "Reboot now? Press enter to continue or Ctrl+C to cancel."
                     sudo reboot now
                     ;;
                 "Shutdown System")
-                    sudo docker stop -t 300 execution
-                    sudo docker stop -t 180 beacon
-                    sudo docker stop -t 180 validator
-                    sleep 5
+                    echo "Stopping running docker container..."
+                    script_launch "stop_docker.sh"  
+                    sleep 3
+                    read -p "Shutdown now? Press enter to continue or Ctrl+C to cancel."                    
                     sudo shutdown now
                     ;;
-                "-")
-                    ;;
-                "Update Local Helper-Files")
-                    clear && script_launch "update_files.sh"
-                    ;;
+
                 "-")
                     ;;
                 "Backup and Restore")
-                    tmux new-session -s bandr $(CUSTOM_PATH)/helper/backup_restore.sh
+                    if tmux has-session -t bandr 2>/dev/null; then
+                    # If the session exists, attach to it
+                    tmux attach-session -t bandr
+                    else
+                    # If the session does not exist, create and attach to it
+                    tmux new-session -d -s bandr $CUSTOM_PATH/helper/backup_restore.sh
+                    tmux attach-session -t bandr
+                    fi
                     ;;
                 "-")
                     ;;
