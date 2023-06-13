@@ -182,7 +182,7 @@ Stop Single: `Clients Menu > desired Client > Stop Client`
 
 #### -via Desktop Icon
 
-if opted to genearte the Desktop icons during initial setup, you should find a `stop docker` icon on your Dekstop
+if opted to generate the Desktop icons during initial setup, you should find a `stop docker` icon on your Dekstop
 
 -----------------------------------------------------------------
 
