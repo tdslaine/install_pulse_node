@@ -38,7 +38,10 @@ echo ""
 echo "Press Enter to Continue"
 read -p ""
  
-main_user=$(whoami)
+function get_main_user() {
+  main_user=$(logname || echo $SUDO_USER || echo $USER)
+  echo "Main user: $main_user"
+}
 
 clear
 
@@ -138,7 +141,8 @@ read -p ""
 cd ${INSTALL_PATH}
 chmod +x deposit.sh
 sudo ./deposit.sh install
-
+sudo chmod -R 777 "${INSTALL_PATH}"
+sudo chown $main_user:$main_user "${INSTALL_PATH}"
 
 echo "generating offline_key.sh script"
 
