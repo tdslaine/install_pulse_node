@@ -1,4 +1,3 @@
-<div align="center">
    
 <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/46573429/238115944-7791dc23-8150-459b-b07e-28a4c05345f6.png" style="max-width: 100%; margin: 0 auto;"/>
 </div>
@@ -255,17 +254,33 @@ sudo nano start_execution.sh
 
 ### - initial update, if you are running my script prior from prior june 2023 and no version number is shown in plsmenu
 
+![grafik](https://github.com/tdslaine/install_pulse_node/assets/46573429/def99e73-b16d-4939-a0cb-97c471e7e690)
+
+(Old version, no version-number is displayed)
+
+
 ```bash
 wget https://raw.githubusercontent.com/tdslaine/install_pulse_node/main/helper/update_files.sh && sudo chmod +x update_files.sh && ./update_files.sh
 ```
 reload plsmenu
 
+
+
+
 ### - Updating from within plsmenu, if you are already got a version number displayed in plsmenu
+
+![grafik](https://github.com/tdslaine/install_pulse_node/assets/46573429/ade52126-40fc-420d-95b0-3186d3d9c712)
+
+(Newer version, version-number is displa
+
 ```bash
 plsmenu
 ```
 
 `System Menu > Update local helper files`
+
+yed)
+
 
 ## |#| Updating the Nodes Docker-Images
 
