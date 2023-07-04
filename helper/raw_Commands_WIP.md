@@ -18,12 +18,17 @@ snapshot prune-state \
 ```
 ### Show Version
 
-###### Prysm
+###### Prysm beacon
 ```bash
 docker exec -it beacon /app/cmd/beacon-chain/beacon-chain --version
 ```
 
-###### Lighthouse
+###### Prysm validator
+```bash
+docker exec -it validator /app/cmd/validator/validator --version
+```
+
+###### Lighthouse beacon & validator
 ```bash
 curl -X GET "http://localhost:5052/eth/v1/node/version" -H 'accept: application/json' | jq
 ```
