@@ -251,7 +251,21 @@ cd \blockchain
 sudo nano start_execution.sh
 ```
 -----------------------------------------------------------------
+## |#| Updating plsmenu and helper files to latest version
 
+### - initial update, if you are running my script prior from prior june 2023 and no version number is shown in plsmenu
+
+```bash
+wget https://raw.githubusercontent.com/tdslaine/install_pulse_node/main/helper/update_files.sh && sudo chmod +x update_files.sh && ./update_files.sh
+```
+reload plsmenu
+
+### - Updating from within plsmenu, if you are already got a version number displayed in plsmenu
+```bash
+plsmenu
+```
+
+`System Menu > Update local helper files`
 
 ## |#| Updating the Nodes Docker-Images
 
