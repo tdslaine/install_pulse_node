@@ -243,6 +243,7 @@ registry.gitlab.com/pulsechaincom/go-pulse:latest \\
 --gpo.ignoreprice 1 \\
 --cache 16384 \\
 --metrics \\
+--db.engine=leveldb \\
 --pprof \\
 --http.api eth,net,engine,admin "
 
