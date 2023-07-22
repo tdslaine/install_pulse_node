@@ -431,7 +431,7 @@ echo ""
 echo -e "${GREEN}Setting up firewall to allow access to SSH and port 8545 for localhost and private network connection to the RPC.${NC}"
 
 ip_range=$(get_ip_range)
-read -p "Do you want to allow access to the RPC and SSH from within your local network ($ip_range)? (y/N): " local_network_choice
+read -p "Do you want to allow access to the RPC and SSH from within your local network ($ip_range) only? (y/N): " local_network_choice
 read -p "Do you want to allow RPC (8545) access ?(y/N): " rpc_choice
 
 if [[ $rpc_choice == "y" ]]; then
@@ -443,16 +443,19 @@ fi
 
 read -p "Do you want to allow SSH access to this server? (y/N): " ssh_choice
 
-if [[ $ssh_choice == "y" ]]; then
-  read -p "Enter SSH port (default is 22): " ssh_port
-  if [[ $ssh_port == "" ]]; then
-    ssh_port=22
-  fi
-  sudo ufw allow $ssh_port/tcp comment 'SSH Port'
-  if [[ $local_network_choice == "y" ]]; then
-    sudo ufw allow from $ip_range to any port $ssh_port proto tcp comment 'SSH Port for private IP range'
-  fi
+if [[ $ssh_choice == "y" ]]; then 
+  read -p "Enter SSH port (default is 22): " ssh_port 
+  if [[ $ssh_port == "" ]]; then 
+    ssh_port=22 
+  fi 
+  
+  if [[ $local_network_choice == "n" ]]; then 
+    sudo ufw allow $ssh_port/tcp comment 'SSH Port' 
+  elif [[ $local_network_choice == "y" ]]; then 
+    sudo ufw allow from $ip_range to any port $ssh_port proto tcp comment 'SSH Port for private IP range' 
+  fi 
 fi
+ 
 
 #############################################################################################################
 
