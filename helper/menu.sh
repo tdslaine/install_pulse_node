@@ -389,6 +389,7 @@ validator_setup_submenu() {
                         ;;
                     "Check for Sync Committee")
                        clear && script_launch "check_sync.sh"
+                       ;;
                     "-")
                         ;;                    
                     "ReRun Initial Setup")
