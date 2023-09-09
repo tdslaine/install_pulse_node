@@ -103,3 +103,6 @@ if [ $TOTAL_FOUND -eq 0 ]; then
 else
     echo "Sync committee duties found for local validators in the current and/or next epoch."
 fi
+
+echo "Press [Enter] to exit..."
+read
