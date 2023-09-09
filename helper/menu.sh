@@ -33,7 +33,7 @@ main_menu() {
         main_opt=$(dialog --stdout --title "Main Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                           "Logviewer" "Start different Logviewer" \
                           "Clients Menu" "Execution, Beacon and Validator Clients" \
-                          "Node and Validator Setup" "Manage your Node, Validator and keys" \
+                          "Info and KeyManagment" "Tools for Key Management and Node/Validator Information" \
                           "System" "Update, Reboot, shutodwn, Backup & Restore" \
                           "-" ""\
                           "exit" "Exit the program")
@@ -47,7 +47,7 @@ main_menu() {
                 "Clients Menu")
                     client_actions_submenu
                     ;;
-                "Node and Validator Setup")
+                "Info and KeyManagment")
                     validator_setup_submenu
                     ;;
                 "System")
@@ -351,7 +351,7 @@ validator_setup_submenu() {
                  "ReRun Initial Setup" "" \
                  "-" ""\
                  "back" "Back to main menu; Return to the main menu.")
-        vs_opt=$(dialog --stdout --title "Node/Validator Setup Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
+        vs_opt=$(dialog --stdout --title "Info and KeyManagment $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
         case $? in
             0)
                 case $vs_opt in
