@@ -1,4 +1,4 @@
-VERSION="1.2c"
+VERSION="1.3"
     
     
 trap cleanup SIGINT
