@@ -1,4 +1,4 @@
-VERSION="1.2b"
+VERSION="1.2c"
     
     
 trap cleanup SIGINT
@@ -346,6 +346,7 @@ validator_setup_submenu() {
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
                  "-" "" \
                  "Validator Info per indice" "Backup, should beacon.pulsechain.com be down"\
+                 "Check for Sync Committee" "Checks if local Valis are in the Sync Committee"\
                  "-" ""
                  "ReRun Initial Setup" "" \
                  "-" ""\
@@ -386,6 +387,8 @@ validator_setup_submenu() {
                     "Validator Info per indice")
                         clear && script_launch "status_batch.sh"
                         ;;
+                    "Check for Sync Committee")
+                       clear && script_launch "check_sync.sh"
                     "-")
                         ;;                    
                     "ReRun Initial Setup")
