@@ -33,7 +33,7 @@ main_menu() {
         main_opt=$(dialog --stdout --title "Main Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                           "Logviewer" "Start different Logviewer" \
                           "Clients Menu" "Execution, Beacon and Validator Clients" \
-                          "Validator & Key Setup" "Manage your Validator Keys" \
+                          "Node and Validator Setup" "Manage your Node, Validator and keys" \
                           "System" "Update, Reboot, shutodwn, Backup & Restore" \
                           "-" ""\
                           "exit" "Exit the program")
@@ -47,7 +47,7 @@ main_menu() {
                 "Clients Menu")
                     client_actions_submenu
                     ;;
-                "Validator & Key Setup")
+                "Node and Validator Setup")
                     validator_setup_submenu
                     ;;
                 "System")
