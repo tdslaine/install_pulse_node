@@ -558,12 +558,43 @@ function start_script(){
 }
 
 
+#function import_lighthouse_validator() {
+#    stop_and_prune_validator_import
+#    echo ""
+#    docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
+#    echo ""
+#    sudo docker run -it \
+#        --name validator_import \
+#        --network=host \
+#        -v ${INSTALL_PATH}:/blockchain \
+#        -v ${INSTALL_PATH}/validator_keys:/keys \
+#        registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \
+#        lighthouse \
+#        --network=${LIGHTHOUSE_NETWORK_FLAG} \
+#        account validator import \
+#        --directory=/keys \
+#        --datadir=/blockchain
+#    stop_and_prune_validator_import
+#}
+
 function import_lighthouse_validator() {
     stop_and_prune_validator_import
     echo ""
+
+    # Prompt the user
+    echo -n "Are you importing multiple validators with the same password? (y/N): "
+    read user_response
+
+    # If nothing is entered, default to "N"
+    if [ -z "$user_response" ]; then
+        user_response="N"
+    fi
+
     docker pull registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest
     echo ""
-    sudo docker run -it \
+
+    # Base command
+    cmd="sudo docker run -it \
         --name validator_import \
         --network=host \
         -v ${INSTALL_PATH}:/blockchain \
@@ -573,9 +604,20 @@ function import_lighthouse_validator() {
         --network=${LIGHTHOUSE_NETWORK_FLAG} \
         account validator import \
         --directory=/keys \
-        --datadir=/blockchain
+        --datadir=/blockchain"
+
+    # Conditionally add the --reuse-password flag
+    if [ "${user_response,,}" == "y" ]; then
+        cmd="$cmd \
+        --reuse-password"
+    fi
+
+    # Execute the command
+    eval $cmd
+
     stop_and_prune_validator_import
 }
+
 
 function import_prysm_validator() {
     stop_and_prune_validator_import
