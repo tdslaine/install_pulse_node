@@ -165,7 +165,7 @@ import_restore_validator_keys() {
 
 
 
-while true; do
+
     clear
     # Prompt the user to enter the path where their keystore files are located
     echo -e "Enter the path where your 'keystore*.json' files are located."
@@ -198,7 +198,7 @@ while true; do
     else
         echo "No keystore files found in the provided directory. Please check and try again."
     fi
-done
+
     
         
     echo ""
