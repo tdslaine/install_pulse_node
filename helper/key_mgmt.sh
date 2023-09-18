@@ -1,3 +1,5 @@
+#!/bin/bash
+
 start_dir=$(pwd)
 script_dir=$(dirname "$0")
 GREEN='\033[0;32m'
@@ -163,37 +165,40 @@ import_restore_validator_keys() {
 
 
 
-    while true; do
-        clear
-        # Prompt the user to enter the path to the root directory containing the 'validator_keys' backup-folder
-        echo -e "Enter the path to the root directory which contains the 'validator_keys' backup-folder."
-        echo -e "For example, if your 'validator_keys' folder is located in '/home/user/my_backup/validator_keys',"
-        echo -e "then provide the path '/home/user/my_backup'. You can use tab-autocomplete when entering the path."
-        echo ""
-        read -e -p "Path to backup: " backup_path
-    
-        # Check if the source directory exists
-        if [ -d "${backup_path}/validator_keys" ]; then
-            # Check if the source and destination paths are different
-            if [ "${INSTALL_PATH}/validator_keys" != "${backup_path}/validator_keys" ]; then
-                # Copy the validator_keys folder to the install path
-                sudo cp -R "${backup_path}/validator_keys" "${INSTALL_PATH}"
-                # Inform the user that the keys have been successfully copied over
-                echo "Keys successfully copied."
-                # Exit the loop
-                break
-            else
-                # Inform the user that the source and destination paths match and no action is needed
-                echo "Source and destination paths match. Skipping restore-copy; keys seem already in place."
-                echo "Key import will still proceed..."
-                # Exit the loop
-                break
-            fi
-        else
-            # Inform the user that the source directory does not exist and ask them to try again
-            echo "Source directory does not exist. Please check the provided path and try again."
+while true; do
+    clear
+    # Prompt the user to enter the path where their keystore files are located
+    echo -e "Enter the path where your 'keystore*.json' files are located."
+    echo -e "For example, if your files are located in '/home/user/my_keys', provide the path '/home/user/my_keys'."
+    echo -e "You can use tab-autocomplete when entering the path."
+    echo ""
+    read -e -p "Path to your keys: " keys_path
+    # Remove trailing slashes from the path
+    keys_path="${keys_path%/}"
+
+    # Check if the directory with keystore files exists
+    keystore_files=$(find "$keys_path" -name "keystore*.json" 2>/dev/null | wc -l)
+
+    if [[ $keystore_files -gt 0 ]]; then
+        sudo cp $keys_path/keystore*.json $INSTALL_PATH/validator_keys/ 2>/tmp/cp_error.log
+
+        if [ $? -ne 0 ]; then
+            echo "Error copying keystore files. Reason: $(cat /tmp/cp_error.log)"
         fi
-    done
+
+        num_keystore_files=$(find "$INSTALL_PATH/validator_keys/" -name "keystore*.json" 2>/dev/null | wc -l)
+        
+        if [ "$num_keystore_files" -eq 0 ]; then
+            echo "No keystore files were copied to the destination. Ensure source directory contains the expected files."
+        else
+            echo "Keys successfully copied."
+            break
+        fi
+
+    else
+        echo "No keystore files found in the provided directory. Please check and try again."
+    fi
+done
     
         
     echo ""
