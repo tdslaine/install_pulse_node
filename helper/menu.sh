@@ -346,6 +346,7 @@ validator_setup_submenu() {
                  "-" "" \
                  "Prysm - List Accounts" "List all Accounts from the Validator DB" \
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
+                 "Prysm - Temp. fix CPU-Bug" "Temporarly revert back to v2.2.2" \
                  "-" "" \
                  "Validator Info per indice" "Backup, should beacon.pulsechain.com be down"\
                  "Check for Sync Committee" "Checks if local Valis are in the Sync Committee"\
@@ -389,6 +390,9 @@ validator_setup_submenu() {
                     "Prysm - Delete Validator")
                         clear && script_launch "prysm_delete_validator.sh"
                         ;;
+                    "Prysm - Temp. fix CPU-Bug")
+                       clear && script_launch "prysm_fix.sh"
+                       ;;
                     "-")
                         ;;
                     "Validator Info per indice")
