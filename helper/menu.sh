@@ -339,6 +339,8 @@ validator_setup_submenu() {
                  "Convert BLS-Keys" "00-BLS to 01-Execution Wallet conversion" \
                  "Exit your Validator(s)" "Initiate the Exit of your Validator(s)" \
                  "-" "" \
+                 "Client Info" "Prints currently used client version" \
+                 "-" "" \
                  "GoPLS - BlockMonitor" "Compare local Block# with scan.puslechain.com" \
                  "GoPLS - Database Prunning" "Prune your local DB to freeup space" \
                  "-" "" \
@@ -368,6 +370,11 @@ validator_setup_submenu() {
                         ;;
                     "-")
                         ;;
+                    "Client Info")
+                       clear && script_launch "show_version.sh"
+                       ;;
+                    "-")
+                       ;;
                     "GoPLS - BlockMonitor")
                         clear && script_launch "compare_blocks.sh"
                         ;;
