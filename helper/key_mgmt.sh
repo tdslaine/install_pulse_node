@@ -201,6 +201,9 @@ import_restore_validator_keys() {
     eval $cmd || echo "Error during Lighthouse import"
     
         elif [[ "$client_choice" == "2" ]]; then
+        
+        sudo chmod -R 0600 "${INSTALL_PATH}/wallet/direct/accounts/all-accounts.keystore.json"
+        
         docker_cmd="docker run --rm -it \
         --name validator_import \
         -v ${keys_path}:/keys \
