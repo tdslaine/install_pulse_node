@@ -4,9 +4,9 @@ clear
 
 echo ""
 echo "This solution addresses issues faced by users with the v2.2.3 update of Prysm."
-echo "It switches the docker images from using the `:latest` tag to the stable `:v2.2.2` version."
+echo "It switches the docker images from using the latest tag to the stable v2.2.2 version."
 echo ""
-echo "Once a subsequent update resolves the problem, you can revert to using the `:latest` tag."
+echo "Once a subsequent update resolves the problem, you can revert to using the latest tag."
 echo ""
 
 
