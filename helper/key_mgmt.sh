@@ -165,7 +165,6 @@ import_restore_validator_keys() {
 
 
 
-
     clear
     # Prompt the user to enter the path where their keystore files are located
     echo -e "Enter the path where your 'keystore*.json' files are located."
@@ -176,47 +175,50 @@ import_restore_validator_keys() {
     # Remove trailing slashes from the path
     keys_path="${keys_path%/}"
 
-    # Check if the directory with keystore files exists
-    keystore_files=$(find "$keys_path" -name "keystore*.json" 2>/dev/null | wc -l)
-
-    if [[ $keystore_files -gt 0 ]]; then
-        sudo cp $keys_path/keystore*.json $INSTALL_PATH/validator_keys/ 2>/tmp/cp_error.log
-
-        if [ $? -ne 0 ]; then
-            echo "Error copying keystore files. Reason: $(cat /tmp/cp_error.log)"
-        fi
-
-        num_keystore_files=$(find "$INSTALL_PATH/validator_keys/" -name "keystore*.json" 2>/dev/null | wc -l)
-        
-        if [ "$num_keystore_files" -eq 0 ]; then
-            echo "No keystore files were copied to the destination. Ensure source directory contains the expected files."
-        else
-            echo "Keys successfully copied."
-            break
-        fi
-
-    else
-        echo "No keystore files found in the provided directory. Please check and try again."
-    fi
-
-    
-        
+            
     echo ""
     echo "Importing validator keys now"
     echo ""
 
-    sudo chmod -R 770 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
+    #sudo chmod -R 770 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
     sudo chmod -R 770 "${INSTALL_PATH}/wallet" >/dev/null 2>&1
     
     if [[ "$client_choice" == "1" ]]; then
-        import_lighthouse_validator
+            # Base command
+    cmd="sudo docker run -it \
+        --name validator_import \
+        --network=host \
+        -v ${INSTALL_PATH}:/blockchain \
+        -v ${keys_path}:/keys \
+        registry.gitlab.com/pulsechaincom/lighthouse-pulse:latest \
+        lighthouse \
+        --network=${LIGHTHOUSE_NETWORK_FLAG} \
+        account validator import \
+        --directory=/keys \
+        --datadir=/blockchain"
+    
+    # Execute the Docker command or handle error
+    eval $cmd || echo "Error during Lighthouse import"
+    
         elif [[ "$client_choice" == "2" ]]; then
-        import_prysm_validator
+        docker_cmd="docker run --rm -it \
+        --name validator_import \
+        -v ${keys_path}:/keys \
+        -v $INSTALL_PATH/wallet:/wallet \
+        registry.gitlab.com/pulsechaincom/prysm-pulse/validator:latest \
+        accounts import \
+        --${PRYSM_NETWORK_FLAG} \
+        --keys-dir=/keys \
+        --wallet-dir=/wallet \
+        --wallet-password-file=/wallet/pw.txt"
+    
+    # Execute the Docker command or handle error
+    	eval $docker_cmd || echo "Error during Prysm import"
     fi
 
-sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
-sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
-sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
+#sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec sudo chmod 440 {} \;
+#sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 444 {} \;
+#sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 
 
      
