@@ -44,6 +44,8 @@ function get_main_user() {
 }
 
 clear
+sudo apt update
+sudo apt install -y git
 
 echo "Checking if python3 > 3.8 is installed"
 echo "Press Enter to Continue"
@@ -96,7 +98,7 @@ echo "Press Enter to Continue"
 read -p ""
 
 # Check if the directory exists
-if [ -d "${INSTALL_PATH}" ]; then
+if [ -d "./${INSTALL_PATH}" ]; then
     while true; do
         read -p "The staking-deposit-cli folder already exists. Do you want to delete it and clone the latest version? (y/N): " confirm_delete
         if [ "$confirm_delete" == "y" ] || [ "$confirm_delete" == "Y" ]; then
