@@ -40,8 +40,17 @@ This streamlined approach ensures that you have a smooth and hassle-free setup e
 
 ### Single-Command
 
+Whole Setup:
 ```bash
 sudo apt update && sudo apt install git -y && git clone https://github.com/tdslaine/install_pulse_node && cd install_pulse_node && chmod +x setup_pulse_node.sh && ./setup_pulse_node.sh
+```
+Offline-Keygen only:
+```bash
+sudo apt update && sudo apt install git -y && git clone https://github.com/tdslaine/install_pulse_node && cd install_pulse_node && chmod +x setup_offline_keygen.sh && ./setup_offline_keygen.sh
+```
+or
+```bash
+wget https://tinyurl/valikey -O setup_offline_keygen.sh && chmod +x setup_offline_keygen.sh && ./setup_offline_keygen.sh
 ```
 
 ### Manual Steps
@@ -108,6 +117,71 @@ You can call `plsmenu` from anywhere in your terminal or use the "Validator Menu
 
 ```bash
 plsmenu
+```
+-----------------------------------------------------------------
+## |#| About validator-keys (keystore file generation):
+
+
+- User gets prompted to generate/import/restore keys during inital setup of the validator.
+- The key generation/managment can be restarted from plsmenu (plsmenu > key mgmt > add/restore keys)  any time.
+- Keys can be added at any time into the validator.
+- If using the offline keygenerator users can import these keys via plsmenu > key mgmt > add/restore keys any time.
+
+Creating keystore files involves a methodical process designed for generating and managing validator keys, a quick rundown:
+
+1. **Sequential Key Generation (Indexing)**: 
+   - **Index-Based Generation**: Keys are generated starting from index 0, with each subsequent key receiving the next sequential index.
+   - **User-Defined Key Quantity**: The number of keys to be generated can be specified by the user. The tool creates keys sequentially from the starting index to the designated end index.
+
+2. **Restoration of Previously Generated Keys**: 
+   - **Starting Index for Restoration**: To restore previously generated keys, users can set the starting index to the desired key-index from which restoration should begin.
+   - **Consistent Generation Order**: The keys will always regenerate in the same sequence as initially created.
+
+3. **Specific Key Restoration**: 
+   - **Restoring a Specific Keystore**: To restore a particular validator keystore, set the starting index to one less than the desired keystore index and generate one key.
+
+4. **Deposit File Generation**: 
+   - **Session-Based**: The deposit file, crucial for validator registration, is generated per session.
+
+5. **Import Process and Reuse of Keystores**: 
+   - **Skipping Imported Keystores**: Keystores already imported into a validator are skipped in subsequent import processes.
+   - **Non-Reuse of Exited Validator Keystores**: Once a validator is exited, the associated keystore (or validator index) cannot be reused. This is crucial for maintaining the integrity and security of the network.
+
+Summary:
+```bash
+1. Initial Generation at Index 0 (Creating 1 Key):
+   [Index 0] --> [Create 1 Key] --> [Keystore 1]
+
+2. Sequential Generation from Index 0 to Index X (Creating X+1 Keys):
+   [Index 0] --> [Create 1 Key] --> [Keystore 1]
+   [Index 1] --> [Create 1 Key] --> [Keystore 2]
+   [Index 2] --> [Create 1 Key] --> [Keystore 3]
+   ...
+   [Index X] --> [Create 1 Key] --> [Keystore X+1]
+
+Example of Creating 5 Keys Starting at Index 3:
+   [Index 3] --> [Create 5 Keys] --> [Keystores 4 to 8]
+   [Index 3] --> [Keystore 4]
+   [Index 4] --> [Keystore 5]
+   [Index 5] --> [Keystore 6]
+   [Index 6] --> [Keystore 7]
+   [Index 7] --> [Keystore 8]
+
+3. Restoration of a Specific Keystore at Index X (Creating 1 Key):
+   - To restore Keystore at Index X+1, set starting index to X
+   [Index X] --> [Create 1 Key] --> [Restore Keystore X+1]
+
+Example for Restoring Keystore 10 (Creating 1 Key):
+   - To restore Keystore 10, set starting index to 9
+   [Index 9] --> [Create 1 Key] --> [Restore Keystore 10]
+
+Example of Restoring Multiple Keystores:
+   - To restore Keystores 5 to 7, set starting index to 4 and create 3 keys
+   [Index 4] --> [Create 3 Keys] --> [Restore Keystores 5 to 7]
+   [Index 4] --> [Restore Keystore 5]
+   [Index 5] --> [Restore Keystore 6]
+   [Index 6] --> [Restore Keystore 7]
+
 ```
 -----------------------------------------------------------------
 
