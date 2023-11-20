@@ -197,12 +197,15 @@ function backup() {
                 echo ""
             else
                 echo "Backup confirmation declined. Backup aborted."
+		start_docker()
             fi
         else
             echo "Not enough space to create the backup in the selected location."
+	    start_docker()
         fi
     else
         echo "Backup aborted."
+	start_docker()
     fi
 }
 
