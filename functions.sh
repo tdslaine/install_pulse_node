@@ -817,7 +817,7 @@ function menu_script_template() {
     cat <<-'EOF' | sed "s|@@CUSTOM_PATH@@|$CUSTOM_PATH|g"
 #!/bin/bash
 CUSTOM_PATH="@@CUSTOM_PATH@@"
-VERSION="1.2"
+VERSION="1.3b"
 script_launch() {
     echo "Launching script: ${CUSTOM_PATH}/helper/$1"
     ${CUSTOM_PATH}/helper/$1
@@ -828,7 +828,7 @@ main_menu() {
         main_opt=$(dialog --stdout --title "Main Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 \
                           "Logviewer" "Start different Logviewer" \
                           "Clients Menu" "Execution, Beacon and Validator Clients" \
-                          "Validator & Key Setup" "Manage your Validator Keys" \
+                          "Info and KeyManagment" "Tools for Key Management and Node/Validator Information" \
                           "System" "Update, Reboot, shutodwn, Backup & Restore" \
                           "-" ""\
                           "exit" "Exit the program")
@@ -842,7 +842,7 @@ main_menu() {
                 "Clients Menu")
                     client_actions_submenu
                     ;;
-                "Validator & Key Setup")
+                "Info and KeyManagment")
                     validator_setup_submenu
                     ;;
                 "System")
@@ -1134,18 +1134,22 @@ validator_setup_submenu() {
                  "Convert BLS-Keys" "00-BLS to 01-Execution Wallet conversion" \
                  "Exit your Validator(s)" "Initiate the Exit of your Validator(s)" \
                  "-" "" \
+                 "Client Info" "Prints currently used client version" \
+                 "-" "" \
                  "GoPLS - BlockMonitor" "Compare local Block# with scan.puslechain.com" \
                  "GoPLS - Database Prunning" "Prune your local DB to freeup space" \
                  "-" "" \
                  "Prysm - List Accounts" "List all Accounts from the Validator DB" \
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
+                 "Prysm - Temp. fix CPU-Bug" "Temporarly revert back to v2.2.2" \
                  "-" "" \
                  "Validator Info per indice" "Backup, should beacon.pulsechain.com be down"\
+                 "Check for Sync Committee" "Checks if local Valis are in the Sync Committee"\
                  "-" ""
                  "ReRun Initial Setup" "" \
                  "-" ""\
                  "back" "Back to main menu; Return to the main menu.")
-        vs_opt=$(dialog --stdout --title "Node/Validator Setup Menu $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
+        vs_opt=$(dialog --stdout --title "Info and KeyManagment $VERSION" --backtitle "created by DipSlayer 0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA" --menu "Choose an option:" 0 0 0 "${options[@]}")
         case $? in
             0)
                 case $vs_opt in
@@ -1162,6 +1166,11 @@ validator_setup_submenu() {
                         ;;
                     "-")
                         ;;
+                    "Client Info")
+                       clear && script_launch "show_version.sh"
+                       ;;
+                    "-")
+                       ;;
                     "GoPLS - BlockMonitor")
                         clear && script_launch "compare_blocks.sh"
                         ;;
@@ -1176,11 +1185,17 @@ validator_setup_submenu() {
                     "Prysm - Delete Validator")
                         clear && script_launch "prysm_delete_validator.sh"
                         ;;
+                    "Prysm - Temp. fix CPU-Bug")
+                       clear && script_launch "prysm_fix.sh"
+                       ;;
                     "-")
                         ;;
                     "Validator Info per indice")
                         clear && script_launch "status_batch.sh"
                         ;;
+                    "Check for Sync Committee")
+                       clear && script_launch "check_sync.sh"
+                       ;;
                     "-")
                         ;;                    
                     "ReRun Initial Setup")
