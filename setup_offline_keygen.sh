@@ -44,9 +44,11 @@ function get_main_user() {
 }
 
 clear
+sudo add-apt-repository -y universe
 sudo apt update
-sudo apt install -y git
+sudo apt install -y git 
 
+clear
 echo "Checking if python3 > 3.8 is installed"
 echo "Press Enter to Continue"
 read -p ""
