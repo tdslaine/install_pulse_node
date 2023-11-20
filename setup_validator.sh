@@ -322,8 +322,8 @@ echo "-----------------------------------------"
 echo "|           Validator Key Setup         |"
 echo "-----------------------------------------"
 echo ""
-PS3=$'\nChoose an option (1-3): '
-options=("Generate new validator_keys (fresh)" "Import/Restore validator_keys from a Folder (from Offline generation or Backup)" "Restore or Add from a Seed Phrase (Mnemonic) to current or initial setup")
+PS3=$'\nChoose an option (1-4): '
+options=("Generate new validator_keys (fresh)" "Import/Restore validator_keys from a Folder (from Offline generation or Backup)" "Restore or Add from a Seed Phrase (Mnemonic) to current or initial setup" "Skip validator key creation")
 COLUMNS=1
 select opt in "${options[@]}"
 
@@ -340,9 +340,13 @@ do
         3)
             Restore_from_MN
             break
-            ;;  
+            ;;
+        4)
+            echo "Skipping validator key creation. Proceeding with the next steps..."
+            break
+            ;;
         *)
-            echo "Invalid option. Please choose option (1-3)."
+            echo "Invalid option. Please choose option (1-4)."
             ;;
     esac
 done
