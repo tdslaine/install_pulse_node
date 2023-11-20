@@ -6,7 +6,7 @@
 ## AIO Interactive Setup
 Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace of Mind with this interactive setup script 
 
-####  Donations: I am currently validating on testnet only and am hoping to expand my validator node to the mainnet as well. Donations are appreciated and will help cover the costs of running and maintaining the validator node as well as to reach the 32M PLS staking requirement for my Mainnet Validator. If you're interested in contributing, you can make a donation. Thank you for your support!
+####  Donations: Donations are appreciated and will help. Thank you for your support!
 
 (PRC20) : `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
 
