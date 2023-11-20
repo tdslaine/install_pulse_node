@@ -234,7 +234,7 @@ function restore() {
 			echo "The directory $INSTALL_PATH does not exist."
 			read -p "Would you like to create it? (y/n) " yn
 			case $yn in
-				[Yy]* ) sudo mkdir -p "$INSTALL_PATH" && sudo chmod 777 "$INSTALL_PATH"
+				[Yy]* ) sudo mkdir -p "$INSTALL_PATH" && sudo chmod -R 777 "$INSTALL_PATH"
 						echo "The directory $INSTALL_PATH has been created with permissions set to 777."
 						break;;
 				[Nn]* ) echo "No directory created. Please specify a valid directory."
@@ -266,7 +266,7 @@ function restore() {
          # Check if the target directory exists. If not, create it.
 		if [ ! -d "$CHAINDATA" ]; then
 				echo "Directory $CHAINDATA does not exist. Creating it..."
-				sudo mkdir -p "$CHAINDATA" && sudo chmod 777 "$CHAINDATA"
+				sudo mkdir -p "$CHAINDATA" && sudo chmod -R 777 "$CHAINDATA"
 			fi
         start_time=$(date +"%Y-%m-%d %H:%M:%S")
         echo "Started on: $start_time"
@@ -338,7 +338,7 @@ function stop_docker() {
             docker container prune -f >/dev/null 2>&1
         fi
     else
-        echo "The Execution-Client (go-pls) is not currently running."
+        echo "The Execution-Client (go-pls) is currently not running."
     fi
 }
 
