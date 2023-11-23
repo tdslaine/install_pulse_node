@@ -9,6 +9,15 @@ while true; do
 done &
 SUDO_KEEP_ALIVE_PID=$!
 
+trap 'cleanup_and_exit' INT
+
+function cleanup_and_exit() {
+    echo "Interrupted. Cleaning up..."
+    start_docker
+    kill $SUDO_KEEP_ALIVE_PID
+    exit 1
+}
+
 #debug helper
 #set -x
 
