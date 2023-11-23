@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Prompt for sudo password at the start and keep the session alive
+sudo -v
+# Refresh sudo session in the background
+while true; do
+    sudo -v
+    sleep 300
+done &
+SUDO_KEEP_ALIVE_PID=$!
+
 #debug helper
 #set -x
 
@@ -390,3 +399,6 @@ function sigint_handler_backup() {
 
 # Run the script
 menu
+
+# Kill the sudo session refresh process after script execution
+kill $SUDO_KEEP_ALIVE_PID
