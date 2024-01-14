@@ -239,13 +239,13 @@ registry.gitlab.com/pulsechaincom/go-pulse:latest \\
 --authrpc.jwtsecret=/blockchain/jwt.hex \\
 --datadir=/blockchain/execution/geth \\
 --http \\
---txlookuplimit 0 \\
+--ws \\
+--state.scheme=path \\
 --gpo.ignoreprice 1 \\
---cache 16384 \\
 --metrics \\
---db.engine=leveldb \\
 --pprof \\
---http.api eth,net,engine,admin "
+--ws.api web3,eth,txpool,net,engine \\
+--http.api web3,eth,txpool,net,engine,admin,debug "
 
 ERIGON_CMD="sudo -u erigon docker run -dt --restart=always  \\
 --network=host \\
