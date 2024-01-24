@@ -1338,7 +1338,7 @@ function exit_validator_LH() {
     --network "${LIGHTHOUSE_NETWORK_FLAG}" \
     account validator exit \
     --keystore="${keystore_path}" \
-    --beacon-node http://127.0.0.1:5052 \
+    --beacon-node https://rpc-pulsechain.g4mm4.io/beacon-api \
     --datadir "${INSTALL_PATH}"
 }
 
