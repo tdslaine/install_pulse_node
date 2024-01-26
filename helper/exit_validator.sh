@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Exit Validator
+# Exit Validator
 
 start_dir=$(pwd)
 script_dir=$(dirname "$0")
@@ -16,21 +16,29 @@ function get_user_choices() {
     echo "-----------------------------------------"
     echo "(based on your consensus/beacon Client)"
     echo ""
+    echo "Lighthouse Options"
     echo "---------------------------------------"
     echo "1. Lighthouse - single key exit"
     echo "2. Lighthouse - multiple keys exit"
+    echo ""
+    echo "Prysm Options"
     echo "---------------------------------------"
     echo "3. Prysm - single or multiple key exit"
     echo ""
+    echo "Emergency Options"
+    echo "---------------------------------------"
+    echo "E. Emergency exit on unsynced node using g4mm4´s external API"
     echo ""
+    echo "General Options"
+    echo "---------------------------------------"
     echo "0. Return or Exit"
     echo ""
-    read -p "Enter your choice (1, 2, 3 or 0): " client_choice
+    read -p "Enter your choice (1, 2, 3, E, or 0): " client_choice
 
     # Validate user input for client choice
-    while [[ ! "$client_choice" =~ ^[0-3]$ ]]; do
-        echo "Invalid input. Please enter a valid choice (1, 2, 3 or 0): "
-        read -p "Enter your choice (1, 2, 3 or 0): " client_choice
+    while [[ ! "$client_choice" =~ ^[123E0]$ ]]; do
+        echo "Invalid input. Please enter a valid choice (1, 2, 3, E, or 0): "
+        read -p "Enter your choice (1, 2, 3, E, or 0): " client_choice
     done
 
     if [[ "$client_choice" == "0" ]]; then
@@ -40,9 +48,6 @@ function get_user_choices() {
 
     echo "${client_choice}"
 }
-
-get_user_choices
-#client_choice=$(get_user_choices)
 
 get_main_user
 
@@ -75,4 +80,9 @@ elif [[ "$client_choice" == "3" ]]; then  # PRYSM
     sudo docker restart validator
     press_enter_to_continue
     exit 0
+    
+elif [[ "$client_choice" == "E" ]]; then  # Emergency exit
+  get_install_path
+  start_script "emergency_exit"
+  exit 0
 fi
