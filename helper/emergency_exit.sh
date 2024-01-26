@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clear
 
 check_directory() {
     if [ ! -d "$1" ]; then
