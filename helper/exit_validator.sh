@@ -83,7 +83,7 @@ elif [[ "$client_choice" == "3" ]]; then  # PRYSM
     exit 0
     
 elif [[ "$client_choice" == "E" ]]; then  # Emergency exit
-  #get_install_path
+  get_install_path
   start_script "emergency_exit"
   press_enter_to_continue
   exit 0
