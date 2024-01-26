@@ -49,6 +49,7 @@ function get_user_choices() {
     echo "${client_choice}"
 }
 
+get_user_choices
 get_main_user
 
 if [[ "$client_choice" == "1" ]]; then  # lighthouse
