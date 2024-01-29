@@ -1,10 +1,27 @@
 #!/bin/bash
 
-# Define the GitHub repository URL
-REPO_URL="https://github.com/tdslaine/install_pulse_node.git"
+# Function to check if a URL is reachable
+is_url_reachable() {
+    if curl --output /dev/null --silent --head --fail "$1"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Define the primary and fallback GitLab repository URLs
+PRIMARY_REPO_URL="https://github.com/tdslaine/install_pulse_node.git"
+FALLBACK_REPO_URL="https://gitlab.com/dipslayer/install_pulse_node.git"
 
 # Define a temporary directory to clone the repository
 TMP_DIR=$(mktemp -d -t ci-$(date +%Y-%m-%d-%H-%M-%S)-XXXXXXXXXX)
+
+# Check if the primary URL is reachable, if not, use the fallback URL
+REPO_URL=$PRIMARY_REPO_URL
+if ! is_url_reachable "$PRIMARY_REPO_URL"; then
+    echo "Primary URL is not reachable. Switching to fallback URL."
+    REPO_URL=$FALLBACK_REPO_URL
+fi
 
 # Clone the repository to the temporary directory
 git clone $REPO_URL $TMP_DIR
@@ -25,7 +42,6 @@ main_user=$(whoami)
 # Replace the value of CUSTOM_PATH with the actual INSTALL_PATH in menu.sh
 sed -i "/^CUSTOM_PATH=/c\CUSTOM_PATH=\"$INSTALL_PATH\"" $TMP_DIR/helper/menu.sh
 sed -i "/^helper_scripts_path=/c\helper_scripts_path=\"$INSTALL_PATH/helper\"" $TMP_DIR/helper/menu.sh
-
 
 cp $TMP_DIR/setup_validator.sh $INSTALL_PATH/helper
 cp $TMP_DIR/setup_monitoring.sh $INSTALL_PATH/helper
@@ -49,7 +65,7 @@ echo "Update completed successfully."
 echo "Press Enter to quit"
 read -p ""
 
-# adding the cronjobs to restart docker-scripts here
+# Adding the cronjobs to restart docker-scripts here
 # Define script paths
 INSTALL_PATH=${INSTALL_PATH%/}
 SCRIPTS=("$INSTALL_PATH/start_consensus.sh" "$INSTALL_PATH/start_execution.sh" "$INSTALL_PATH/start_validator.sh")
@@ -71,9 +87,6 @@ do
         echo "Skipping $script - does not exist or is not executable."
     fi
 done
-
-echo "Process completed."
-
 
 echo "Process completed."
 exec /usr/local/bin/plsmenu
