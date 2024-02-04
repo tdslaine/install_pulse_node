@@ -83,8 +83,11 @@ else
 fi
 
 echo "Updated $start_script_path successfully, restarting beacon client now"
+echo ""
 sleep 1
 sudo docker stop -t 180 beacon
+echo ""
 sudo docker container prune -f
-${blockchain_folder}/start_consensus.sh
+echo ""
+sudo ${blockchain_folder}/start_consensus.sh
 read -n1 -p "Press Enter to exit... "
