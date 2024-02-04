@@ -82,4 +82,5 @@ else
     echo "No changes were made to the --p2p-host-ip line."
 fi
 
-echo "Updated $start_script_path successfully."
+echo "Updated $start_script_path successfully, please restart the Beacon-Client now"
+read -n1 -p "Press Enter to exit... "
