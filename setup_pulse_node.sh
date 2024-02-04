@@ -280,17 +280,26 @@ registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
 --prune=r  "
 
 # Docker run commands for Consensus clients
-PRYSM_CMD="sudo -u prysm docker run -dt --restart=always \\
+PRYSM_CMD="# Retrieve the current IP address 
+IP=\$(curl -s ipinfo.io/ip)
+if [ -z \"\$IP\" ]; then
+    echo \"Failed to retrieve IP address. Exiting...\"
+    exit 1
+fi
+
+sudo -u prysm docker run -dt --restart=always \\
 --network=host \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
-registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:v.2.2.3 \\
+registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest \\
 --${PRYSM_NETWORK_FLAG} \\
 --jwt-secret=/blockchain/jwt.hex \\
 --datadir=/blockchain/consensus/prysm \\
 --checkpoint-sync-url=${CHECKPOINT} \\
 --min-sync-peers 1 \\
---genesis-beacon-api-url=${CHECKPOINT} "
+--genesis-beacon-api-url=${CHECKPOINT} \\
+--p2p-host-ip \$IP
+"
 
 LIGHTHOUSE_CMD="sudo -u lighthouse docker run -dt --restart=always \\
 --network=host \\
