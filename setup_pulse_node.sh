@@ -284,7 +284,7 @@ PRYSM_CMD="sudo -u prysm docker run -dt --restart=always \\
 --network=host \\
 --name beacon \\
 -v ${CUSTOM_PATH}:/blockchain \\
-registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:latest \\
+registry.gitlab.com/pulsechaincom/prysm-pulse/beacon-chain:v.2.2.3 \\
 --${PRYSM_NETWORK_FLAG} \\
 --jwt-secret=/blockchain/jwt.hex \\
 --datadir=/blockchain/consensus/prysm \\
