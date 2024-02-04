@@ -82,5 +82,9 @@ else
     echo "No changes were made to the --p2p-host-ip line."
 fi
 
-echo "Updated $start_script_path successfully, please restart the Beacon-Client now"
+echo "Updated $start_script_path successfully, restarting beacon client now"
+sleep 1
+sudo docker stop -t 180 beacon
+sudo docker container prune -f
+${blockchain_folder}/start_consensus.sh
 read -n1 -p "Press Enter to exit... "
