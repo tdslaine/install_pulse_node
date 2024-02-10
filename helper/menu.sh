@@ -34,7 +34,7 @@ main_menu() {
                           "Logviewer" "Start different Logviewer" \
                           "Clients Menu" "Execution, Beacon and Validator Clients" \
                           "Info and KeyManagment" "Tools for Key Management and Node/Validator Information" \
-                          "System" "Update, Reboot, shutodwn, Backup & Restore" \
+                          "System" "Update, Reboot, shutdown, Backup & Restore" \
                           "-" ""\
                           "exit" "Exit the program")
 
