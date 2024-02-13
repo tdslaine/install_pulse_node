@@ -2,6 +2,6 @@
 
 ## To get the lighthosue binary from the latest Docker
 
-'''bash
+
 docker cp validator:/usr/local/bin/lighthouse .
-'''
+
