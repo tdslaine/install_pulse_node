@@ -1,7 +1,13 @@
 ### Will upload precompiled Binarys here once i find a way around the upload limit
 
-lighthosue:
+#####lighthosue:
+
 sudo docker cp validator:/usr/local/bin/lighthouse TARGET_PATH
 
-prysm validator:
+#####prysm validator:
+
 sudo docker cp validator:/app/cmd/validator/validator.runfiles/prysm/cmd/validator/validator_/validator TARGET_PATH
+
+#####prysm beacon:
+
+ sudo docker cp  beacon:/app/cmd/beacon-chain/beacon-chain.runfiles/prysm/cmd/beacon-chain/beacon-chain_/beacon-chain TARGET_PATH
