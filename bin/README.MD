@@ -13,6 +13,11 @@ sudo docker cp validator:/app/cmd/validator/validator.runfiles/prysm/cmd/validat
  sudo docker cp  beacon:/app/cmd/beacon-chain/beacon-chain.runfiles/prysm/cmd/beacon-chain/beacon-chain_/beacon-chain TARGET_PATH
 
 
+#####gopls:
+
+sudo docker cp execution:/usr/local/bin/geth TARGET_PATH
+
+
 
 other stuff:
 
