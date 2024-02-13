@@ -1,7 +1,7 @@
-### Will upload precompiled Binarys here once i find a way around the upload limit here :D
+### Will upload precompiled Binarys here once i find a way around the upload limit
 
-## To get the lighthosue binary from the latest Docker
+lighthosue:
+sudo docker cp validator:/usr/local/bin/lighthouse TARGET_PATH
 
-
-docker cp validator:/usr/local/bin/lighthouse .
-
+prysm validator:
+sudo docker cp validator:/app/cmd/validator/validator.runfiles/prysm/cmd/validator/validator_/validator TARGET_PATH
