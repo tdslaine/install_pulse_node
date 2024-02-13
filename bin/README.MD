@@ -11,3 +11,11 @@ sudo docker cp validator:/app/cmd/validator/validator.runfiles/prysm/cmd/validat
 #####prysm beacon:
 
  sudo docker cp  beacon:/app/cmd/beacon-chain/beacon-chain.runfiles/prysm/cmd/beacon-chain/beacon-chain_/beacon-chain TARGET_PATH
+
+
+
+other stuff:
+
+check running docker details (get paths etc...:
+
+docker inspect {beacon|validator|execution}
