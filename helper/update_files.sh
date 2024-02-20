@@ -46,13 +46,13 @@ sed -i "/^helper_scripts_path=/c\helper_scripts_path=\"$INSTALL_PATH/helper\"" $
 cp $TMP_DIR/setup_validator.sh $INSTALL_PATH/helper
 cp $TMP_DIR/setup_monitoring.sh $INSTALL_PATH/helper
 cp $TMP_DIR/helper/* $INSTALL_PATH/helper/
-mv $INSTALL_PATH/helper/menu.sh $INSTALL_PATH
+sudo mv $INSTALL_PATH/helper/menu.sh $INSTALL_PATH
 
-chmod +x $INSTALL_PATH/helper/*.sh
-chmod +x $INSTALL_PATH/menu.sh
+sudo chmod +x $INSTALL_PATH/helper/*.sh
+sudo chmod +x $INSTALL_PATH/menu.sh
 
-chown $main_user $INSTALL_PATH/helper/*.sh
-chown $main_user $INSTALL_PATH/menu.sh
+sudo chown $main_user $INSTALL_PATH/helper/*.sh
+sudo chown $main_user $INSTALL_PATH/menu.sh
 
 # Create a symbolic link of the menu.sh file in /usr/local/bin and name it plsmenu
 sudo rm /usr/local/bin/plsmenu
