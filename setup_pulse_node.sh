@@ -682,7 +682,19 @@ fi
   echo ""  
   display_credits
 
-  sleep 1
-  echo "Please press Enter to exit"
-  read -p ""
+# Inform the user that a reboot is required, making 'Yes' the default choice
+echo ""
+echo "The system now requires a reboot to complete the setup. Would you like to reboot now? (Yes/no)"
+
+read -p "" user_response
+
+# Treat an empty response as 'yes'
+if [[ -z "$user_response" ]] || [[ "$user_response" == "yes" ]] || [[ "$user_response" == "y" ]]; then
+    echo "Rebooting the system..."
+    sleep 1
+    sudo reboot
+else
+    echo "Please reboot the system manually to complete the setup."
+    exit 0
+fi
   exit 0
