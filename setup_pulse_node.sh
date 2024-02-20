@@ -633,6 +633,7 @@ press_enter_to_continue
 ###### added features
 cron
 grace
+beacon
 
 # setting 775 for the exeuction folder, in case of backup
 sudo chmod 775 -R $CUSTOM_PATH/execution
