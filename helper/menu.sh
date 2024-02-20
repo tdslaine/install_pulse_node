@@ -1,4 +1,4 @@
-VERSION="1.4c"
+VERSION="1.4d"
     
     
 trap cleanup SIGINT
@@ -346,7 +346,7 @@ validator_setup_submenu() {
                  "-" "" \
                  "Prysm - List Accounts" "List all Accounts from the Validator DB" \
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
-                 "Prysm - Add p2p-host-ip" " Adds req. flag to startup script" \
+                 "Prysm - Add p2p-host-ip" "Fix for v.2.2.4" \
                  "Prysm - Temp. fix CPU-Bug" "Temporarly revert back to v2.2.2" \
                  "-" "" \
                  "Validator Info per indice" "Backup, should beacon.pulsechain.com be down"\
