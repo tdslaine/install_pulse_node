@@ -284,7 +284,7 @@ PRYSM_CMD="# Retrieve the current IP address
 IP=\$(curl -s ipinfo.io/ip)
 if [ -z \"\$IP\" ]; then
     echo \"Failed to retrieve IP address. Exiting...\"
-    exit 1
+    echo ""
 fi
 
 sudo -u prysm docker run -dt --restart=always \\
