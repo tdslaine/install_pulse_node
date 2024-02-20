@@ -1435,7 +1435,37 @@ EOF
     sudo systemctl enable graceful_stop.service
     sudo systemctl start graceful_stop.service
     echo ""
-    echo "Set up and enabled graceful_stop service. Activated cronjob to always restart docker clients after a reboot"
+    echo "Set up and enabled graceful_stop service."
+    echo ""
+    read -p "Press Enter to continue"
+}
+
+beacon() {
+    echo "Adding beacon startup as system service"
+    # Create the systemd service file
+cat <<EOF | sudo tee /etc/systemd/system/beacon.service > /dev/null
+[Unit]
+Description=Consensus Client Startup Script
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=$INSTALL_PATH/start_consensus.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    
+    # Reload systemd manager configuration
+    sudo systemctl daemon-reload
+
+    # Enable the new service to be started on bootup
+    sudo systemctl enable beacon.service
+    sudo systemctl start beacon.service
+    echo ""
+    echo "Set up and enabled beacon service."
     echo ""
     read -p "Press Enter to continue"
 }
