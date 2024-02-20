@@ -90,4 +90,8 @@ echo ""
 sudo docker container prune -f
 echo ""
 sudo ${blockchain_folder}/start_consensus.sh
+echo ""
+echo "Adding beacon startup as system service"
+sudo ${blockchain_folder}/helper/create_beacon_service.sh
+echo ""
 read -n1 -p "Press Enter to exit... "
