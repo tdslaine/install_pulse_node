@@ -23,7 +23,7 @@ start_script_path="${blockchain_folder}/start_consensus.sh"
 # Check if the script contains the line for Prysm
 if ! grep -q "prysm" "$start_script_path"; then
     echo "Prysm line not found in the script. Exiting..."
-    exit 1
+    echo ""
 fi
 
 # Flag to indicate if the IP retrieval block was added
