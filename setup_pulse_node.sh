@@ -638,6 +638,9 @@ beacon
 # setting 775 for the exeuction folder, in case of backup
 sudo chmod 775 -R $CUSTOM_PATH/execution
 
+# setting 770 for install_path so things can be done...
+sudo chmod -R 770 ${INSTALL_PATH}
+
 clear
 read -p "$(echo -e ${GREEN})Would you like to setup a validator? (y/n):$(echo -e ${NC}))" VALIDATOR_CHOICE
 echo ""
