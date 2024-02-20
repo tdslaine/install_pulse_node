@@ -817,7 +817,7 @@ function menu_script_template() {
     cat <<-'EOF' | sed "s|@@CUSTOM_PATH@@|$CUSTOM_PATH|g"
 #!/bin/bash
 CUSTOM_PATH="@@CUSTOM_PATH@@"
-VERSION="1.3b"
+VERSION="1.4d"
 script_launch() {
     echo "Launching script: ${CUSTOM_PATH}/helper/$1"
     ${CUSTOM_PATH}/helper/$1
@@ -829,7 +829,7 @@ main_menu() {
                           "Logviewer" "Start different Logviewer" \
                           "Clients Menu" "Execution, Beacon and Validator Clients" \
                           "Info and KeyManagment" "Tools for Key Management and Node/Validator Information" \
-                          "System" "Update, Reboot, shutodwn, Backup & Restore" \
+                          "System" "Update, Reboot, shutdown, Backup & Restore" \
                           "-" ""\
                           "exit" "Exit the program")
 
@@ -1141,6 +1141,7 @@ validator_setup_submenu() {
                  "-" "" \
                  "Prysm - List Accounts" "List all Accounts from the Validator DB" \
                  "Prysm - Delete Validator" "Delete/Remove Accounts from Validator" \
+                 "Prysm - Add p2p-host-ip" "Fix for v.2.2.4" \
                  "Prysm - Temp. fix CPU-Bug" "Temporarly revert back to v2.2.2" \
                  "-" "" \
                  "Validator Info per indice" "Backup, should beacon.pulsechain.com be down"\
@@ -1185,6 +1186,9 @@ validator_setup_submenu() {
                     "Prysm - Delete Validator")
                         clear && script_launch "prysm_delete_validator.sh"
                         ;;
+                    "Prysm - Add p2p-host-ip")
+                        clear && script_launch "prysm_fix_host_ip.sh"
+                        ;;                    
                     "Prysm - Temp. fix CPU-Bug")
                        clear && script_launch "prysm_fix.sh"
                        ;;
