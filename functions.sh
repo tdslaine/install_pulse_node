@@ -418,9 +418,63 @@ function clone_staking_deposit_cli() {
     done
 }
 
-
 function Staking_Cli_launch_setup() {
     echo "Running staking-cli setup..."
+
+    # Ensure Python 3.8 is installed
+    echo "Ensuring Python 3.8 is installed..."
+    sudo apt-get install -y software-properties-common
+    sudo add-apt-repository -y ppa:deadsnakes/ppa
+    sudo apt-get update
+    sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
+
+    # Verify Python 3.8 installation
+    #python3.8_version=$(python3.8 -V 2>&1)
+    #if [[ $python3.8_version != "Python 3.8"* ]]; then
+    #    echo "Error: Python 3.8 is not installed correctly."
+    #    exit 1
+    #fi
+    #echo "Python 3.8 is successfully installed."
+
+    # Check if the staking-deposit-cli folder exists
+    if [ ! -d "${INSTALL_PATH}/staking-deposit-cli" ]; then
+        echo "Error: staking-deposit-cli directory not found at ${INSTALL_PATH}."
+        exit 1
+    fi
+
+    # Set up Python 3.8 virtual environment
+    echo "Setting up Python 3.8 virtual environment..."
+    cd "${INSTALL_PATH}/staking-deposit-cli" || exit
+    if [ ! -d "venv" ]; then
+        python3.8 -m venv venv
+    fi
+
+    # Activate the virtual environment
+    source venv/bin/activate
+
+    # Install dependencies inside the virtual environment
+    echo "Installing staking-deposit-cli dependencies in virtual environment..."
+    pip install --upgrade pip setuptools > /dev/null 2>&1
+    pip install -r requirements.txt > /dev/null 2>&1
+    pip install . > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to install dependencies."
+        deactivate
+        exit 1
+    fi
+
+    # Deactivate virtual environment
+    deactivate
+
+    # Grant necessary permissions
+    echo "Granting necessary permissions..."
+    sudo chmod -R 777 "${INSTALL_PATH}/staking-deposit-cli"
+
+    echo "Staking-cli setup complete with virtual environment."
+}
+
+#function Staking_Cli_launch_setup() {
+#    echo "Running staking-cli setup..."
 
     # Ensure Python 3.8 is installed
    # echo "Forcing installation of Python 3.8..."
@@ -429,50 +483,50 @@ function Staking_Cli_launch_setup() {
    # sudo apt-get autoremove -y
    # sudo apt-get autoclean
 
-    sudo apt-get install -y software-properties-common
-    sudo add-apt-repository -y ppa:deadsnakes/ppa
-    sudo apt-get update
-    sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
+#    sudo apt-get install -y software-properties-common
+#    sudo add-apt-repository -y ppa:deadsnakes/ppa
+#    sudo apt-get update
+#    sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
 
     # Ensure Python 3.8 is the default python3 version
-    echo "Configuring Python 3.8 as the default python3 version..."
-    sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
-    sudo update-alternatives --set python3 /usr/bin/python3.8
+ #   echo "Configuring Python 3.8 as the default python3 version..."
+ #   sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
+ #   sudo update-alternatives --set python3 /usr/bin/python3.8
 
     # Install pip for Python 3.8
-    echo "Installing pip for Python 3.8..."
-    sudo apt-get install -y python3-pip
-    python3 -m pip install --upgrade pip setuptools
+ #   echo "Installing pip for Python 3.8..."
+ #   sudo apt-get install -y python3-pip
+ #   python3 -m pip install --upgrade pip setuptools
 
     # Verify Python 3.8 is correctly installed
-    python3_version=$(python3 -V 2>&1 | awk '{print $2}')
-    if [[ $python3_version != 3.8* ]]; then
-        echo "Error: Python 3.8 is not correctly installed."
-        exit 1
-    fi
-    echo "Python 3.8 setup complete."
+  #  python3_version=$(python3 -V 2>&1 | awk '{print $2}')
+  #  if [[ $python3_version != 3.8* ]]; then
+  #      echo "Error: Python 3.8 is not correctly installed."
+  #      exit 1
+  #  fi
+ #   echo "Python 3.8 setup complete."
 
     # Check if the staking-deposit-cli folder exists
-    if [ ! -d "${INSTALL_PATH}/staking-deposit-cli" ]; then
-        echo "Error: staking-deposit-cli directory not found at ${INSTALL_PATH}."
-        exit 1
-    fi
+#    if [ ! -d "${INSTALL_PATH}/staking-deposit-cli" ]; then
+#        echo "Error: staking-deposit-cli directory not found at ${INSTALL_PATH}."
+#        exit 1
+#    fi
 
     # Grant necessary permissions and navigate to the folder
-    sudo chmod -R 777 "${INSTALL_PATH}/staking-deposit-cli"
-    cd "${INSTALL_PATH}/staking-deposit-cli" || exit
+#    sudo chmod -R 777 "${INSTALL_PATH}/staking-deposit-cli"
+#    cd "${INSTALL_PATH}/staking-deposit-cli" || exit
 
     # Install dependencies using pip
-    echo "Installing staking-deposit-cli dependencies..."
-    pip install -r requirements.txt > /dev/null 2>&1
-    pip install . --user > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to install dependencies."
-        exit 1
-    fi
+#    echo "Installing staking-deposit-cli dependencies..."
+#    pip install -r requirements.txt > /dev/null 2>&1
+#    pip install . --user > /dev/null 2>&1
+#    if [ $? -ne 0 ]; then
+#        echo "Error: Failed to install dependencies."
+#        exit 1
+#    fi
 
-    echo "Staking-cli setup complete."
-}
+#    echo "Staking-cli setup complete."
+#}
 
 #function Staking_Cli_launch_setup() {
     # Check Python version (>= Python3.8)
