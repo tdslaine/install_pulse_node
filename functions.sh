@@ -926,7 +926,7 @@ function menu_script_template() {
     cat <<-'EOF' | sed "s|@@CUSTOM_PATH@@|$CUSTOM_PATH|g"
 #!/bin/bash
 CUSTOM_PATH="@@CUSTOM_PATH@@"
-VERSION="1.4d"
+VERSION="1.5"
 script_launch() {
     echo "Launching script: ${CUSTOM_PATH}/helper/$1"
     ${CUSTOM_PATH}/helper/$1
