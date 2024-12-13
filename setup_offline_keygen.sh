@@ -49,37 +49,20 @@ sudo apt update
 sudo apt install -y git 
 
 
-echo "Installing Git..."
-sudo apt update
-sudo apt install -y git
-
-
-#echo "Ensuring Python 3.8 is installed..."
-#sudo apt-get remove -y python3 python3.* python3-pip python3-venv
-#sudo apt-get purge -y python3 python3.* python3-pip python3-venv
-#sudo apt-get autoremove -y
-#sudo apt-get autoclean
-
+# Step 2: Ensure Python 3.8 is installed
+echo "Ensuring Python 3.8 is installed..."
 sudo apt-get install -y software-properties-common
 sudo add-apt-repository -y ppa:deadsnakes/ppa
 sudo apt-get update
 sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
 
-echo "Configuring Python 3.8 as the default python3 version..."
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
-sudo update-alternatives --set python3 /usr/bin/python3.8
-
-echo "Installing pip for Python 3.8..."
-sudo apt-get install -y python3-pip
-python3 -m pip install --upgrade pip setuptools
-
-# Verify Python 3.8 is active
-python3_version=$(python3 -V 2>&1)
-if [[ $python3_version != "Python 3.8"* ]]; then
-    echo -e "${RED}Error: Python 3.8 is not active.${NC}"
+# Verify Python 3.8 installation
+python3.8_version=$(python3.8 -V 2>&1)
+if [[ $python3.8_version != "Python 3.8"* ]]; then
+    echo -e "${RED}Error: Python 3.8 is not installed correctly.${NC}"
     exit 1
 fi
-echo -e "${GREEN}Python 3.8 is successfully installed and active.${NC}"
+echo -e "${GREEN}Python 3.8 is successfully installed.${NC}"
 
 clear
 
@@ -120,16 +103,22 @@ else
     echo "Directory already exists. Skipping the cloning process."
 fi
 
-# Install staking-cli dependencies
-echo "Installing staking-cli dependencies..."
+# Step 3: Set up virtual environment
+echo "Setting up Python 3.8 virtual environment..."
 cd "${INSTALL_PATH}" || exit
-pip install -r requirements.txt > /dev/null 2>&1
-pip install . --user > /dev/null 2>&1
+python3.8 -m venv venv
+source venv/bin/activate
+
+# Install staking-cli dependencies inside venv
+echo "Installing staking-cli dependencies inside the virtual environment..."
+pip install --upgrade pip setuptools > /dev/null 2>&1
+pip install . > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to install staking-cli dependencies.${NC}"
+    deactivate
     exit 1
 fi
-echo -e "${GREEN}Staking-cli dependencies installed successfully.${NC}"
+echo -e "${GREEN}Staking-cli dependencies installed successfully inside the virtual environment.${NC}"
 
 # Keygen script generation
 echo "Generating keygen script..."
@@ -141,6 +130,8 @@ INSTALL_PATH="${INSTALL_PATH}"
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
+
+source "\${INSTALL_PATH}/venv/bin/activate"
 
 generate_new_validator_key() {
     clear
@@ -210,6 +201,9 @@ Terminal=true
 Categories=Utility;
 EOL
 chmod +x "${desktop_file}"
+
+# Deactivate virtual environment
+deactivate
 
 clear
 echo -e "${GREEN}Setup complete.${NC}"
