@@ -186,6 +186,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls
 
 ################################################### Import ##################################################
 import_restore_validator_keys() {
+    
 
     if [[ "$client_choice" == "1" ]]; then
         check_and_pull_lighthouse
@@ -273,7 +274,7 @@ import_restore_validator_keys() {
 ################################################### Restore ##################################################
 # Function to restore from SeedPhrase 
 Restore_from_MN() {
-
+    source "${INSTALL_PATH}/staking-deposit-cli/venv/bin/activate"
     echo "Restoring validator_keys from SeedPhrase (Mnemonic)"
 
     if [[ "$client_choice" == "1" ]]; then
@@ -321,7 +322,8 @@ Restore_from_MN() {
     --folder="${INSTALL_PATH}" \
     --eth1_withdrawal_address="${withdrawal_wallet}"
      
-
+    deactivate
+    
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
     fi
