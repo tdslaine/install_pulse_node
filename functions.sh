@@ -423,11 +423,11 @@ function Staking_Cli_launch_setup() {
     echo "Running staking-cli setup..."
 
     # Ensure Python 3.8 is installed
-    echo "Forcing installation of Python 3.8..."
-    sudo apt-get remove -y python3 python3.* python3-pip python3-venv
-    sudo apt-get purge -y python3 python3.* python3-pip python3-venv
-    sudo apt-get autoremove -y
-    sudo apt-get autoclean
+   # echo "Forcing installation of Python 3.8..."
+   # sudo apt-get remove -y python3 python3.* python3-pip python3-venv
+   # sudo apt-get purge -y python3 python3.* python3-pip python3-venv
+   # sudo apt-get autoremove -y
+   # sudo apt-get autoclean
 
     sudo apt-get install -y software-properties-common
     sudo add-apt-repository -y ppa:deadsnakes/ppa
@@ -464,6 +464,7 @@ function Staking_Cli_launch_setup() {
 
     # Install dependencies using pip
     echo "Installing staking-deposit-cli dependencies..."
+    pip install -r requirements.txt > /dev/null 2>&1
     pip install . --user > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         echo "Error: Failed to install dependencies."
