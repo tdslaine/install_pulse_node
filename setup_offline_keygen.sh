@@ -112,6 +112,7 @@ source venv/bin/activate
 # Install staking-cli dependencies inside venv
 echo "Installing staking-cli dependencies inside the virtual environment..."
 pip install --upgrade pip setuptools > /dev/null 2>&1
+pip install -r requirements.txt > /dev/null 2>&1
 pip install . > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to install staking-cli dependencies.${NC}"
