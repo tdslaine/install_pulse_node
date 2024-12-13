@@ -109,7 +109,12 @@ done
     echo ""
     echo "Starting staking-cli to Generate the new validator_keys"
     echo ""
+    
+    cd "${INSTALL_PATH}"
+    sudo chmod -R 777 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
+    sudo chmod -R 777 "${INSTALL_PATH}/wallet" >/dev/null 2>&1
 
+    
     cd ${INSTALL_PATH}/staking-deposit-cli
     ./deposit.sh new-mnemonic \
     --mnemonic_language=english \
@@ -117,10 +122,6 @@ done
     --folder="${INSTALL_PATH}" \
     --eth1_withdrawal_address="${withdrawal_wallet}"
 
-
-    cd "${INSTALL_PATH}"
-    sudo chmod -R 770 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
-    sudo chmod -R 770 "${INSTALL_PATH}/wallet" >/dev/null 2>&1
 
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
@@ -142,7 +143,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls
     start_script ../start_validator
     
     echo ""
-    sudo chmod -R 440 "${INSTALL_PATH}/validator_keys"
+    sudo chmod -R 777 "${INSTALL_PATH}/validator_keys"
     echo "Import into existing Setup done."
     restart_tmux_logs_session
     press_enter_to_continue
