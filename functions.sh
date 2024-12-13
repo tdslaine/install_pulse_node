@@ -235,7 +235,7 @@ function common_task_software_check(){
 
 
     # Check if req. software is installed
-    python_check=$(python3.10 --version 2>/dev/null)
+    python_check=$(python3.8 --version 2>/dev/null)
     docker_check=$(docker --version 2>/dev/null)
     docker_compose_check=$(docker-compose --version 2>/dev/null)
     openssl_check=$(openssl version 2>/dev/null)
@@ -265,7 +265,7 @@ function common_task_software_check(){
             ufw \
             openssl \
             lsb-release \
-            python3.10 python3.10-venv python3.10-dev python3-pip \
+            python3.8 python3.8-venv python3.8-dev python3-pip \
             docker-ce docker-ce-cli containerd.io docker-compose
     
     else
