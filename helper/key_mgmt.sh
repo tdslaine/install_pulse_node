@@ -13,6 +13,38 @@ tab_autocomplete
 check_and_set_network_variables
 get_install_path
 
+# Set up Python 3.8 virtual environment
+function setup_python_venv() {
+    echo "Setting up Python 3.8 virtual environment..."
+    sudo apt-get install -y software-properties-common
+    sudo add-apt-repository -y ppa:deadsnakes/ppa
+    sudo apt-get update
+    sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
+
+    # Verify Python 3.8 installation
+    python3.8_version=$(python3.8 -V 2>&1)
+    if [[ $python3.8_version != "Python 3.8"* ]]; then
+        echo -e "${RED}Error: Python 3.8 is not installed correctly.${NC}"
+        exit 1
+    fi
+
+    # Create venv if it doesn't exist
+    if [ ! -d "${INSTALL_PATH}/staking-deposit-cli/venv" ]; then
+        cd "${INSTALL_PATH}/staking-deposit-cli" || exit
+        python3.8 -m venv venv
+    fi
+
+    # Activate venv and install dependencies
+    source "${INSTALL_PATH}/staking-deposit-cli/venv/bin/activate"
+    echo "Installing dependencies inside virtual environment..."
+    pip install --upgrade pip setuptools > /dev/null 2>&1
+    pip install -r requirements.txt > /dev/null 2>&1
+    pip install . > /dev/null 2>&1
+    deactivate
+    echo -e "${GREEN}Python 3.8 virtual environment setup complete.${NC}"
+}
+
+setup_python_venv
 
 function get_user_choices() {
     echo ""
@@ -47,7 +79,8 @@ get_user_choices
 
 
 generate_new_validator_key() {
-
+    source "${INSTALL_PATH}/staking-deposit-cli/venv/bin/activate"
+    
     if [[ "$client_choice" == "1" ]]; then
         check_and_pull_lighthouse
     elif [[ "$client_choice" == "2" ]]; then
@@ -122,7 +155,7 @@ done
     --folder="${INSTALL_PATH}" \
     --eth1_withdrawal_address="${withdrawal_wallet}"
 
-
+    deactivate
 
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
