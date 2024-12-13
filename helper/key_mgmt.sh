@@ -22,13 +22,14 @@ function setup_python_venv() {
     sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
 
     # Verify Python 3.8 installation
-    python3.8_version=$(python3.8 -V 2>&1)
-    if [[ $python3.8_version != "Python 3.8"* ]]; then
-        echo -e "${RED}Error: Python 3.8 is not installed correctly.${NC}"
-        exit 1
-    fi
+    #python3.8_version=$(python3.8 -V 2>&1)
+    #if [[ $python3.8_version != "Python 3.8"* ]]; then
+    #    echo -e "${RED}Error: Python 3.8 is not installed correctly.${NC}"
+    #    exit 1
+    #fi
 
     # Create venv if it doesn't exist
+    sudo chmod -R 777 "${INSTALL_PATH}/staking-deposit-cli"
     if [ ! -d "${INSTALL_PATH}/staking-deposit-cli/venv" ]; then
         cd "${INSTALL_PATH}/staking-deposit-cli" || exit
         python3.8 -m venv venv
