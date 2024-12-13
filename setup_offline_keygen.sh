@@ -48,59 +48,53 @@ sudo add-apt-repository -y universe
 sudo apt update
 sudo apt install -y git 
 
-clear
-echo "Checking if python3 > 3.8 is installed"
-echo "Press Enter to Continue"
-read -p ""
 
-command -v python3 >/dev/null 2>&1 || { echo >&2 "Python3 is required but it's not installed. Aborting."; exit 1; }
+echo "Installing Git..."
+sudo apt update
+sudo apt install -y git
 
-# Find the highest python3 version installed
-HIGHEST_PY3_VERSION=$(dpkg --get-selections | grep -oP 'python3\.\K[0-9]+' | sort -V | tail -n 1)
 
-REQUIRED_PY_VERSION="3.8"
+echo "Ensuring Python 3.8 is installed..."
+sudo apt-get remove -y python3 python3.* python3-pip python3-venv
+sudo apt-get purge -y python3 python3.* python3-pip python3-venv
+sudo apt-get autoremove -y
+sudo apt-get autoclean
 
-if (( $(echo "$HIGHEST_PY3_VERSION < $REQUIRED_PY_VERSION" | bc -l) ))
-then
-    echo "Highest Python3 version is lower than $REQUIRED_PY_VERSION"
-    echo "Installing Python $REQUIRED_PY_VERSION..."
-    sudo apt-get update
-    sudo apt-get install software-properties-common
-    sudo add-apt-repository ppa:deadsnakes/ppa
-    sudo apt-get update
-    sudo apt-get install -y python3.8
-else
-    echo "Highest Python3 version is $HIGHEST_PY3_VERSION, which is sufficient"
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository -y ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
+
+echo "Configuring Python 3.8 as the default python3 version..."
+sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
+sudo update-alternatives --set python3 /usr/bin/python3.8
+
+echo "Installing pip for Python 3.8..."
+sudo apt-get install -y python3-pip
+python3 -m pip install --upgrade pip setuptools
+
+# Verify Python 3.8 is active
+python3_version=$(python3 -V 2>&1)
+if [[ $python3_version != "Python 3.8"* ]]; then
+    echo -e "${RED}Error: Python 3.8 is not active.${NC}"
+    exit 1
 fi
+echo -e "${GREEN}Python 3.8 is successfully installed and active.${NC}"
 
-clear
-
-echo "Checking if pip3 is installed"
-echo "Press Enter to Continue"
-read -p ""
-
-# Check if pip3 is installed
-command -v pip3 >/dev/null 2>&1 || { echo >&2 "Pip3 is required but it's not installed. Installing..."; sudo apt install -y python3-pip; }
 clear
 
 # Prompt the user for the installation path
-read -e -p "Please enter the installation path (Press Enter for default: home/"${main_user}"/stakingcli): " INSTALL_PATH
+read -e -p "Please enter the installation path (Press Enter for default: ~/stakingcli): " INSTALL_PATH
 
 # Check if the user has entered a path
 if [ -z "$INSTALL_PATH" ]; then
     INSTALL_PATH=~/stakingcli
 fi
 
-echo "" 
-
 clear
 
-echo "Checking if stakingcli is already installed"
-echo "Press Enter to Continue"
-read -p ""
-
-# Check if the directory exists
-if [ -d "./${INSTALL_PATH}" ]; then
+echo "Checking if staking-cli is already installed..."
+if [ -d "${INSTALL_PATH}" ]; then
     while true; do
         read -p "The staking-deposit-cli folder already exists. Do you want to delete it and clone the latest version? (y/N): " confirm_delete
         if [ "$confirm_delete" == "y" ] || [ "$confirm_delete" == "Y" ]; then
@@ -116,206 +110,93 @@ if [ -d "./${INSTALL_PATH}" ]; then
 fi
 
 # Clone the staking-deposit-cli repository
-while true; do
-    if [ -d "${INSTALL_PATH}" ]; then
-        echo "Directory already exists. Skipping the cloning process."
-        break
-    elif git clone https://gitlab.com/pulsechaincom/staking-deposit-cli.git "${INSTALL_PATH}"; then
-        echo "Cloned staking-deposit-cli repository into ${INSTALL_PATH}"
-        break
-    else
-        echo ""
-        echo "Failed to clone staking-deposit-cli repository. Please check your internet connection and try again."
-        echo ""
-        read -p "Press 'r' to retry, any other key to exit: " choice
-        if [ "$choice" != "r" ]; then
-            exit 1
-        fi
-    fi
-done
-
-
-# Give execution permission to deposit.sh and run it
-clear
-
-echo "granting Permissions to stakingcli and installing requierments"
-echo "Press Enter to Continue"
-read -p ""
-
-cd ${INSTALL_PATH}
-chmod +x deposit.sh
-sudo ./deposit.sh install
-sudo chmod -R 777 "${INSTALL_PATH}"
-sudo chown $main_user:$main_user "${INSTALL_PATH}"
-
-echo "generating offline_key.sh script"
-
-NEWKEY='generate_new_validator_key() {
-
-    clear
-
-    echo ""
-    echo "Generating the validator keys via staking-cli"
-    echo ""
-    echo "Please follow the instructions and make sure to READ! and understand everything on screen"
-    echo ""
-    echo -e "${RED}Attention:${NC}"
-    echo ""
-    echo "The next steps require you to enter the wallet address that you would like to use for receiving"
-    echo "validator rewards while validating and withdrawing your funds when you exit the validator pool."
-    echo -e "This is the ${GREEN}Withdrawal- or Execution-Wallet (they are the same)${NC}"
-    echo ""
-    echo -e "Make sure ${RED}you have full access${NC} to this Wallet. ${RED}Once set, it cannot be changed${NC}"
-    echo ""
-    echo -e "You need to provide this Wallet-Adresss in the ${GREEN}proper format (checksum)${NC}."
-    echo -e "One way to achieve this, is to copy your address from the Blockexplorer"
-    echo ""
-
-    read -p "I have read this information and understand the importance of using the right Withdrawal-Wallet Address. (y/n): " confirm
-    if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
-        echo "Exiting script now."
+if [ ! -d "${INSTALL_PATH}" ]; then
+    echo "Cloning the staking-deposit-cli repository..."
+    git clone https://gitlab.com/pulsechaincom/staking-deposit-cli.git "${INSTALL_PATH}" || {
+        echo -e "${RED}Failed to clone the repository. Please check your internet connection.${NC}"
         exit 1
-    fi
+    }
+else
+    echo "Directory already exists. Skipping the cloning process."
+fi
 
-    echo ""
+# Install staking-cli dependencies
+echo "Installing staking-cli dependencies..."
+cd "${INSTALL_PATH}" || exit
+pip install . --user > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Failed to install staking-cli dependencies.${NC}"
+    exit 1
+fi
+echo -e "${GREEN}Staking-cli dependencies installed successfully.${NC}"
 
-    # Check if the address is a valid address, loop until it is...
-    while true; do
-        read -e -p "Please enter your Execution/Withdrawal-Wallet address: " withdrawal_wallet
-        if [[ "${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-            break
-        else
-            echo "Invalid address format. Please enter a valid PRC20 address."
-        fi
-    done
-
-    # Running staking-cli to Generate the new validator_keys
-    echo ""
-    echo "Starting staking-cli to Generate the new validator_keys"
-    echo ""
-
-    cd "${INSTALL_PATH}"
-    ./deposit.sh new-mnemonic \
-    --mnemonic_language=english \
-    --chain=pulsechain \
-    --folder="${INSTALL_PATH}" \
-    --eth1_withdrawal_address="${withdrawal_wallet}"
-
-    chmod -R 777 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
-    echo ""
-    echo "Press Enter to quit"
-    read -p ""
-}'
-
-RESTORE_KEY='Restore_from_MN() {
-
-    clear
-
-    echo ""
-    echo "Generating the validator keys via staking-cli"
-    echo ""
-    echo "Please follow the instructions and make sure to READ! and understand everything on screen"
-    echo ""
-    echo -e "${RED}Attention:${NC}"
-    echo ""
-    echo "The next steps require you to enter the wallet address that you would like to use for receiving"
-    echo "validator rewards while validating and withdrawing your funds when you exit the validator pool."
-    echo -e "This is the ${GREEN}Withdrawal- or Execution-Wallet (they are the same)${NC}"
-    echo ""
-    echo -e "Make sure ${RED}you have full access${NC} to this Wallet. ${RED}Once set, it cannot be changed${NC}"
-    echo ""
-    echo -e "You need to provide this Wallet-Adresss in the ${GREEN}proper format (checksum)${NC}."
-    echo -e "One way to achieve this, is to copy your address from the Blockexplorer"
-    echo ""
-
-    read -p "I have read this information and understand the importance of using the right Withdrawal-Wallet Address. (y/n): " confirm
-    if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
-        echo "Exiting script now."
-        exit 1
-    fi
-    
-    
-    # Check if the address is a valid address, loop until it is...
-    while true; do
-        read -e -p "Please enter your Execution/Withdrawal-Wallet address: " withdrawal_wallet
-        if [[ "${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-            break
-        else
-            echo "Invalid address format. Please enter a valid PRC20 address."
-        fi
-    done
-
-    echo ""
-
-    cd "${INSTALL_PATH}"
-    ./deposit.sh existing-mnemonic \
-    --chain=pulsechain \
-    --folder="${INSTALL_PATH}" \
-    --eth1_withdrawal_address="${withdrawal_wallet}"
-
-    chmod -R 777 "${INSTALL_PATH}/validator_keys"
-    echo "Your keys can be found in "${INSTALL_PATH}/validator_keys""
-    echo ""
-    echo "Press Enter to quit"
-    read -p ""
-}'
-
-clear
-
-echo "Generating keygen script"
-echo "Press Enter to Continue"
-read -p ""
-
-
-cat > offline_key.sh << EOL
+# Keygen script generation
+echo "Generating keygen script..."
+cat > "${INSTALL_PATH}/offline_key.sh" << EOL
 #!/bin/bash
 
-INSTALL_PATH="$INSTALL_PATH"
+INSTALL_PATH="${INSTALL_PATH}"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-${NEWKEY}
+generate_new_validator_key() {
+    clear
+    echo "Generating new validator keys..."
+    while true; do
+        read -e -p "Enter Withdrawal Wallet Address: " withdrawal_wallet
+        if [[ "\${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
+            break
+        else
+            echo "Invalid address format. Please try again."
+        fi
+    done
+    cd "\${INSTALL_PATH}"
+    ./deposit.sh new-mnemonic \
+        --mnemonic_language=english \
+        --chain=pulsechain \
+        --folder="\${INSTALL_PATH}" \
+        --eth1_withdrawal_address="\${withdrawal_wallet}"
+}
 
-${RESTORE_KEY}
+restore_from_mnemonic() {
+    clear
+    echo "Restoring keys from mnemonic..."
+    while true; do
+        read -e -p "Enter Withdrawal Wallet Address: " withdrawal_wallet
+        if [[ "\${withdrawal_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
+            break
+        else
+            echo "Invalid address format. Please try again."
+        fi
+    done
+    cd "\${INSTALL_PATH}"
+    ./deposit.sh existing-mnemonic \
+        --chain=pulsechain \
+        --folder="\${INSTALL_PATH}" \
+        --eth1_withdrawal_address="\${withdrawal_wallet}"
+}
 
-echo "-----------------------------------------"
-echo "|           Validator Key Setup         |"
-echo "-----------------------------------------"
-echo ""
+echo "Choose an option:"
+echo "1) Generate new validator keys"
+echo "2) Restore keys from mnemonic"
+echo "0) Exit"
+read choice
 
-while true; do
-	echo "1) Generate new validator keys. (Fresh, with a new Seed)"
-	echo ""
-	echo "2) Restore or Add from a Seed Phrase/Mnemonic (Using an existing Seed)"
-	echo ""
-	echo "0) Exit/Cancel"
-
-    read -p $'\nChoose an option (1-3): ' choice
-
-    if [[ \$choice == 1 ]]; then
-        generate_new_validator_key
-        break
-    elif [[ \$choice == 2 ]]; then
-        Restore_from_MN
-        break
-    elif [[ \$choice == 0 ]]; then
-        echo "Exiting..."
-        exit 0
-    else
-        echo "Invalid option. Please choose option (1,2 or 0)."
-    fi
-done
+case \$choice in
+    1) generate_new_validator_key ;;
+    2) restore_from_mnemonic ;;
+    0) exit ;;
+    *) echo "Invalid option." ;;
+esac
 EOL
 
+chmod +x "${INSTALL_PATH}/offline_key.sh"
+sudo ln -s "${INSTALL_PATH}/offline_key.sh" /usr/local/bin/keygen
 
-chmod +x offline_key.sh
-sudo ln -s "$(pwd)/offline_key.sh" /usr/local/bin/keygen
-
-
+# Desktop shortcut
 desktop_file="${HOME}/Desktop/offline_keygen.desktop"
-
 cat > "${desktop_file}" << EOL
 [Desktop Entry]
 Version=1.0
@@ -327,14 +208,12 @@ Icon=utilities-terminal
 Terminal=true
 Categories=Utility;
 EOL
-
 chmod +x "${desktop_file}"
 
 clear
-
-echo -e "${GREEN}Setup complete${NC}"
+echo -e "${GREEN}Setup complete.${NC}"
+echo "Run 'keygen' or use the Desktop shortcut to start."
 echo ""
-echo "Please disconnect your device from the Internet now."
 echo ""
 echo -e "You can launch the validator key setup anytime via the command ${GREEN}keygen${NC} from the terminal, or the Desktop-Icon \"Offline Keygen\""
 echo "you can find the main_script here: ${INSTALL_PATH}/offline_key.sh."
