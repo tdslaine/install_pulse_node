@@ -93,7 +93,8 @@ clear
 
 ################################################### Generate New ##################################################
 generate_new_validator_key() {
-
+    source "${INSTALL_PATH}/staking-deposit-cli/venv/bin/activate"
+    
     if [[ "$client_choice" == "1" ]]; then
         check_and_pull_lighthouse
     elif [[ "$client_choice" == "2" ]]; then
@@ -169,7 +170,7 @@ done
     sudo chmod -R 770 "${INSTALL_PATH}/validator_keys" >/dev/null 2>&1
     sudo chmod -R 770 "${INSTALL_PATH}/wallet" >/dev/null 2>&1
 
-
+    deactivate
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
     fi
@@ -251,6 +252,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls
 ################################################### Restore ##################################################
 # Function to restore from SeedPhrase 
 Restore_from_MN() {
+    source "${INSTALL_PATH}/staking-deposit-cli/venv/bin/activate"
 
     echo "Restoring validator_keys from SeedPhrase (Mnemonic)"
 
@@ -296,7 +298,7 @@ Restore_from_MN() {
     --folder="${INSTALL_PATH}" \
     --eth1_withdrawal_address="${withdrawal_wallet}"
      
-
+    deactivate
     if [[ "$network_off" =~ ^[Yy]$ ]]; then
         network_interface_UP
     fi
@@ -446,6 +448,7 @@ sudo find "$INSTALL_PATH/validator_keys" -type f -name "keystore*.json" -exec su
 sudo find "$INSTALL_PATH/validator_keys" -type f -name "deposit*.json" -exec sudo chmod 774 {} \;
 sudo find "$INSTALL_PATH/validator_keys" -type f -exec sudo chown $main_user:pls-validator {} \;
 
+sudo chmod -R 777 "$INSTALL_PATH/validator_keys"
 sudo chmod -R 770 "$INSTALL_PATH/wallet" > /dev/null 2>&1
 sudo chmod -R 770 "$INSTALL_PATH/validators" > /dev/null 2>&1
 
