@@ -54,11 +54,11 @@ sudo apt update
 sudo apt install -y git
 
 
-echo "Ensuring Python 3.8 is installed..."
-sudo apt-get remove -y python3 python3.* python3-pip python3-venv
-sudo apt-get purge -y python3 python3.* python3-pip python3-venv
-sudo apt-get autoremove -y
-sudo apt-get autoclean
+#echo "Ensuring Python 3.8 is installed..."
+#sudo apt-get remove -y python3 python3.* python3-pip python3-venv
+#sudo apt-get purge -y python3 python3.* python3-pip python3-venv
+#sudo apt-get autoremove -y
+#sudo apt-get autoclean
 
 sudo apt-get install -y software-properties-common
 sudo add-apt-repository -y ppa:deadsnakes/ppa
@@ -123,6 +123,7 @@ fi
 # Install staking-cli dependencies
 echo "Installing staking-cli dependencies..."
 cd "${INSTALL_PATH}" || exit
+pip install -r requirements.txt > /dev/null 2>&1
 pip install . --user > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to install staking-cli dependencies.${NC}"
