@@ -18,9 +18,9 @@ check_file() {
 }
 
 # Prompt user for blockchain folder
-echo "Enter the blockchain folder (use TAB for autocomplete):"
-read -e -p "Blockchain folder [default: /blockchain]: " BLOCKCHAIN_FOLDER
-BLOCKCHAIN_FOLDER=${BLOCKCHAIN_FOLDER:-/blockchain}
+echo "Enter the blockchain/validator_keys folder (use TAB for autocomplete):"
+read -e -p "Blockchain/validator_keys folder [default: /blockchain/validator_keys]: " BLOCKCHAIN_FOLDER
+BLOCKCHAIN_FOLDER=${BLOCKCHAIN_FOLDER:-/blockchain/validator_keys}
 
 # Check if the blockchain directory exists
 check_directory "$BLOCKCHAIN_FOLDER"
