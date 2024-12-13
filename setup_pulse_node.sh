@@ -357,7 +357,7 @@ sudo apt-get install -y \
     jq \
     lsb-release \
     dbus-x11 \
-    python3.10 python3.10-venv python3.10-dev python3-pip
+    python3.8 python3.8-venv python3.8-dev python3-pip
 echo ""
 # Downloading Docker
 echo -e "${GREEN}Adding Docker PPA and installing Docker${NC}"
