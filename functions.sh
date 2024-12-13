@@ -443,6 +443,7 @@ function Staking_Cli_launch_setup() {
     fi
 
     # Set up Python 3.8 virtual environment
+    sudo chmod -R 777 ${INSTALL_PATH}/staking-deposit-cli
     echo "Setting up Python 3.8 virtual environment..."
     cd "${INSTALL_PATH}/staking-deposit-cli" || exit
     if [ ! -d "venv" ]; then
