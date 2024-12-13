@@ -10,7 +10,7 @@ Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace
 
 (PRC20) : `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
 
-### Info: Current plsmenu version: 1.4c  (updated 02-04-2024)
+### Info: Current plsmenu version: 1.5  (updated 12-13-2024)
 
 
 ## Installing and Running a Pulsechain Node/Validator + Prometheus/Grafana Monitoring
