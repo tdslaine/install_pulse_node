@@ -44,6 +44,7 @@ function get_main_user() {
 }
 
 clear
+sudo apt-get install -y software-properties-common
 sudo add-apt-repository -y universe
 sudo apt update
 sudo apt install -y git 
@@ -51,7 +52,6 @@ sudo apt install -y git
 
 # Step 2: Ensure Python 3.8 is installed
 echo "Ensuring Python 3.8 is installed..."
-sudo apt-get install -y software-properties-common
 sudo add-apt-repository -y ppa:deadsnakes/ppa
 sudo apt-get update
 sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
