@@ -14,16 +14,16 @@ check_and_set_network_variables
 get_install_path
 
 # Set up Python 3.8 virtual environment
-function setup_python_venv() {
-    # Check if Python 3.8 is already installed
-    if command -v python3.8 >/dev/null 2>&1; then
-        echo "Python 3.8 is already installed."
-    else
-        echo "Python 3.8 not found. Installing Python 3.8..."
-        sudo apt-get install -y software-properties-common
-        sudo add-apt-repository -y ppa:deadsnakes/ppa
-        sudo apt-get update
-        sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
+#function setup_python_venv() {
+#    # Check if Python 3.8 is already installed
+#    if command -v python3.8 >/dev/null 2>&1; then
+#        echo "Python 3.8 is already installed."
+#    else
+#        echo "Python 3.8 not found. Installing Python 3.8..."
+#        sudo apt-get install -y software-properties-common
+#        sudo add-apt-repository -y ppa:deadsnakes/ppa
+#        sudo apt-get update
+#        sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
 
         # Verify Python 3.8 installation
         #python3.8_version=$(python3.8 -V 2>&1)
@@ -31,17 +31,54 @@ function setup_python_venv() {
         #    echo -e "${RED}Error: Python 3.8 is not installed correctly.${NC}"
         #    exit 1
         #fi
-    fi
+ #   fi
 
     # Create venv if it doesn't exist
-    if [ ! -d "${INSTALL_PATH}/staking-deposit-cli/venv" ]; then
-        echo "Creating virtual environment..."
-        cd "${INSTALL_PATH}/staking-deposit-cli" || exit
-        python3.8 -m venv venv
-    else
-        echo "Virtual environment already exists."
-    fi
+ #   if [ ! -d "${INSTALL_PATH}/staking-deposit-cli/venv" ]; then
+ #       echo "Creating virtual environment..."
+ #       cd "${INSTALL_PATH}/staking-deposit-cli" || exit
+ #       python3.8 -m venv venv
+ #   else
+ #       echo "Virtual environment already exists."
+ #   fi
 
+    # Activate venv and install dependencies
+ #   source "${INSTALL_PATH}/staking-deposit-cli/venv/bin/activate"
+ #   echo "Installing dependencies inside virtual environment..."
+ #   pip install --upgrade pip setuptools > /dev/null 2>&1
+ #   pip install -r requirements.txt > /dev/null 2>&1
+ #   pip install . > /dev/null 2>&1
+ #   deactivate
+ #   echo -e "${GREEN}Python 3.8 virtual environment setup complete.${NC}"
+#}
+
+function setup_python_venv() {
+    # Check if the virtual environment already exists
+    if [ -d "${INSTALL_PATH}/staking-deposit-cli/venv" ]; then
+        read -p "Virtual environment already exists. Do you want to reset it? (y/N): " choice
+        choice=${choice:-n} # Default to 'n' if the user just presses enter
+        if [[ "$choice" =~ ^[Yy]$ ]]; then
+            echo "Resetting the virtual environment..."
+            sudo rm -rf "${INSTALL_PATH}/staking-deposit-cli/venv"
+        else
+            echo "Skipping setup."
+            return
+        fi
+    fi
+    
+    echo "Creating virtual environment..."
+    
+    # Install Python 3.8
+    echo "Installing Python 3.8..."
+    sudo apt-get install -y software-properties-common
+    sudo add-apt-repository -y ppa:deadsnakes/ppa
+    sudo apt-get update
+    sudo apt-get install -y python3.8 python3.8-venv python3.8-distutils python3.8-dev
+    
+    # Create the virtual environment
+    cd "${INSTALL_PATH}/staking-deposit-cli" || exit
+    python3.8 -m venv venv
+    
     # Activate venv and install dependencies
     source "${INSTALL_PATH}/staking-deposit-cli/venv/bin/activate"
     echo "Installing dependencies inside virtual environment..."
@@ -49,12 +86,10 @@ function setup_python_venv() {
     pip install -r requirements.txt > /dev/null 2>&1
     pip install . > /dev/null 2>&1
     deactivate
-    echo -e "${GREEN}Python 3.8 virtual environment setup complete.${NC}"
+    
+    echo -e "${GREEN}Python 3.8 staking CLI virtual environment setup complete.${NC}"
 }
-
 # Call the function
-setup_python_venv
-
 
 setup_python_venv
 
