@@ -329,6 +329,8 @@ else
 fi
 
 # Add the deadsnakes PPA repository to install the latest Python version
+sudo apt-get update -y
+sudo apt-get install -y software-properties-common cron
 echo -e "${GREEN}Adding deadsnakes PPA to get the latest Python Version${NC}"
 sudo add-apt-repository ppa:deadsnakes/ppa -y
 echo ""
