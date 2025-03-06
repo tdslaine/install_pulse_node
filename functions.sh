@@ -243,6 +243,8 @@ function common_task_software_check(){
     # Install the req. software only if not already installed
     if [[ -z "${python_check}" || -z "${docker_check}" || -z "${docker_compose_check}" || -z "${openssl_check}" ]]; then
         echo "Installing required packages..."
+        sudo apt-get update -y 
+        sudo apt-get install -y software-properties-common cron
         sudo add-apt-repository ppa:deadsnakes/ppa -y
     
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
