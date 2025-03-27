@@ -81,6 +81,7 @@ function setup_python_venv() {
     
     # Activate venv and install dependencies
     source "${INSTALL_PATH}/staking-deposit-cli/venv/bin/activate"
+    sudo chmod -R 777 "${INSTALL_PATH}/staking-deposit-cli"
     echo "Installing dependencies inside virtual environment..."
     pip install --upgrade pip setuptools > /dev/null 2>&1
     pip install -r requirements.txt > /dev/null 2>&1
