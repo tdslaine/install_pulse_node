@@ -269,7 +269,6 @@ registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
 --chain=${EXECUTION_NETWORK_FLAG} \\
 --authrpc.jwtsecret=/blockchain/jwt.hex \\
 --datadir=/blockchain/execution/erigon \\
---externalcl \\
 --http \\
 --http.api="eth,erigon,web3,net,debug,trace,txpool" \\
 --metrics \\
