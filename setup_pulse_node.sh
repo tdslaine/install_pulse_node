@@ -259,6 +259,7 @@ registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
 --http.api="eth,erigon,web3,net,debug,trace,txpool" \\
 --metrics \\
 --pprof \\
+--snpashot=false \\
 --externalcl "
 
 ERIGON_CMD2="sudo -u erigon docker run -dt --restart=always  \\
@@ -274,6 +275,7 @@ registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
 --http.api="eth,erigon,web3,net,debug,trace,txpool" \\
 --metrics \\
 --pprof \\
+--snpashot=false \\
 --prune.h.older=2000 \\
 --prune.t.older=2000 \\
 --prune.c.older=2000 \\
