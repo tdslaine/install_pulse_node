@@ -259,8 +259,7 @@ registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
 --http.api="eth,erigon,web3,net,debug,trace,txpool" \\
 --metrics \\
 --pprof \\
---snpashot=false \\
---externalcl "
+--snpashot=false "
 
 ERIGON_CMD2="sudo -u erigon docker run -dt --restart=always  \\
 --network=host \\
@@ -270,7 +269,6 @@ registry.gitlab.com/pulsechaincom/erigon-pulse:latest \\
 --chain=${EXECUTION_NETWORK_FLAG} \\
 --authrpc.jwtsecret=/blockchain/jwt.hex \\
 --datadir=/blockchain/execution/erigon \\
---externalcl \\
 --http \\
 --http.api="eth,erigon,web3,net,debug,trace,txpool" \\
 --metrics \\
