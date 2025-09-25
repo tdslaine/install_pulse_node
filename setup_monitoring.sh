@@ -189,8 +189,8 @@ PROMETHEUS_CMD="sudo -u prometheus docker run -dt --name prometheus --restart=al
   --net='host' \\
   -v ${config_location}/prometheus.yml:/etc/prometheus/prometheus.yml \\
   -v ${config_location}/prometheus:/prometheus-data \\
-  prom/prometheus
-  
+  prom/prometheus \\
+  --web.listen-address='0.0.0.0:9099' 
   "
 
 PROMETHEUS_NODE_CMD="sudo -u prometheus docker run -dt --name node_exporter --restart=always \\
@@ -264,7 +264,7 @@ sleep 2
 # Set variables for the API endpoint, authentication, and datasource configuration
 grafana_api="http://localhost:3000/api/datasources"
 grafana_auth="admin:admin"
-prometheus_url="http://localhost:9090"
+prometheus_url="http://localhost:9099"
 datasource_name="Prometheus"
 datasource_type="prometheus"
 access_mode="proxy"
