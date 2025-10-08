@@ -3,10 +3,6 @@
 </div>
 
 
-## AIO Interactive Setup
-Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace of Mind with this interactive setup script 
-
-
 ### Info: Current plsmenu version: 1.5  (updated 12-13-2024)
 
 
