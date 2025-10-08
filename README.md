@@ -6,9 +6,6 @@
 ## AIO Interactive Setup
 Pulse-Chain Unleashed: Experience the Harmony of Effortless Innovation and Peace of Mind with this interactive setup script 
 
-####  Donations: Donations are appreciated and will help. Thank you for your support!
-
-(PRC20) : `0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA`
 
 ### Info: Current plsmenu version: 1.5  (updated 12-13-2024)
 
