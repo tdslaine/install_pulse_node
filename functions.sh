@@ -792,16 +792,19 @@ function warn_network() {
 
 
 function get_fee_receipt_address() {
-    read -e -p "$(echo -e "${GREEN}Enter fee-receipt address (leave blank for my donation address; can be changed later in start_validator.sh):${NC}")" fee_wallet
-    echo ""
-    # Use a regex pattern to validate the input wallet address
-    if [[ -z "${fee_wallet}" ]] || ! [[ "${fee_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
-        fee_wallet="0xCB00d822323B6f38d13A1f951d7e31D9dfDED4AA"
-        echo " - Using default fee-receiption address: ${fee_wallet}"
-    else
-        echo " - Using provided fee-receiption address: ${fee_wallet}"
-    fi
+    while true; do
+        read -e -p "$(echo -e "${GREEN}Enter fee-receipt address:${NC} ")" fee_wallet
+        echo ""
+        # Validate Ethereum address format (0x followed by 40 hex chars)
+        if [[ "${fee_wallet}" =~ ^0x[a-fA-F0-9]{40}$ ]]; then
+            echo " - Using fee-receipt address: ${fee_wallet}"
+            break
+        else
+            echo -e "${RED}Invalid address format. Please enter a valid 0x address.${NC}"
+        fi
+    done
 }
+
 
 function get_user_choices_monitor() {
   local client_choice
