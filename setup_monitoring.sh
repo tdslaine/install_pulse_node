@@ -187,7 +187,7 @@ echo ""
 # Define Docker commands as variables
 PROMETHEUS_CMD="sudo -u prometheus docker run -dt --name prometheus --restart=always \\
   --net='host' \\
-  -v ${config_location}/prometheus.yml:/etc/prometheus/prometheus.yml \\
+  -v ${config_location}/prometheus.yml:/prometheus/prometheus.yml \\
   -v ${config_location}/prometheus:/prometheus-data \\
   prom/prometheus
   
