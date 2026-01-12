@@ -1,0 +1,71 @@
+# Validator Keys and Sensitive Data
+validator_keys/
+*.json
+*.hex
+wallet/
+pw.txt
+deposit_data*.json
+keystore-*.json
+
+# Blockchain Data
+/blockchain/
+execution/
+consensus/
+validators/
+
+# Python Virtual Environments
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Logs
+*.log
+logs/
+
+# Temporary Files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.sublime-*
+.project
+.settings/
+
+# System Files
+Thumbs.db
+desktop.ini
+
+# Docker Volumes
+docker-compose.override.yml
+
+# Monitoring Data
+Dashboards/
+prometheus/
+grafana/
+
+# Backup Files
+*.bak
+*.backup
+backup/
+
+# Test Output
+test_results/
+*.test
+
+# User-specific Configuration
+.env
+.env.local
+config.local.*
+
+# Generated Files
+*.pid
+*.sock
